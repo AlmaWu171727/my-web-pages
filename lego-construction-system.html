@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>乐高构建体系解析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0A0A0A;--white:#F5F0E8;
+  --red:#E3000B;--blue:#006CB7;--green:#00A650;
+  --yellow:#FFD700;--orange:#FF6B00;--purple:#C084FC;
+  --border:rgba(245,240,232,0.07);
+  --text:rgba(245,240,232,0.82);
+  --muted:rgba(245,240,232,0.38);
+  --faint:rgba(245,240,232,0.12);
+}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--white);font-family:'Noto Sans SC',sans-serif;font-weight:300;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+strong{font-weight:500}
+code{font-family:'JetBrains Mono',monospace;font-size:0.85em}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,10,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 32px;height:50px;display:flex;align-items:center}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:0.22em;color:var(--muted);margin-right:28px;flex-shrink:0}
+.nav-items{display:flex;gap:0;flex:1}
+.nav-link{padding:0 16px;height:50px;display:flex;align-items:center;font-size:0.68rem;letter-spacing:0.16em;color:var(--muted);border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;cursor:pointer}
+.nav-link:hover,.nav-link.active{color:var(--white);border-bottom-color:var(--white)}
+.nav-link[data-l="up"].active{color:var(--red);border-bottom-color:var(--red)}
+.nav-link[data-l="mid"].active{color:var(--blue);border-bottom-color:var(--blue)}
+.nav-link[data-l="dn"].active{color:var(--green);border-bottom-color:var(--green)}
+.home-entry{position:fixed;right:24px;bottom:24px;z-index:160;display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:999px;border:1px solid rgba(245,240,232,0.12);background:rgba(10,10,10,0.84);color:var(--white);box-shadow:0 18px 38px rgba(0,0,0,.28);backdrop-filter:blur(12px);transition:transform .2s,background .2s}
+.home-entry:hover{transform:translateY(-2px);background:rgba(18,18,18,0.92)}
+.home-entry-label{display:flex;flex-direction:column;line-height:1.2}
+.home-entry-kicker{font-size:.58rem;letter-spacing:.18em;color:var(--muted);font-family:'JetBrains Mono',monospace;text-transform:uppercase}
+.home-entry-title{font-size:.78rem;letter-spacing:.06em}
+
+/* PAGE */
+.page{padding-top:50px}
+.w{max-width:1200px;margin:0 auto;padding:0 40px}
+section{padding:72px 40px;max-width:1200px;margin:0 auto}
+
+/* SECTION HEADERS */
+.sec-num{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.3em;color:var(--muted);margin-bottom:10px;display:block}
+.sec-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,5vw,3.8rem);letter-spacing:.06em;line-height:1;margin-bottom:6px}
+.sec-mandate{font-size:0.7rem;letter-spacing:0.18em;font-family:'JetBrains Mono',monospace;margin-bottom:24px}
+.sec-mandate.up{color:var(--red)}.sec-mandate.mid{color:var(--blue)}.sec-mandate.dn{color:var(--green)}
+.sec-lead{font-size:0.88rem;color:var(--text);line-height:1.9;max-width:680px;margin-bottom:44px;border-left:2px solid var(--border);padding-left:18px}
+.sec-output{font-size:0.7rem;font-family:'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.1em;margin-top:44px;padding-top:20px;border-top:1px solid var(--border)}
+
+/* FADE IN */
+.fu{opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+.fu.on{opacity:1;transform:none}
+
+/* DIVIDERS */
+.ldiv{height:1px;background:var(--border)}
+.ldiv.up{background:linear-gradient(90deg,transparent,var(--red) 50%,transparent)}
+.ldiv.mid{background:linear-gradient(90deg,transparent,var(--blue) 50%,transparent)}
+.ldiv.dn{background:linear-gradient(90deg,transparent,var(--green) 50%,transparent)}
+
+/* ===== 01 OVERVIEW ===== */
+#overview{
+  min-height:100vh;padding:80px 40px 64px;max-width:100%;
+  border-bottom:1px solid var(--border);position:relative;overflow:hidden;
+  display:flex;flex-direction:column;gap:0;
+}
+.ov-bg{position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 55% 50% at 10% 50%,rgba(227,0,11,.055) 0%,transparent 70%),
+    radial-gradient(ellipse 45% 40% at 88% 28%,rgba(0,108,183,.045) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 40% at 50% 85%,rgba(0,166,80,.035) 0%,transparent 70%);
+}
+.ov-hd{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:1;margin-bottom:52px}
+.ov-kicker{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.36em;color:var(--muted);margin-bottom:28px;display:block}
+.ov-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,6rem);letter-spacing:.04em;line-height:.92;margin-bottom:28px}
+.ov-title .t1{display:block;color:var(--white)}
+.ov-title .t2{display:block;color:var(--muted);font-size:.5em;margin-top:8px}
+.ov-formula{max-width:780px;font-size:.86rem;color:var(--text);line-height:1.9;padding:20px 26px;border:1px solid var(--border);border-left:3px solid rgba(245,240,232,.4)}
+.ov-formula .fl{font-size:.58rem;letter-spacing:.28em;color:var(--muted);display:block;margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+
+.ov-map{max-width:1200px;margin:0 auto;width:100%;position:relative;z-index:1;display:grid;grid-template-columns:1fr 36px 1fr 36px 1fr;align-items:stretch}
+.ov-layer{padding:26px 24px 22px;border:1px solid;transition:background .2s}
+.ov-layer.up{border-color:rgba(227,0,11,.28)}.ov-layer.up:hover{background:rgba(227,0,11,.04)}
+.ov-layer.mid{border-color:rgba(0,108,183,.28)}.ov-layer.mid:hover{background:rgba(0,108,183,.04)}
+.ov-layer.dn{border-color:rgba(0,166,80,.28)}.ov-layer.dn:hover{background:rgba(0,166,80,.04)}
+.ol-tag{font-size:.56rem;letter-spacing:.26em;font-family:'JetBrains Mono',monospace;margin-bottom:12px;display:block}
+.ol-tag.up{color:var(--red)}.ol-tag.mid{color:var(--blue)}.ol-tag.dn{color:var(--green)}
+.ol-name{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.1em;margin-bottom:8px;line-height:1}
+.ol-q{font-size:.68rem;color:var(--muted);margin-bottom:14px;font-family:'JetBrains Mono',monospace;line-height:1.5}
+.ol-items{list-style:none;display:flex;flex-direction:column;gap:5px}
+.ol-item{font-size:.76rem;color:var(--text);display:flex;align-items:flex-start;gap:7px;line-height:1.5}
+.ol-item::before{content:'→';color:var(--muted);flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.ov-arr{display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--faint)}
+.ov-cue{max-width:1200px;margin:36px auto 0;width:100%;font-size:.66rem;color:var(--muted);letter-spacing:.18em;font-family:'JetBrains Mono',monospace;text-align:center;animation:bob 2.5s ease-in-out infinite;position:relative;z-index:1}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+/* ===== 02 UPSTREAM ===== */
+#upstream{background:rgba(227,0,11,.02)}
+
+.chain-hd{display:flex;align-items:stretch;border:1px solid rgba(227,0,11,.15);margin-bottom:36px;overflow:hidden}
+.chain-step{flex:1;padding:16px 20px;border-right:1px solid rgba(227,0,11,.15);transition:background .2s}
+.chain-step:last-child{border-right:none}
+.chain-step:hover{background:rgba(227,0,11,.03)}
+.cs-n{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:rgba(227,0,11,.4);letter-spacing:.18em;margin-bottom:5px}
+.cs-nm{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.1em;margin-bottom:3px}
+.cs-r{font-size:.69rem;color:var(--muted);line-height:1.5}
+.chain-arr{width:36px;flex-shrink:0;display:flex;align-items:center;justify-content:center;color:rgba(227,0,11,.25);font-size:1rem}
+
+.sub-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-bottom:28px}
+.sub-card{background:var(--black);padding:22px 20px;border-top:2px solid}
+.sub-card.s1{border-color:var(--red)}.sub-card.s2{border-color:var(--blue)}.sub-card.s3{border-color:var(--green)}.sub-card.s4{border-color:var(--yellow)}
+.sub-nm{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:.1em;margin-bottom:3px}
+.sub-en{font-size:.58rem;letter-spacing:.18em;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:12px}
+.sub-bd{font-size:.76rem;color:var(--text);line-height:1.75;margin-bottom:12px}
+.sub-tag{font-size:.6rem;font-family:'JetBrains Mono',monospace;color:var(--muted);display:block;padding:5px 8px;background:rgba(255,255,255,.03);border:1px solid var(--border)}
+
+.mod-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.mod-bl{padding:18px 16px;border:1px solid var(--border);border-top:2px solid rgba(227,0,11,.35)}
+.mod-lbl{font-size:.56rem;letter-spacing:.22em;color:var(--red);font-family:'JetBrains Mono',monospace;margin-bottom:7px}
+.mod-ttl{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.1em;margin-bottom:8px}
+.mod-desc{font-size:.74rem;color:var(--muted);line-height:1.65}
+
+.mod-table-wrap{overflow-x:auto;margin-bottom:14px}
+.mod-table{width:100%;border-collapse:collapse;font-size:.75rem}
+.mod-table th{padding:9px 13px;text-align:left;font-size:.56rem;letter-spacing:.16em;color:var(--muted);font-weight:400;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace}
+.mod-table td{padding:9px 13px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text)}
+.mod-table tr:hover td{background:rgba(255,255,255,.015)}
+.cd{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+.nbox{padding:14px 18px;background:rgba(255,107,0,.05);border:1px solid rgba(255,107,0,.16);border-left:3px solid var(--orange);font-size:.75rem;color:var(--muted);line-height:1.75}
+.nbox strong{color:var(--orange)}
+
+.color-thread{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:14px}
+.ct-card{padding:18px 16px;border:1px solid var(--border)}
+.ct-top{display:flex;gap:8px;margin-bottom:10px}
+.ct-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.ct-nm{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.1em}
+.ct-items{display:flex;flex-direction:column;gap:4px}
+.ct-item{font-size:.72rem;color:var(--muted);line-height:1.5;padding-left:12px;border-left:1px solid var(--border)}
+.color-note{font-size:.7rem;color:var(--muted);font-style:italic;padding:10px 14px;border:1px solid var(--border);border-left:2px solid rgba(255,255,255,.12);line-height:1.7}
+
+/* ===== 03 MIDSTREAM ===== */
+#midstream{background:rgba(0,108,183,.02)}
+
+.method-chain{position:relative;margin-bottom:44px}
+.mc-spine{position:absolute;left:26px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,rgba(0,108,183,.6) 0%,rgba(0,108,183,.1) 100%)}
+.mc-step{margin-left:56px;border:1px solid var(--border);border-left:2px solid rgba(0,108,183,.25);position:relative;transition:border-left-color .2s}
+.mc-step:not(:last-child){border-bottom:none}
+.mc-step.open{border-left-color:rgba(0,108,183,.6)}
+.mc-step::before{content:'';position:absolute;left:-30px;top:26px;width:28px;height:1px;background:rgba(0,108,183,.3)}
+.mc-dot{position:absolute;left:-35px;top:20px;width:11px;height:11px;border-radius:50%;border:2px solid var(--blue);background:var(--black);transition:background .2s}
+.mc-step.open .mc-dot{background:var(--blue)}
+.mc-hdr{display:flex;align-items:center;gap:18px;padding:20px 26px;cursor:pointer;transition:background .2s}
+.mc-hdr:hover{background:rgba(0,108,183,.035)}
+.mc-n{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.18em;color:rgba(0,108,183,.5);min-width:22px}
+.mc-nm{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.08em;flex:1}
+.mc-q{font-size:.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace;flex:2}
+.mc-tog{font-size:.62rem;color:var(--muted);letter-spacing:.12em;font-family:'JetBrains Mono',monospace;flex-shrink:0;transition:color .2s}
+.mc-hdr:hover .mc-tog{color:var(--blue)}
+.mc-body{padding:0 26px 22px;display:none}
+.mc-step.open .mc-body{display:block}
+.mc-intro{font-size:.76rem;color:var(--muted);margin-bottom:14px;line-height:1.7}
+
+.comp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:18px}
+.comp-cell{background:var(--black);padding:16px 14px}
+.cc-nm{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.08em;margin-bottom:3px}
+.cc-role{font-size:.66rem;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.cc-subs{display:flex;flex-direction:column;gap:3px}
+.cc-sub{font-size:.64rem;color:var(--muted);display:flex;gap:5px;align-items:flex-start;line-height:1.5}
+.cc-sub::before{content:'·';color:var(--blue);flex-shrink:0}
+
+.org-levels{display:grid;grid-template-columns:1fr 32px 1fr 32px 1fr 32px 1fr;gap:0;margin-bottom:18px}
+.org-lv{background:rgba(255,255,255,.015);border:1px solid var(--border);padding:16px 14px;text-align:center}
+.org-lv-n{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--blue);margin-bottom:6px;letter-spacing:.18em}
+.org-lv-nm{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.1em;margin-bottom:5px}
+.org-lv-def{font-size:.66rem;color:var(--muted);line-height:1.5}
+.org-arr{display:flex;align-items:center;justify-content:center;color:rgba(0,108,183,.3);font-size:1rem;border:1px solid var(--border);border-left:none;border-right:none}
+
+.ctype{font-size:.58rem;letter-spacing:.28em;font-family:'JetBrains Mono',monospace;padding:5px 10px;display:inline-block;margin-bottom:14px;margin-top:4px}
+.ctype.con{background:rgba(227,0,11,.08);color:var(--red);border:1px solid rgba(227,0,11,.22)}
+.ctype.rule{background:rgba(0,108,183,.08);color:var(--blue);border:1px solid rgba(0,108,183,.22)}
+
+.con-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
+.con-bl{padding:20px 18px;border:1px solid var(--border);border-left:3px solid}
+.con-bl.c1{border-left-color:var(--red)}.con-bl.c2{border-left-color:var(--blue)}.con-bl.c3{border-left-color:var(--green)}.con-bl.c4{border-left-color:var(--yellow)}
+.con-nm{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.08em;margin-bottom:7px}
+.con-def{font-size:.76rem;color:var(--text);line-height:1.75;margin-bottom:9px}
+.con-items{display:flex;flex-direction:column;gap:4px}
+.con-item{font-size:.7rem;color:var(--muted);display:flex;gap:7px;line-height:1.55}
+.con-item::before{content:'—';color:var(--border);flex-shrink:0}
+
+.con-rev{padding:20px 22px;background:rgba(255,107,0,.04);border:1px solid rgba(255,107,0,.18);display:grid;grid-template-columns:1fr auto;gap:22px;align-items:center}
+.con-rev-h{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.08em;margin-bottom:7px;color:var(--orange)}
+.con-rev-p{font-size:.76rem;color:var(--text);line-height:1.75}
+.con-rev-ul{margin-top:9px;display:flex;flex-direction:column;gap:3px}
+.con-rev-li{font-size:.7rem;color:var(--muted);list-style:none;display:flex;gap:7px}
+.con-rev-li::before{content:'⇄';color:var(--orange);flex-shrink:0}
+.rev-cycle{display:flex;flex-direction:column;gap:6px;align-items:center}
+.rev-box{padding:7px 12px;border:1px solid rgba(255,107,0,.28);font-size:.68rem;color:var(--orange);font-family:'JetBrains Mono',monospace;letter-spacing:.08em;text-align:center;width:82px}
+.rev-ar{color:rgba(255,107,0,.4);font-size:.8rem;text-align:center}
+
+.rules-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border)}
+.rule-card{background:var(--black);padding:20px 18px}
+.rule-n{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--blue);letter-spacing:.18em;margin-bottom:5px}
+.rule-nm{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;margin-bottom:5px}
+.rule-def{font-size:.74rem;color:var(--text);line-height:1.7;margin-bottom:7px}
+.rule-val{font-size:.67rem;color:var(--muted);line-height:1.6}
+.rule-val strong{color:rgba(245,240,232,.55)}
+.rule-trig{font-size:.64rem;font-family:'JetBrains Mono',monospace;color:rgba(255,107,0,.5);margin-top:7px;padding-top:7px;border-top:1px solid var(--border)}
+
+/* ===== 04 DOWNSTREAM ===== */
+#downstream{background:rgba(0,166,80,.02)}
+
+.iter-wrap{display:grid;grid-template-columns:1fr 190px;gap:36px;margin-bottom:44px;align-items:start}
+.iter-steps{display:flex;flex-direction:column}
+.iter-step{display:grid;grid-template-columns:50px 1fr;border:1px solid var(--border);border-bottom:none;transition:background .2s}
+.iter-step:last-child{border-bottom:1px solid var(--border)}
+.iter-step:hover{background:rgba(0,166,80,.025)}
+.is-n{padding:16px 14px;border-right:1px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.18em;color:var(--muted);text-align:center;display:flex;align-items:flex-start;justify-content:center;padding-top:18px}
+.is-bd{padding:16px 20px}
+.is-nm{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;margin-bottom:4px}
+.is-desc{font-size:.75rem;color:var(--text);line-height:1.7;margin-bottom:5px}
+.is-trig{font-size:.64rem;font-family:'JetBrains Mono',monospace;color:rgba(0,166,80,.5);letter-spacing:.05em}
+.is-trig::before{content:'↺ ';color:var(--green)}
+
+.iter-side{position:sticky;top:72px}
+.is-side-ttl{font-size:.56rem;letter-spacing:.26em;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:12px}
+.is-side-items{display:flex;flex-direction:column;gap:6px}
+.is-side-item{padding:9px 12px;border:1px solid var(--border);border-left:2px solid rgba(255,107,0,.35)}
+.is-side-n{font-size:.56rem;font-family:'JetBrains Mono',monospace;color:rgba(255,107,0,.5);margin-bottom:3px}
+.is-side-nm{font-size:.7rem;color:var(--text);line-height:1.5}
+
+.eval-man{padding:13px 18px;background:rgba(0,166,80,.05);border:1px solid rgba(0,166,80,.16);border-left:3px solid var(--green);font-size:.76rem;color:var(--text);margin-bottom:24px;line-height:1.75}
+.eval-man strong{color:var(--green)}
+.eval-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.eval-card{background:var(--black);padding:18px 16px}
+.eval-top{display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:.54rem;letter-spacing:.18em;color:var(--muted);margin-bottom:5px}
+.eval-en{color:var(--green)}
+.eval-nm{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.08em;margin-bottom:7px}
+.eval-def{font-size:.72rem;color:var(--text);line-height:1.7;margin-bottom:7px}
+.eval-fail{font-size:.64rem;color:var(--muted);line-height:1.6;padding-top:7px;border-top:1px solid var(--border)}
+.eval-fail::before{content:'失效表现：';color:rgba(227,0,11,.4);font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.08em;display:block;margin-bottom:3px}
+
+/* ===== 05 CONCLUSION ===== */
+#conclusion{border-top:1px solid var(--border)}
+.conc-f{padding:52px 40px;max-width:1200px;margin:0 auto;text-align:center}
+.cf-pre{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.28em;color:var(--muted);margin-bottom:22px}
+.cf-text{font-size:clamp(.96rem,2vw,1.28rem);color:var(--text);line-height:1.95;max-width:780px;margin:0 auto 44px}
+.cf-text strong{color:var(--white)}
+.conc-cards{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:1px}
+.conc-card{background:var(--black);padding:30px 26px}
+.conc-tag{font-size:.56rem;letter-spacing:.26em;font-family:'JetBrains Mono',monospace;margin-bottom:10px}
+.conc-tag.up{color:var(--red)}.conc-tag.mid{color:var(--blue)}.conc-tag.dn{color:var(--green)}
+.conc-ttl{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.06em;margin-bottom:10px}
+.conc-body{font-size:.76rem;color:var(--muted);line-height:1.85}
+.conc-body strong{color:var(--text)}
+.conc-final{max-width:1200px;margin:0 auto;padding:36px 40px;border-top:1px solid var(--border);text-align:center}
+.cf-final{font-size:.8rem;color:var(--muted);font-style:italic;line-height:2.1}
+.cf-final strong{color:var(--white);font-style:normal}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sub-grid,.color-thread,.con-grid,.eval-grid,.conc-cards,.mod-row{grid-template-columns:1fr}
+  .org-levels{grid-template-columns:1fr}
+  .org-arr{display:none}
+  .ov-map{grid-template-columns:1fr}.ov-arr{display:none}
+  .comp-grid{grid-template-columns:1fr 1fr}
+  .iter-wrap{grid-template-columns:1fr}.iter-side{display:none}
+  .rules-grid{grid-template-columns:1fr}
+  section{padding:48px 20px}
+  .conc-f,.conc-final{padding-left:20px;padding-right:20px}
+}
+</style>
+</head>
+<body>
+<a class="home-entry" href="./index.html" aria-label="返回脑洞展厅">
+  <span>←</span>
+  <span class="home-entry-label">
+    <span class="home-entry-kicker">Back to Home</span>
+    <span class="home-entry-title">返回脑洞展厅</span>
+  </span>
+</a>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">LEGO SYSTEM</span>
+    <div class="nav-items">
+      <a class="nav-link" href="#overview">01 总览</a>
+      <a class="nav-link" href="#upstream" data-l="up">02 上游约束</a>
+      <a class="nav-link" href="#midstream" data-l="mid">03 中游方法</a>
+      <a class="nav-link" href="#downstream" data-l="dn">04 下游输出</a>
+      <a class="nav-link" href="#conclusion">05 总结</a>
+    </div>
+  </div>
+</nav>
+
+<div class="page">
+
+<!-- 01 OVERVIEW -->
+<div id="overview">
+  <div class="ov-bg"></div>
+  <div class="ov-hd">
+    <span class="ov-kicker">LEGO CONSTRUCTION SYSTEM ANALYSIS · 乐高构建体系</span>
+    <h1 class="ov-title">
+      <span class="t1">乐高构建</span>
+      <span class="t2">不是零件堆积，而是系统</span>
+    </h1>
+    <div class="ov-formula">
+      <span class="fl">总公式</span>
+      乐高不是零件堆积，而是由<strong>约束空间、构造方法与验证机制</strong>共同构成的<strong>可逆重构系统</strong>。先定义可行空间，再定义构造方法，最后定义输出与验证。
+    </div>
+  </div>
+
+  <div class="ov-map">
+    <a class="ov-layer up" href="#upstream">
+      <span class="ol-tag up">上游约束层 · UPSTREAM</span>
+      <div class="ol-name">可行空间定义</div>
+      <div class="ol-q">回答"能用什么"</div>
+      <ul class="ol-items">
+        <li class="ol-item">子系统 — 构造宇宙</li>
+        <li class="ol-item">模数规范 — 几何可行域</li>
+        <li class="ol-item">色彩系统 — 叙事与供货约束</li>
+      </ul>
+    </a>
+    <div class="ov-arr">→</div>
+    <a class="ov-layer mid" href="#midstream">
+      <span class="ol-tag mid">中游方法层 · MIDSTREAM</span>
+      <div class="ol-name">构造方法定义</div>
+      <div class="ol-q">回答"怎么组织"</div>
+      <ul class="ol-items">
+        <li class="ol-item">组件分类 — 职责分工</li>
+        <li class="ol-item">组织形式 — 层级聚合</li>
+        <li class="ol-item">协作约束 — 成立底线</li>
+        <li class="ol-item">配合规则 — 设计准则</li>
+      </ul>
+    </a>
+    <div class="ov-arr">→</div>
+    <a class="ov-layer dn" href="#downstream">
+      <span class="ol-tag dn">下游输出层 · DOWNSTREAM</span>
+      <div class="ol-name">输出与验证</div>
+      <div class="ol-q">回答"如何验证成立"</div>
+      <ul class="ol-items">
+        <li class="ol-item">迭代构建 — 局部到整体</li>
+        <li class="ol-item">评价标准 — 系统判定</li>
+      </ul>
+    </a>
+  </div>
+
+  <div class="ov-cue">↓ 向下展开每一层</div>
+</div>
+
+<!-- 02 UPSTREAM -->
+<div class="ldiv up"></div>
+<section id="upstream">
+  <span class="sec-num fu">02 / UPSTREAM CONSTRAINTS</span>
+  <h2 class="sec-h fu">上游约束层</h2>
+  <p class="sec-mandate up fu">上游约束共同定义可行空间 · 在开始构建之前就已生效</p>
+  <p class="sec-lead fu">这三个板块不是三个并列的知识模块，而是一条连续的决策链。子系统决定你处于哪个构造宇宙，模数规范将这个宇宙量化为精确的几何约束，色彩系统则在供货、结构与叙事三个维度进一步筛选哪些方案能够成立。三者共同构成设计的可行空间。</p>
+
+  <div class="chain-hd fu">
+    <div class="chain-step">
+      <div class="cs-n">01 · 子系统</div>
+      <div class="cs-nm">决定构造宇宙</div>
+      <div class="cs-r">进入哪个子系统，即进入其完整的接口规范与内部逻辑。子系统间兼容性是有条件的结果，非默认前提。</div>
+    </div>
+    <div class="chain-arr">→</div>
+    <div class="chain-step">
+      <div class="cs-n">02 · 模数规范</div>
+      <div class="cs-nm">决定几何可行域</div>
+      <div class="cs-r">将子系统差异量化为精确的接口尺寸与模数约束。几何兼容性由此层决定，不是猜测，是计算。</div>
+    </div>
+    <div class="chain-arr">→</div>
+    <div class="chain-step">
+      <div class="cs-n">03 · 色彩系统</div>
+      <div class="cs-nm">决定哪些方案成立</div>
+      <div class="cs-r">在几何可行域内，色彩供货进一步筛选哪些方案可实现；色彩语义约束叙事方向。</div>
+    </div>
+  </div>
+
+  <h3 class="fu" style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.1em;margin-bottom:14px;color:var(--muted)">01 · 四大子系统</h3>
+  <div class="sub-grid fu">
+    <div class="sub-card s1">
+      <div class="sub-nm">System</div><div class="sub-en">经典系统</div>
+      <div class="sub-bd">标准砖块体系，1.6mm基础模数，凸点间距8mm，高度9.6mm（含板）。零件兼容性最广，城市、建筑、人仔系列均基于此。</div>
+      <span class="sub-tag">接口：标准凸点 · 8mm间距 · 1.6mm壁厚</span>
+    </div>
+    <div class="sub-card s2">
+      <div class="sub-nm">Technic</div><div class="sub-en">机械系统</div>
+      <div class="sub-bd">轴、销、梁为核心接口。模数与System共享，但以孔位间距8mm为基础，面向机械运动与结构力学。销孔与凸点不能直接互通。</div>
+      <span class="sub-tag">接口：5mm销孔 / 5.9mm轴孔 / 连杆</span>
+    </div>
+    <div class="sub-card s3">
+      <div class="sub-nm">Duplo</div><div class="sub-en">大颗粒系统</div>
+      <div class="sub-bd">为幼儿设计，凸点直径与间距是System的2倍，高度模数为2倍。单向兼容——Duplo底面可接System凸点，反向不可。</div>
+      <span class="sub-tag">接口：16mm间距 · 单向兼容 · 2× 模数</span>
+    </div>
+    <div class="sub-card s4">
+      <div class="sub-nm">CCBS</div><div class="sub-en">球窝关节系统</div>
+      <div class="sub-bd">源于Bionicle，以球窝接头提供三维自由旋转。骨架件通过轴孔与Technic部分兼容，拓扑组织逻辑完全不同。</div>
+      <span class="sub-tag">接口：球窝 / 5mm轴孔（部分）</span>
+    </div>
+  </div>
+
+  <h3 class="fu" style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.1em;margin:36px 0 14px;color:var(--muted)">02 · 模数规范与跨系统兼容</h3>
+  <div class="mod-row fu">
+    <div class="mod-bl">
+      <div class="mod-lbl">平面模数</div><div class="mod-ttl">水平方向基准</div>
+      <div class="mod-desc">System与Technic共享8mm水平模数。所有水平组合以此为整数倍约束。非整数倍偏移依赖半模数件桥接。</div>
+    </div>
+    <div class="mod-bl">
+      <div class="mod-lbl">高度模数</div><div class="mod-ttl">垂直方向基准</div>
+      <div class="mod-desc">System标准砖高9.6mm，板件3.2mm（1/3砖高）。3板 = 1砖是垂直混搭核心规则。Technic梁销孔高度8mm与水平模数对齐。</div>
+    </div>
+    <div class="mod-bl">
+      <div class="mod-lbl">半模数与偏移</div><div class="mod-ttl">非整数倍桥接</div>
+      <div class="mod-desc">4mm（半砖）偏移依赖SNOT转接块、侧凸点板。SNOT技术将垂直堆叠转为水平拼接，突破标准模数网格限制。</div>
+    </div>
+    <div class="mod-bl">
+      <div class="mod-lbl">跨系统桥接</div><div class="mod-ttl">有条件的接口转接</div>
+      <div class="mod-desc">每多一层转接引入一个力学薄弱点。System↔Technic需专用插销件。System↔Duplo单向兼容。System↔CCBS需Technic轴。</div>
+    </div>
+  </div>
+
+  <div class="mod-table-wrap fu">
+    <table class="mod-table">
+      <thead><tr><th>子系统</th><th>水平模数</th><th>高度模数</th><th>接口类型</th><th>与System兼容性</th><th>桥接方式</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong style="color:var(--red)">System</strong></td>
+          <td><code>8mm</code></td><td><code>9.6mm / 3.2mm板</code></td>
+          <td>凸点 + 管道内壁</td>
+          <td><span class="cd" style="background:#00A650"></span>基准系统</td><td>—</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--blue)">Technic</strong></td>
+          <td><code>8mm</code></td><td><code>8mm（销孔中心）</code></td>
+          <td>销孔 + 轴孔</td>
+          <td><span class="cd" style="background:#FFD700"></span>有条件</td><td>Technic销插入砖块凸点列</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--green)">Duplo</strong></td>
+          <td><code>16mm</code></td><td><code>19.2mm</code></td>
+          <td>大凸点（单向）</td>
+          <td><span class="cd" style="background:#FF6B00"></span>单向</td><td>Duplo底面凹槽接收System凸点</td>
+        </tr>
+        <tr>
+          <td><strong style="color:var(--yellow)">CCBS</strong></td>
+          <td>—（有机形态）</td><td>—（关节驱动）</td>
+          <td>球窝 + 5mm轴</td>
+          <td><span class="cd" style="background:#E3000B"></span>独立</td><td>通过Technic轴作中间层</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="nbox fu"><strong>接口设计原则：</strong>跨系统桥接总是有成本的。每多一层转接，就引入一个潜在的力学薄弱点与几何累积误差。应尽量在单一子系统内解决问题，仅在功能明确需要时才引入桥接件。</div>
+
+  <h3 class="fu" style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.1em;margin:36px 0 5px;color:var(--muted)">03 · 色彩系统</h3>
+  <p class="fu" style="font-size:.72rem;color:var(--muted);margin-bottom:14px;font-family:'JetBrains Mono',monospace;letter-spacing:.06em">色彩是约束，不是装饰 · 纵向贯穿全局，在组件、构建、评价各阶段持续作用</p>
+  <div class="color-thread fu">
+    <div class="ct-card">
+      <div class="ct-top"><div class="ct-dot" style="background:var(--red)"></div><div class="ct-nm">供货约束</div></div>
+      <div class="ct-items">
+        <div class="ct-item">颜色可用性由官方零件库决定</div>
+        <div class="ct-item">并非所有零件类型都有全部颜色</div>
+        <div class="ct-item">颜色稀缺性直接影响成本与可行性</div>
+        <div class="ct-item">关键风险：接近完成才发现颜色无法获取</div>
+      </div>
+    </div>
+    <div class="ct-card">
+      <div class="ct-top"><div class="ct-dot" style="background:var(--blue)"></div><div class="ct-nm">层次规则</div></div>
+      <div class="ct-items">
+        <div class="ct-item">内部结构色：功能优先，不可见色</div>
+        <div class="ct-item">外部表皮色：叙事优先，形成印象</div>
+        <div class="ct-item">强调色：语义定位，≤20%占比</div>
+        <div class="ct-item">地面/底板：中性色，不参与叙事竞争</div>
+      </div>
+    </div>
+    <div class="ct-card">
+      <div class="ct-top"><div class="ct-dot" style="background:var(--green)"></div><div class="ct-nm">聚焦规则</div></div>
+      <div class="ct-items">
+        <div class="ct-item">主色2–3种，构建视觉主轴</div>
+        <div class="ct-item">强调色指向场景焦点区域</div>
+        <div class="ct-item">色彩分散 = 叙事失焦</div>
+        <div class="ct-item">人仔色彩必须与场景产生对比</div>
+      </div>
+    </div>
+    <div class="ct-card">
+      <div class="ct-top"><div class="ct-dot" style="background:var(--yellow)"></div><div class="ct-nm">语义规则</div></div>
+      <div class="ct-items">
+        <div class="ct-item">颜色传递阵营/功能/材质信息</div>
+        <div class="ct-item">同色系 = 同功能或同归属</div>
+        <div class="ct-item">跨颜色区域 = 场景边界</div>
+        <div class="ct-item">颜色语义先于形态语义被读取</div>
+      </div>
+    </div>
+  </div>
+  <div class="color-note fu">色彩系统是横向线程，不在此结束——在中游的组件选择、下游的迭代构建与评价标准（E5 视觉一致性、E6 色彩一致性）中持续约束决策。</div>
+
+  <div class="sec-output fu">OUTPUT → 上游约束层输出的是<strong>可行空间</strong>：可用子系统 · 几何合法域 · 色彩可选集。中游方法层在此空间内展开。</div>
+</section>
+
+<!-- 03 MIDSTREAM -->
+<div class="ldiv mid"></div>
+<section id="midstream">
+  <span class="sec-num fu">03 / MIDSTREAM METHODS</span>
+  <h2 class="sec-h fu">中游方法层</h2>
+  <p class="sec-mandate mid fu">在可行空间内 · 定义构造方法的连续决策链</p>
+  <p class="sec-lead fu">上游定义了空间边界，中游在此空间内回答"怎么做"。这四个步骤构成一条连续的方法链，而非四个独立的知识板块：先明确零件的职责分工，再定义如何聚合，然后设定系统成立的底线约束，最后给出在约束内的协作准则。</p>
+
+  <div class="method-chain fu">
+    <div class="mc-spine"></div>
+
+    <div class="mc-step open" id="mc1">
+      <div class="mc-dot"></div>
+      <div class="mc-hdr" onclick="toggleMC('mc1')">
+        <span class="mc-n">01</span>
+        <span class="mc-nm">组件分类</span>
+        <span class="mc-q">有哪些功能角色可以调用</span>
+        <span class="mc-tog">收起 ↑</span>
+      </div>
+      <div class="mc-body">
+        <p class="mc-intro">六类组件不是平行列表，而是有职能分工的系统层级。分类原则是系统职责，而非零件形状。每类内部还可进一步细分为二级规格。</p>
+        <div class="comp-grid">
+          <div class="comp-cell" style="border-top:2px solid var(--red)">
+            <div class="cc-nm" style="color:var(--red)">结构件</div>
+            <div class="cc-role">骨架承重 · 定义形态与比例 · 所有其他组件的依附基础</div>
+            <div class="cc-subs">
+              <div class="cc-sub">承重件 — 主梁与立柱，失效=结构下沉</div>
+              <div class="cc-sub">锁定件 — 固定相对位置，失效=模块错位</div>
+              <div class="cc-sub">跨接件 — 跨越空隙，失效=板件弯曲</div>
+              <div class="cc-sub">框架件 — 定义开口边界</div>
+              <div class="cc-sub">悬挑件 — 单端固定，失效=尾端脱落</div>
+              <div class="cc-sub">补偿件 — 填充模数间隙</div>
+            </div>
+          </div>
+          <div class="comp-cell" style="border-top:2px solid var(--blue)">
+            <div class="cc-nm" style="color:var(--blue)">连接件</div>
+            <div class="cc-role">接口转接 · 实现角度与系统间桥接 · 解决几何约束</div>
+            <div class="cc-subs">
+              <div class="cc-sub">凸点接口 — 8mm网格内水平定位</div>
+              <div class="cc-sub">轴孔接口 — Technic传动核心</div>
+              <div class="cc-sub">夹持接口 — 弹性夹持，力有上限</div>
+              <div class="cc-sub">铰链接口 — 单轴旋转自由度</div>
+              <div class="cc-sub">球窝接口 — 三维自由旋转</div>
+              <div class="cc-sub">摩擦/无摩擦轴 — 外观相似，功能相反</div>
+            </div>
+          </div>
+          <div class="comp-cell" style="border-top:2px solid var(--orange)">
+            <div class="cc-nm" style="color:var(--orange)">功能件</div>
+            <div class="cc-role">运动传动 · 实现机械动作 · 依赖连接件定位</div>
+            <div class="cc-subs">
+              <div class="cc-sub">传动类 — 齿轮组、差速器</div>
+              <div class="cc-sub">支撑类 — 轮子、脚轮</div>
+              <div class="cc-sub">转换类 — 旋转↔线性运动</div>
+              <div class="cc-sub">储能类 — 弹簧、弹射机构</div>
+              <div class="cc-sub">驱动类 — 电机、气缸</div>
+              <div class="cc-sub">控制类 — 换向器、离合器</div>
+            </div>
+          </div>
+          <div class="comp-cell" style="border-top:2px solid var(--green)">
+            <div class="cc-nm" style="color:var(--green)">表皮件</div>
+            <div class="cc-role">外观塑形 · 处理曲面与过渡 · 附着在结构件上，不承重</div>
+            <div class="cc-subs">
+              <div class="cc-sub">平面化 — 光滑板件，最高经济性</div>
+              <div class="cc-sub">斜面化 — 斜坡砖，角度有离散值</div>
+              <div class="cc-sub">曲面化 — 圆弧砖，多件组合曲线</div>
+              <div class="cc-sub">边缘收口 — 处理暴露截面</div>
+              <div class="cc-sub">缝隙管理 — 半模数偏移技术</div>
+              <div class="cc-sub">细节提示 — 印刷砖、纹理砖</div>
+            </div>
+          </div>
+          <div class="comp-cell" style="border-top:2px solid var(--yellow)">
+            <div class="cc-nm" style="color:var(--yellow)">语义件</div>
+            <div class="cc-role">场景识别 · 触发叙事语境 · 赋予场景可读性</div>
+            <div class="cc-subs">
+              <div class="cc-sub">建筑语义 — 门、窗、楼梯</div>
+              <div class="cc-sub">交通语义 — 车轮、引擎盖</div>
+              <div class="cc-sub">工业语义 — 管道、控制台</div>
+              <div class="cc-sub">自然语义 — 植被、岩石件</div>
+              <div class="cc-sub">生活语义 — 家具、餐具</div>
+            </div>
+          </div>
+          <div class="comp-cell" style="border-top:2px solid var(--purple)">
+            <div class="cc-nm" style="color:var(--purple)">角色件</div>
+            <div class="cc-role">叙事入口 · 确定场景比例基准 · 引入主体视角</div>
+            <div class="cc-subs">
+              <div class="cc-sub">角色主体 — 人仔：1.5砖宽×4砖高，比例基准件</div>
+              <div class="cc-sub">姿态组件 — 赋予身份与状态</div>
+              <div class="cc-sub">装备组件 — 定义行为意图</div>
+              <div class="cc-sub">阵营识别件 — 颜色与图形快速传达归属</div>
+            </div>
+          </div>
+        </div>
+        <div class="nbox" style="border-left-color:var(--blue)"><strong style="color:var(--blue)">色彩线程：</strong>组件选择时需同步核查色彩可用性。结构件颜色优先考虑供货广泛度；表皮件颜色需满足上游色彩系统的聚焦与语义规则。</div>
+      </div>
+    </div>
+
+    <div class="mc-step" id="mc2">
+      <div class="mc-dot"></div>
+      <div class="mc-hdr" onclick="toggleMC('mc2')">
+        <span class="mc-n">02</span>
+        <span class="mc-nm">组织形式</span>
+        <span class="mc-q">这些角色如何编组 · 如何从零件演化为场景</span>
+        <span class="mc-tog">展开 ↓</span>
+      </div>
+      <div class="mc-body">
+        <p class="mc-intro">零件不是直接堆成场景的，而是经过四个层级的聚合，逐步获得结构、功能与叙事意义。</p>
+        <div class="org-levels">
+          <div class="org-lv">
+            <div class="org-lv-n">L1</div>
+            <div class="org-lv-nm">零件</div>
+            <div class="org-lv-def">单一物理零件，具有特定接口和几何形态。由上游子系统与模数规范定义其可用性。</div>
+          </div>
+          <div class="org-arr">→</div>
+          <div class="org-lv">
+            <div class="org-lv-n">L2</div>
+            <div class="org-lv-nm">模块</div>
+            <div class="org-lv-def">具有独立功能意义的组件组合，如一面墙、一个驾驶舱。模块有明确物理边界和独立拆卸能力。</div>
+          </div>
+          <div class="org-arr">→</div>
+          <div class="org-lv">
+            <div class="org-lv-n">L3</div>
+            <div class="org-lv-nm">功能区</div>
+            <div class="org-lv-def">多个模块构成具有完整叙事意义的区域，如建筑的内外庭院、载具的动力舱与乘员舱。</div>
+          </div>
+          <div class="org-arr">→</div>
+          <div class="org-lv">
+            <div class="org-lv-n">L4</div>
+            <div class="org-lv-nm">场景</div>
+            <div class="org-lv-def">多个功能区构成的完整叙事单元，有明确主题、焦点与可读顺序。角色件在此层激活叙事。</div>
+          </div>
+        </div>
+        <div class="nbox" style="border-left-color:var(--blue)"><strong style="color:var(--blue)">聚合原则：</strong>每个层级都应有独立的逻辑意义。模块可独立拆卸，功能区可独立替换，场景可局部迭代。这是中游方法与可逆性约束的衔接点。</div>
+      </div>
+    </div>
+
+    <div class="mc-step" id="mc3">
+      <div class="mc-dot"></div>
+      <div class="mc-hdr" onclick="toggleMC('mc3')">
+        <span class="mc-n">03</span>
+        <span class="mc-nm">协作约束</span>
+        <span class="mc-q">什么情况下系统成立 · 哪些是不能逾越的底线</span>
+        <span class="mc-tog">展开 ↓</span>
+      </div>
+      <div class="mc-body">
+        <div class="ctype con">约束 = 成立底线 · 违反即系统在对应维度失效</div>
+        <p class="mc-intro">协作成立不是靠默契，而是靠约束。五个维度缺一不可——任何一条失效，构建系统即在对应维度崩塌。</p>
+        <div class="con-grid">
+          <div class="con-bl c1">
+            <div class="con-nm">几何约束</div>
+            <div class="con-def">所有组件必须在三维空间中无冲突共存，接口尺寸精确匹配，不存在体积穿插。</div>
+            <div class="con-items">
+              <div class="con-item">凸点间距、孔径与管道内径需精确配合，公差以0.1mm为单位</div>
+              <div class="con-item">旋转角必须为标准离散值（45°/90°及其整数倍）</div>
+              <div class="con-item">SNOT偏移需经计算验证，不能凭视觉估计</div>
+              <div class="con-item">跨系统桥接时需核算双方模数是否在接口处对齐</div>
+            </div>
+          </div>
+          <div class="con-bl c2">
+            <div class="con-nm">力学约束</div>
+            <div class="con-def">结构在重力与外力下保持稳定，连接可靠不脱落，活动件运动顺畅不卡死。</div>
+            <div class="con-items">
+              <div class="con-item">重心位置低于支撑底面积的几何中心，防止倾覆</div>
+              <div class="con-item">凸点摩擦力有上限——悬挑超约3-4砖后需加锁定件</div>
+              <div class="con-item">齿轮比设计需考虑反向锁死风险</div>
+              <div class="con-item">薄板件跨度超过8砖后需在中段增加支撑</div>
+            </div>
+          </div>
+          <div class="con-bl c3">
+            <div class="con-nm">视觉约束</div>
+            <div class="con-def">整体观感在比例、色彩、形态三个维度须达到内在一致性，叙事指向明确。</div>
+            <div class="con-items">
+              <div class="con-item">角色件（人仔）为比例基准，所有建筑与载具从此推导</div>
+              <div class="con-item">主色≤3种，强调色≤20%，否则视觉焦点失散</div>
+              <div class="con-item">几何语言不混用——有机曲面与直角几何不宜共存于同一主体</div>
+              <div class="con-item">纹理密度从场景前景到背景应逐层递减</div>
+            </div>
+          </div>
+          <div class="con-bl c4">
+            <div class="con-nm">语义约束</div>
+            <div class="con-def">场景传递的叙事信息需自洽，不存在相互矛盾的语义信号，可被观众正确解读。</div>
+            <div class="con-items">
+              <div class="con-item">语义件类型与场景主题须匹配</div>
+              <div class="con-item">色彩语义与形态语义不得冲突（如棕色金属结构）</div>
+              <div class="con-item">角色件数量与位置须指向叙事焦点，不能均等分布</div>
+              <div class="con-item">场景"可读顺序"（前景→中景→背景）需经设计，非随机</div>
+            </div>
+          </div>
+        </div>
+        <div class="con-rev">
+          <div>
+            <div class="con-rev-h">可逆性约束 · 乐高哲学的根本</div>
+            <div class="con-rev-p">所有组合都是临时的，所有零件都可无损拆卸，所有方案都可重组演化。这不是妥协，而是乐高体系区别于其他积木系统的核心价值主张。可逆性赋予系统永续生命力，也是下游迭代构建的设计前提。</div>
+            <ul class="con-rev-ul">
+              <li class="con-rev-li">连接力有上限——扣合力的设计上限确保可手动拆卸</li>
+              <li class="con-rev-li">零件无损——每次拆装后零件保持功能完整</li>
+              <li class="con-rev-li">重组可能性——任何拆解后的零件集合都可形成新的有效组合</li>
+              <li class="con-rev-li">设计终态是假设——任何"完成"都只是当前演化阶段的快照</li>
+            </ul>
+          </div>
+          <div class="rev-cycle">
+            <div class="rev-box">设计</div><div class="rev-ar">⇄</div>
+            <div class="rev-box">构建</div><div class="rev-ar">⇄</div>
+            <div class="rev-box">验证</div><div class="rev-ar">⇄</div>
+            <div class="rev-box">拆解</div><div class="rev-ar">⇄</div>
+            <div class="rev-box">重组</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mc-step" id="mc4">
+      <div class="mc-dot"></div>
+      <div class="mc-hdr" onclick="toggleMC('mc4')">
+        <span class="mc-n">04</span>
+        <span class="mc-nm">配合规则</span>
+        <span class="mc-q">在约束内应该如何做决策 · 七条协作准则</span>
+        <span class="mc-tog">展开 ↓</span>
+      </div>
+      <div class="mc-body">
+        <div class="ctype rule">规则 = 设计准则 · 违反导致低效或后期大量返工</div>
+        <p class="mc-intro">约束描述系统边界条件；规则描述在约束内如何有效协同。两者不可混用——约束违反导致系统失效，规则违反导致设计低效。</p>
+        <div class="rules-grid">
+          <div class="rule-card">
+            <div class="rule-n">R01</div><div class="rule-nm">主从规则</div>
+            <div class="rule-def">每个组合单元有且仅有一个主结构件作为基准，其他所有组件相对于主件定位，而非互相引用。</div>
+            <div class="rule-val"><strong>设计价值：</strong>确保拆解任何单一组件不会导致整体坍塌，降低局部修改的连锁影响。</div>
+            <div class="rule-trig">返工触发：移除某"非主要"组件时，3个以上组件随之脱落</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-n">R02</div><div class="rule-nm">层次隔离规则</div>
+            <div class="rule-def">结构层、功能层、表皮层之间不直接依赖，允许独立替换各层而不影响其他层。</div>
+            <div class="rule-val"><strong>设计价值：</strong>可以在不重建骨架的前提下重新配色或更换外观，大幅降低方案迭代成本。</div>
+            <div class="rule-trig">返工触发：调整表皮件颜色时需拆除超过2层结构砖</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-n">R03</div><div class="rule-nm">接口最少化规则</div>
+            <div class="rule-def">两个模块之间的连接点数量应最小化（通常2–4个），同时满足力学稳定性要求，避免过度约束。</div>
+            <div class="rule-val"><strong>设计价值：</strong>减少模块间的依赖程度，允许两个模块独立拆卸与重组，提高可逆性。</div>
+            <div class="rule-trig">返工触发：分离两个独立模块时需拆除超过8个连接点</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-n">R04</div><div class="rule-nm">关键路径优先规则</div>
+            <div class="rule-def">构建顺序应优先完成对后续所有步骤有约束的关键路径——通常是地基、主体骨架和比例基准件。</div>
+            <div class="rule-val"><strong>设计价值：</strong>避免因后期发现关键结构尺寸错误，导致已完成的大量细节工作全部废弃。</div>
+            <div class="rule-trig">返工触发：细节完成后发现主体骨架存在比例错误，必须推倒重建</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-n">R05</div><div class="rule-nm">模块边界清晰规则</div>
+            <div class="rule-def">每个功能模块有明确的物理边界，模块内部的组件调整不影响边界外的其他模块。</div>
+            <div class="rule-val"><strong>设计价值：</strong>支持并行构建多个子模块，减少协调成本。是可逆性约束在组织层面的具体实现。</div>
+            <div class="rule-trig">返工触发：修改某模块内部时，发现必须同时修改相邻模块</div>
+          </div>
+          <div class="rule-card">
+            <div class="rule-n">R06</div><div class="rule-nm">反馈闭环规则</div>
+            <div class="rule-def">每个构建阶段完成后，必须从观察者角度进行全局验证，将验证结果作为下一阶段的输入，而非单向推进。</div>
+            <div class="rule-val"><strong>设计价值：</strong>使每个阶段的局部决策都能受到全局语境的校正，避免局部最优导致全局失调。</div>
+            <div class="rule-trig">返工触发：方案"完成"后首次全局审视，发现多处显著问题</div>
+          </div>
+          <div class="rule-card" style="grid-column:1/-1">
+            <div class="rule-n">R07</div><div class="rule-nm">场景焦点一致规则</div>
+            <div class="rule-def">整个场景的结构设计、色彩分配、语义件放置，须共同指向同一个叙事焦点，不允许多个叙事核心同时竞争观众注意力。</div>
+            <div class="rule-val"><strong>设计价值：</strong>确保场景有明确的"第一眼"吸引点，建立稳定的叙事层次，避免视觉混乱。</div>
+            <div class="rule-trig">返工触发：询问他人"这个场景的主体是什么"时，得到3个以上不同答案</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-output fu">OUTPUT → 中游方法层输出的是<strong>执行逻辑</strong>：有职责分工的组件集合 · 层级化的组织结构 · 五维约束空间 · 七条协作准则。下游输出层将执行逻辑转化为实际构建。</div>
+</section>
+
+<!-- 04 DOWNSTREAM -->
+<div class="ldiv dn"></div>
+<section id="downstream">
+  <span class="sec-num fu">04 / DOWNSTREAM OUTPUT</span>
+  <h2 class="sec-h fu">下游输出层</h2>
+  <p class="sec-mandate dn fu">从局部试做到完整场景 · 并判断它是否成立</p>
+  <p class="sec-lead fu">上游定义了空间，中游给出了方法，下游回答：在实际构建中，如何将方法转化为场景，并判断这个场景是否成立。这层是闭环而非瀑布——任何验证发现的问题都可以触发对上游的返回。</p>
+
+  <h3 class="fu" style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.1em;margin-bottom:6px;color:var(--muted)">迭代构建 · 闭环而非瀑布</h3>
+  <p class="fu" style="font-size:.7rem;font-family:'JetBrains Mono',monospace;color:rgba(0,166,80,.5);margin-bottom:18px;letter-spacing:.1em">↺ 非线性 · 各阶段均可反推前序 · 局部完成 → 全局验证 → 修正假设</p>
+
+  <div class="iter-wrap">
+    <div class="iter-steps fu">
+      <div class="iter-step">
+        <div class="is-n">01</div>
+        <div class="is-bd">
+          <div class="is-nm">主题设定</div>
+          <div class="is-desc">确定叙事主题、时代背景、情感基调与核心冲突。主题定义构建方向，决定子系统选择与语义件类型的初始范围。</div>
+          <div class="is-trig">功能模块完成后，主题可能被精化或替换</div>
+        </div>
+      </div>
+      <div class="iter-step">
+        <div class="is-n">02</div>
+        <div class="is-bd">
+          <div class="is-nm">比例假设</div>
+          <div class="is-desc">以角色件（人仔）为基准，建立整体尺度假设。确定建筑高度、载具体量、地面范围的初始估计值。这是"假设"而非最终决定，后续构建将持续校正。</div>
+          <div class="is-trig">主体结构完成后比例感与预期不符，通常需要缩小整体规模</div>
+        </div>
+      </div>
+      <div class="iter-step">
+        <div class="is-n">03</div>
+        <div class="is-bd">
+          <div class="is-nm">子系统选择 · 供件核查</div>
+          <div class="is-desc">根据主题与功能需求选择子系统组合，同时进行初步供件核查——确认所需颜色版本的关键零件在库存或市场中可获得。此步骤将现实可行性引入设计前期。</div>
+          <div class="is-trig">关键零件供货不足，需返回调整主题或颜色方案</div>
+        </div>
+      </div>
+      <div class="iter-step">
+        <div class="is-n">04</div>
+        <div class="is-bd">
+          <div class="is-nm">局部模块试做</div>
+          <div class="is-desc">在进入整体布局前，先构建1–2个关键局部模块，验证所选技法与材料是否能实现预期效果。试做的结论会修正整体方案。</div>
+          <div class="is-trig">局部试做验证失败，需返回重新选择组织形式或连接方案</div>
+        </div>
+      </div>
+      <div class="iter-step">
+        <div class="is-n">05</div>
+        <div class="is-bd">
+          <div class="is-nm">整体布局 · 结构验证</div>
+          <div class="is-desc">完成主体骨架，建立整体空间布局。进行结构验证——以力学约束为标准检查承重稳定性、悬挑可靠性与连接强度。结构验证通过后方可进入表皮阶段。</div>
+          <div class="is-trig">骨架完成后比例失衡（通常偏大），需返回缩减规模</div>
+        </div>
+      </div>
+      <div class="iter-step">
+        <div class="is-n">06</div>
+        <div class="is-bd">
+          <div class="is-nm">细节氛围 · 色彩验证</div>
+          <div class="is-desc">添加表皮件、语义件与色彩强调。进行色彩验证——检查主色分布是否符合聚焦规则，语义件是否与主题一致，整体色调是否实现了预期叙事编码。</div>
+          <div class="is-trig">色彩发散或语义矛盾，需局部替换零件颜色或更换语义件类型</div>
+        </div>
+      </div>
+      <div class="iter-step">
+        <div class="is-n">07</div>
+        <div class="is-bd">
+          <div class="is-nm">角色布置 · 叙事验证</div>
+          <div class="is-desc">放入人仔与动物，进行角色验证——检查角色与场景的尺度关系是否正确，角色位置是否激活了预期的叙事焦点，场景是否已具备"可读顺序"。</div>
+          <div class="is-trig">人仔放入后空间尺度冲突（如门洞太窄），需返回修改结构件尺寸</div>
+        </div>
+      </div>
+      <div class="iter-step">
+        <div class="is-n">08</div>
+        <div class="is-bd">
+          <div class="is-nm">可逆性验证 · 进入评价</div>
+          <div class="is-desc">执行可逆性验证——确认主要模块可独立拆卸，无循环依赖。可逆性验证通过后，方案进入"当前阶段完成"状态，并以九项评价指标进行系统判定。</div>
+          <div class="is-trig" style="color:rgba(0,166,80,.6)">当前阶段完成 ≠ 终态 · 可逆性保证任意时刻均可重新演化</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="iter-side fu">
+      <div class="is-side-ttl">典型返工触发点</div>
+      <div class="is-side-items">
+        <div class="is-side-item"><div class="is-side-n">T1</div><div class="is-side-nm">模块成立但比例失衡 → 返回 02</div></div>
+        <div class="is-side-item"><div class="is-side-n">T2</div><div class="is-side-nm">功能实现但结构变脆 → 返回 05</div></div>
+        <div class="is-side-item"><div class="is-side-n">T3</div><div class="is-side-nm">角色进入后尺度冲突 → 返回 05</div></div>
+        <div class="is-side-item"><div class="is-side-n">T4</div><div class="is-side-nm">外观完成后色彩发散 → 返回 06</div></div>
+        <div class="is-side-item"><div class="is-side-n">T5</div><div class="is-side-nm">方案成立但供件不足 → 返回 03</div></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="fu" style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.1em;margin:44px 0 10px;color:var(--muted)">评价标准 · 系统判定，不是审美打分</h3>
+  <div class="eval-man fu">评价不是主观打分，而是<strong>系统判定</strong>。九项指标各有明确的判定说明与失效表现，可用于方案自审与迭代改进。任何一项低分都指向具体的返工方向。</div>
+  <div class="eval-grid fu">
+    <div class="eval-card">
+      <div class="eval-top"><span>系统适配度</span><span class="eval-en">E1</span></div>
+      <div class="eval-def">所选子系统组合是否与主题功能需求匹配。跨系统桥接是否有明确的接口转接方案，而非强行凑合。</div>
+      <div class="eval-fail">使用了某子系统但该子系统的优势特性在方案中完全未被利用。</div>
+    </div>
+    <div class="eval-card">
+      <div class="eval-top"><span>接口效率</span><span class="eval-en">E2</span></div>
+      <div class="eval-def">连接件的使用是否达到最少化原则：同等稳定性下，使用更少的接口点，避免过度约束。</div>
+      <div class="eval-fail">相邻模块通过大面积凸点全面接触，无法在不破坏双方的前提下分离。</div>
+    </div>
+    <div class="eval-card">
+      <div class="eval-top"><span>结构稳定性</span><span class="eval-en">E3</span></div>
+      <div class="eval-def">结构在预期展示条件下（包括搬运振动）保持形态完整，无零件自然脱落，重心在支撑范围内。</div>
+      <div class="eval-fail">平放展示时稳定，但竖立时因重心过高而倾倒；或悬挑区域在自重下缓慢下沉。</div>
+    </div>
+    <div class="eval-card">
+      <div class="eval-top"><span>可逆重构性</span><span class="eval-en">E4</span></div>
+      <div class="eval-def">主要模块是否可独立拆卸与替换，拆卸过程是否不损坏其他模块，所有零件拆卸后是否可无损复用。</div>
+      <div class="eval-fail">拆除某附属装饰件时，需连带移除5个以上的结构件；或零件拆卸后出现变形。</div>
+    </div>
+    <div class="eval-card">
+      <div class="eval-top"><span>视觉一致性</span><span class="eval-en">E5</span></div>
+      <div class="eval-def">整体比例是否以角色件为基准统一推导；各模块的几何语言（硬朗/有机）是否保持内部一致。</div>
+      <div class="eval-fail">场景中某建筑门洞高度仅为1.5个人仔高度；或相邻模块几何语言相互矛盾。</div>
+    </div>
+    <div class="eval-card">
+      <div class="eval-top"><span>色彩一致性</span><span class="eval-en">E6</span></div>
+      <div class="eval-def">主色数量是否在3种以内；色彩分布是否符合聚焦规则；内部色与外部色是否保持层次隔离。</div>
+      <div class="eval-fail">从正面观察时可见5种以上不同颜色且无明显主次；或内部结构颜色从接缝处大量渗出。</div>
+    </div>
+    <div class="eval-card">
+      <div class="eval-top"><span>叙事可读性</span><span class="eval-en">E7</span></div>
+      <div class="eval-def">场景是否有明确的叙事焦点；观察者是否能在3秒内理解场景的主要内容与故事语境。</div>
+      <div class="eval-fail">向5位不同观察者询问"这是什么场景"，得到3个以上互不相关的答案。</div>
+    </div>
+    <div class="eval-card">
+      <div class="eval-top"><span>零件经济性</span><span class="eval-en">E8</span></div>
+      <div class="eval-def">方案是否在达到效果的前提下使用了最少数量的零件；是否存在可以用更通用零件替代稀有零件的改进空间。</div>
+      <div class="eval-fail">某区域使用了大量稀有专用件，而通过不同组织方式可以用常见件实现相同效果。</div>
+    </div>
+    <div class="eval-card">
+      <div class="eval-top"><span>模块复用潜力</span><span class="eval-en">E9</span></div>
+      <div class="eval-def">方案中的关键模块是否具有通用性，可在不同场景中被复用或作为其他方案的参考模板。</div>
+      <div class="eval-fail">所有模块都高度定制化，任何模块脱离此特定场景后便无独立意义。</div>
+    </div>
+  </div>
+
+  <div class="sec-output fu">OUTPUT → 下游输出层输出的是<strong>当前阶段的完成状态</strong>：已迭代收敛的场景方案 · 九维系统评价结果 · 可无损拆解并重组的零件集合。这不是终态。</div>
+</section>
+
+<!-- 05 CONCLUSION -->
+<div class="ldiv"></div>
+<div id="conclusion">
+  <div class="conc-f">
+    <div class="cf-pre fu">05 / CONCLUSION · 总结</div>
+    <div class="cf-text fu">
+      乐高的本质不是拼装，而是在<strong>约束空间</strong>内进行<strong>模块化组织</strong>、<strong>可逆重构</strong>与<strong>场景表达</strong>。
+    </div>
+  </div>
+  <div class="conc-cards">
+    <div class="conc-card fu">
+      <div class="conc-tag up">上游 · 约束系统</div>
+      <div class="conc-ttl">可行空间</div>
+      <div class="conc-body">子系统、模数规范与色彩系统共同构成<strong>先决约束</strong>，在构建开始前就已定义合法边界。违反上游约束，方案在物理或叙事层面不成立。上游不是知识储备，是设计前提。</div>
+    </div>
+    <div class="conc-card fu">
+      <div class="conc-tag mid">中游 · 构建系统</div>
+      <div class="conc-ttl">执行逻辑</div>
+      <div class="conc-body">组件分类、组织形式、协作约束与配合规则构成<strong>方法链</strong>。约束（成立底线）与规则（设计准则）明确区分：违反约束导致系统失效，违反规则导致后期大量返工。</div>
+    </div>
+    <div class="conc-card fu">
+      <div class="conc-tag dn">下游 · 叙事系统</div>
+      <div class="conc-ttl">验证与输出</div>
+      <div class="conc-body">迭代构建是闭环而非瀑布。评价标准是系统判定而非审美打分。任何完成状态都只是当前演化阶段的<strong>快照</strong>。可逆性保证整个系统可以在任意时刻重新演化。</div>
+    </div>
+  </div>
+  <div class="conc-final">
+    <div class="cf-final fu">乐高不是零件堆积，而是由约束空间、构造方法与验证机制共同构成的<strong>可逆重构系统</strong>。<br>任何完成状态都只是当前演化阶段的快照。</div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+// Nav
+const navLinks=document.querySelectorAll('.nav-link');
+const secs=[...document.querySelectorAll('#overview,#upstream,#midstream,#downstream,#conclusion')];
+function upNav(){
+  const y=window.scrollY+70;
+  let a=0;secs.forEach((s,i)=>{if(s.offsetTop<=y)a=i});
+  navLinks.forEach((l,i)=>l.classList.toggle('active',i===a));
+}
+window.addEventListener('scroll',upNav,{passive:true});
+navLinks.forEach(l=>l.addEventListener('click',e=>{e.preventDefault();const id=l.getAttribute('href').slice(1);document.getElementById(id)?.scrollIntoView({behavior:'smooth'})}));
+
+// Fade
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')})},{threshold:.07,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.fu').forEach(el=>obs.observe(el));
+
+// Method chain
+function toggleMC(id){
+  const st=document.getElementById(id);
+  const isOpen=st.classList.contains('open');
+  document.querySelectorAll('.mc-step').forEach(s=>{
+    s.classList.remove('open');
+    const t=s.querySelector('.mc-tog');if(t)t.textContent='展开 ↓';
+  });
+  if(!isOpen){
+    st.classList.add('open');
+    const t=st.querySelector('.mc-tog');if(t)t.textContent='收起 ↑';
+  }
+}
+</script>
+</body>
+</html>

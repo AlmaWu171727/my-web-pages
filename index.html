@@ -77,7 +77,8 @@
     .meta,
     .hint,
     .ticket,
-    .card-no {
+    .card-no,
+    .slug {
       font-family: "IBM Plex Mono", monospace;
     }
     .eyebrow {
@@ -198,9 +199,20 @@
       line-height: 1.25;
     }
     .meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-size: 13px;
       letter-spacing: 0.02em;
       color: var(--muted);
+    }
+    .slug {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(86, 64, 41, 0.12);
+      background: rgba(255, 255, 255, 0.45);
+      font-size: 12px;
+      color: #7a624f;
     }
     .arrow {
       font-size: 26px;
@@ -251,27 +263,27 @@
       </div>
     </section>
     <div class="list">
-      <a class="card" href="./88888.html">
+      <a class="card" href="./exam-prep-engine-v3.html">
         <div class="card-no">01</div>
         <div>
           <div class="name">公考智能备考引擎——设计文档 v3.0</div>
-          <div class="meta">88888.html</div>
+          <div class="meta"><span class="slug">exam-prep-engine-v3.html</span><span>更正式的项目路径</span></div>
         </div>
         <div class="arrow">↗</div>
       </a>
-      <a class="card" href="./legao.html">
+      <a class="card" href="./lego-construction-system.html">
         <div class="card-no">02</div>
         <div>
           <div class="name">乐高构建体系解析</div>
-          <div class="meta">legao.html</div>
+          <div class="meta"><span class="slug">lego-construction-system.html</span><span>保留作品感，也更像正式页面</span></div>
         </div>
         <div class="arrow">↗</div>
       </a>
-      <a class="card" href="./openmaic-v3.html">
+      <a class="card" href="./ai-class-comes-alive.html">
         <div class="card-no">03</div>
         <div>
           <div class="name">一堂AI课是怎么活起来的</div>
-          <div class="meta">openmaic-v3.html</div>
+          <div class="meta"><span class="slug">ai-class-comes-alive.html</span><span>从内容主题直接落到路径名</span></div>
         </div>
         <div class="arrow">↗</div>
       </a>

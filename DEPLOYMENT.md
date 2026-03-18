@@ -7,8 +7,9 @@
 
 ## 当前页面
 
-- `88888.html`
-- `openmaic-v3.html`
+- `exam-prep-engine-v3.html`
+- `lego-construction-system.html`
+- `ai-class-comes-alive.html`
 - `index.html`
 
 ## 同步规则
