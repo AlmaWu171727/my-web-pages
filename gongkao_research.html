@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公考用户调研系统</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans SC', 'Inter', -apple-system, sans-serif;
+  background: #f0f2f5;
+  color: #1d2129;
+  -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+:root {
+  --bg: #f0f2f5;
+  --white: #ffffff;
+  --border: #e4e7ed;
+  --border-sm: #f0f0f0;
+  --t1: #1d2129;
+  --t2: #4e5969;
+  --t3: #86909c;
+  --t4: #c9cdd4;
+  --pri: #165dff;
+  --pri-bg: #e8f3ff;
+  --pri-tx: #003cb3;
+  --suc: #00b42a;
+  --suc-bg: #e8ffea;
+  --suc-tx: #005714;
+  --warn: #ff7d00;
+  --warn-bg: #fff7e8;
+  --warn-tx: #7d3a00;
+  --dan: #f53f3f;
+  --dan-bg: #ffece8;
+  --dan-tx: #7d0000;
+  --pur: #722ed1;
+  --pur-bg: #f5e8ff;
+  --pur-tx: #3d0085;
+  --radius: 6px;
+  --radius-lg: 8px;
+  --sh: 0 1px 4px rgba(0,0,0,0.06);
+  --sh-md: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+/* ── Header ── */
+.header {
+  height: 56px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  flex-shrink: 0;
+  box-shadow: var(--sh);
+  z-index: 100;
+  position: relative;
+}
+.logo {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--t1);
+  margin-right: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo-dot {
+  width: 8px; height: 8px;
+  background: var(--pri);
+  border-radius: 2px;
+}
+.nav { display: flex; height: 56px; flex: 1; }
+.nav-item {
+  font-size: 13px;
+  color: var(--t3);
+  padding: 0 16px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .15s, border-color .15s;
+  user-select: none;
+  white-space: nowrap;
+}
+.nav-item:hover { color: var(--t2); }
+.nav-item.active { color: var(--pri); border-bottom-color: var(--pri); font-weight: 500; }
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+
+/* ── Buttons ── */
+.btn {
+  font-family: inherit;
+  font-size: 13px;
+  height: 32px;
+  padding: 0 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  transition: all .15s;
+}
+.btn-pri { background: var(--pri); color: #fff; border: 1px solid var(--pri); font-weight: 500; }
+.btn-pri:hover { opacity: .88; }
+.btn-def { background: var(--white); color: var(--t2); border: 1px solid var(--border); }
+.btn-def:hover { border-color: var(--pri); color: var(--pri); }
+.btn-ghost { background: transparent; color: var(--t3); border: none; padding: 0 8px; }
+.btn-ghost:hover { color: var(--dan); }
+
+/* ── Layout ── */
+.body { flex: 1; overflow: hidden; display: flex; }
+.pane { flex: 1; overflow-y: auto; display: none; }
+.pane.active { display: block; }
+
+/* ── Table pane ── */
+.pane-header {
+  padding: 20px 24px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.pane-title { font-size: 16px; font-weight: 600; color: var(--t1); }
+.pane-desc  { font-size: 12px; color: var(--t3); margin-top: 2px; }
+
+.toolbar {
+  margin: 0 24px 16px;
+  padding: 14px 16px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--sh);
+  display: grid;
+  grid-template-columns: minmax(220px, 1.4fr) repeat(3, minmax(0, 1fr)) auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.toolbar-field label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  color: var(--t3);
+}
+
+.toolbar-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--t3);
+  white-space: nowrap;
+}
+
+.toolbar-meta strong {
+  color: var(--t1);
+  font-weight: 600;
+}
+
+.tbl-card {
+  margin: 0 24px 24px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--sh);
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 1100px; }
+thead th {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--t3);
+  padding: 10px 12px;
+  background: #fafafa;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  white-space: nowrap;
+  letter-spacing: .02em;
+}
+thead th:first-child { padding-left: 20px; width: 36px; }
+thead th:last-child  { width: 32px; }
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-sm);
+  color: var(--t2);
+  vertical-align: top;
+  line-height: 1.5;
+}
+tbody td:first-child { padding-left: 20px; color: var(--t4); font-size: 11px; padding-top: 13px; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: #fafbff; }
+.c-name { font-weight: 500; color: var(--t1); white-space: nowrap; }
+.c-sm   { font-size: 12px; white-space: nowrap; color: var(--t2); }
+.c-note { max-width: 160px; font-size: 11px; color: var(--t3); line-height: 1.55; font-style: italic; }
+.c-group { font-size: 11px; font-weight: 500; color: var(--t4); letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; padding-top: 13px; }
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin: 1px 2px;
+  white-space: nowrap;
+  line-height: 1.6;
+}
+.tg-blue  { background: var(--pri-bg); color: var(--pri-tx); }
+.tg-red   { background: var(--dan-bg); color: var(--dan-tx); }
+.tg-grn   { background: var(--suc-bg); color: var(--suc-tx); }
+.tg-org   { background: var(--warn-bg); color: var(--warn-tx); }
+.tg-pur   { background: var(--pur-bg); color: var(--pur-tx); }
+.tg-gray  { background: #f2f3f5; color: var(--t3); }
+
+.del-btn {
+  width: 24px; height: 24px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  color: var(--t4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0;
+  transition: all .12s;
+  font-family: inherit;
+}
+tbody tr:hover .del-btn { opacity: 1; }
+.del-btn:hover { color: var(--dan); background: var(--dan-bg); }
+
+.empty-state {
+  padding: 72px 0;
+  text-align: center;
+  color: var(--t4);
+}
+.empty-state p:first-child { font-size: 13px; color: var(--t3); margin-bottom: 4px; }
+.empty-state p { font-size: 12px; }
+
+/* group-header rows */
+.group-sep td {
+  padding: 6px 12px 4px 20px;
+  background: #fafafa;
+  border-bottom: 1px solid var(--border-sm);
+  border-top: 1px solid var(--border-sm);
+}
+tbody tr.group-sep:first-child td { border-top: none; }
+
+/* ── Analytics pane ── */
+.ana-wrap { padding: 20px 24px 40px; }
+.ana-head { margin-bottom: 20px; }
+.ana-head .pane-title { margin-bottom: 3px; }
+
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 16px; }
+.kpi {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px 12px;
+  box-shadow: var(--sh);
+}
+.kpi-label { font-size: 12px; color: var(--t3); margin-bottom: 6px; }
+.kpi-val {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--t1);
+  line-height: 1;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+.kpi-val span { font-size: 14px; font-weight: 400; color: var(--t3); }
+.kpi-sub { font-size: 11px; color: var(--t4); margin-top: 5px; }
+
+.summary-card {
+  background: linear-gradient(135deg, #f7faff, #eef5ff);
+  border: 1px solid #d8e6ff;
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  box-shadow: var(--sh);
+  margin-bottom: 16px;
+}
+
+.summary-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.summary-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--t1);
+}
+
+.summary-sub {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--t3);
+  line-height: 1.6;
+}
+
+.summary-badge {
+  font-size: 11px;
+  color: var(--pri-tx);
+  background: var(--white);
+  border: 1px solid #cfe0ff;
+  border-radius: 999px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summary-item {
+  background: rgba(255,255,255,0.74);
+  border: 1px solid #dfe9ff;
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.summary-item-label {
+  font-size: 11px;
+  color: var(--t3);
+  margin-bottom: 6px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.summary-item strong {
+  display: block;
+  font-size: 13px;
+  color: var(--t1);
+  line-height: 1.5;
+}
+
+.summary-item span {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--t3);
+  line-height: 1.6;
+}
+
+/* chart grid */
+.chart-row { display: grid; gap: 12px; margin-bottom: 12px; }
+.cr2 { grid-template-columns: 1fr 1fr; }
+.cr3 { grid-template-columns: 1fr 1fr 1fr; }
+.cr-41 { grid-template-columns: 3fr 2fr; }
+
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  box-shadow: var(--sh);
+}
+.card-title { font-size: 13px; font-weight: 500; color: var(--t1); margin-bottom: 2px; }
+.card-sub   { font-size: 11px; color: var(--t3); margin-bottom: 14px; }
+
+/* persona cards */
+.persona-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+.p-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--sh);
+  cursor: pointer;
+  transition: box-shadow .15s, transform .15s;
+}
+.p-card:hover { box-shadow: var(--sh-md); transform: translateY(-1px); }
+.p-card-bar { height: 3px; }
+.p-card-body { padding: 14px 16px; }
+.p-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+.p-card-icon { font-size: 22px; line-height: 1; }
+.p-card-pct { font-size: 24px; font-weight: 600; font-family: 'Inter', sans-serif; }
+.p-card-name { font-size: 13px; font-weight: 500; color: var(--t1); margin-bottom: 3px; }
+.p-card-count { font-size: 12px; color: var(--t3); margin-bottom: 8px; }
+.p-card-desc { font-size: 12px; color: var(--t2); line-height: 1.65; }
+.p-card-link { font-size: 12px; color: var(--pri); margin-top: 10px; display: inline-flex; align-items: center; gap: 2px; }
+.p-card-dims {
+  padding: 10px 16px 12px;
+  border-top: 1px solid var(--border-sm);
+  background: #fafafa;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.p-dim { font-size: 11px; color: var(--t3); }
+.p-dim strong { color: var(--t2); font-weight: 500; }
+
+/* hyp table */
+.hyp-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--sh);
+  margin-bottom: 12px;
+}
+.hyp-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 20px;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--border-sm);
+}
+.hyp-row:last-child { border-bottom: none; }
+.hyp-head-row {
+  background: #fafafa;
+  padding: 9px 20px;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 20px;
+}
+.hyp-head-row span { font-size: 11px; font-weight: 500; color: var(--t3); letter-spacing: .04em; }
+.hyp-q { font-size: 12px; color: var(--t1); line-height: 1.5; }
+.hyp-src { font-size: 11px; color: var(--t4); }
+.hyp-pct { font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif; color: var(--t1); text-align: right; min-width: 44px; }
+.hyp-badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: center;
+}
+.hb-y { background: var(--suc-bg); color: var(--suc-tx); }
+.hb-p { background: var(--warn-bg); color: var(--warn-tx); }
+.hb-n { background: var(--dan-bg); color: var(--dan-tx); }
+.hb-w { background: #f2f3f5; color: var(--t3); }
+
+/* no data */
+.no-data { padding: 80px 0; text-align: center; }
+.no-data p { font-size: 13px; color: var(--t3); margin-bottom: 4px; }
+.no-data span { font-size: 12px; color: var(--t4); }
+
+/* ── Drill modal ── */
+.ov {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.38);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+.ov.show { display: flex; }
+.drill-box {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  width: 700px;
+  max-height: 84vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,.14);
+}
+.drill-hd {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  z-index: 10;
+}
+.drill-title { font-size: 16px; font-weight: 600; color: var(--t1); }
+.drill-sub   { font-size: 12px; color: var(--t3); margin-top: 3px; }
+.drill-body  { padding: 20px 24px 24px; }
+.drill-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; }
+.ds {
+  background: #fafafa;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+}
+.ds-n { font-size: 20px; font-weight: 600; font-family: 'Inter', sans-serif; color: var(--t1); }
+.ds-l { font-size: 11px; color: var(--t3); margin-top: 3px; }
+.drill-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.sec-label { font-size: 11px; font-weight: 500; color: var(--t2); letter-spacing: .04em; margin-bottom: 10px; text-transform: uppercase; }
+.bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.bar-lbl { font-size: 11px; color: var(--t3); width: 84px; text-align: right; flex-shrink: 0; line-height: 1.4; }
+.bar-tr { flex: 1; height: 8px; background: #f0f2f5; border-radius: 4px; overflow: hidden; }
+.bar-fl { height: 100%; border-radius: 4px; transition: width .4s ease; }
+.bar-vl { font-size: 11px; color: var(--t4); width: 20px; text-align: right; flex-shrink: 0; font-family: 'Inter', sans-serif; }
+.quotes { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.quote {
+  border-left: 3px solid var(--border);
+  padding: 10px 14px;
+  background: #fafafa;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.qt { font-size: 13px; color: var(--t1); line-height: 1.7; }
+.qa { font-size: 11px; color: var(--t4); margin-top: 5px; }
+.user-rows { display: flex; flex-direction: column; gap: 6px; }
+.user-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 12px;
+  border: 1px solid var(--border-sm);
+  border-radius: var(--radius);
+  background: #fafafa;
+}
+.ur-name { font-size: 13px; font-weight: 500; color: var(--t1); }
+.ur-meta { font-size: 11px; color: var(--t3); margin-top: 1px; }
+.ur-tags { display: flex; flex-wrap: wrap; gap: 3px; justify-content: flex-end; max-width: 200px; }
+
+/* ── Form modal ── */
+.form-ov { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 600; align-items: center; justify-content: center; }
+.form-ov.show { display: flex; }
+.form-box {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  width: 640px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 16px 48px rgba(0,0,0,.14);
+  display: flex;
+  flex-direction: column;
+}
+.form-hd {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.form-title { font-size: 15px; font-weight: 600; }
+.form-body { padding: 16px 24px; flex: 1; overflow-y: auto; }
+.form-sec { margin-bottom: 18px; }
+.form-sec-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--t3);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--border-sm);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px; }
+.form-row.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-row.full { grid-template-columns: 1fr; }
+.form-field label { font-size: 12px; color: var(--t3); display: block; margin-bottom: 4px; }
+input[type=text], input[type=date], select, textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--white);
+  color: var(--t1);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--pri);
+  box-shadow: 0 0 0 2px rgba(22,93,255,.08);
+}
+textarea { resize: vertical; min-height: 64px; line-height: 1.6; }
+.chip-wrap { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.chip {
+  font-family: inherit;
+  font-size: 12px;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  color: var(--t3);
+  background: var(--white);
+  user-select: none;
+  transition: all .12s;
+  line-height: 1.5;
+}
+.chip:hover { border-color: #99b3ff; color: var(--pri); }
+.chip.on { background: var(--pri-bg); color: var(--pri-tx); border-color: #99b3ff; }
+.chip.on-warn { background: var(--warn-bg); color: var(--warn-tx); border-color: #ffb366; }
+.chip.on-red { background: var(--dan-bg); color: var(--dan-tx); border-color: #ffb3b3; }
+.form-ft {
+  padding: 12px 24px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+@media (max-width: 1100px) {
+  .header {
+    height: auto;
+    padding: 14px 16px;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    height: auto;
+  }
+
+  .nav-item {
+    height: 40px;
+    padding: 0 12px;
+  }
+
+  .header-right {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .summary-grid,
+  .kpi-row,
+  .cr2,
+  .cr3,
+  .persona-row,
+  .drill-stats,
+  .drill-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  body {
+    height: auto;
+    min-height: 100vh;
+    overflow: auto;
+  }
+
+  .body,
+  .pane {
+    overflow: visible;
+  }
+
+  .pane-header,
+  .ana-wrap,
+  .tbl-card,
+  .toolbar {
+    margin-left: 12px;
+    margin-right: 12px;
+  }
+
+  .pane-header,
+  .ana-wrap {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .toolbar {
+    grid-template-columns: 1fr;
+    margin-top: 0;
+  }
+
+  .toolbar-meta,
+  .summary-head {
+    display: block;
+  }
+
+  .summary-badge {
+    display: inline-flex;
+    margin-top: 8px;
+  }
+
+  .form-box,
+  .drill-box {
+    width: calc(100vw - 24px);
+    max-height: 88vh;
+  }
+
+  .form-row,
+  .form-row.g3 {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="logo"><div class="logo-dot"></div>公考调研系统</div>
+  <nav class="nav">
+    <div class="nav-item active" onclick="showTab('records',this)">调研记录</div>
+    <div class="nav-item" onclick="showTab('analytics',this)">数据分析</div>
+  </nav>
+  <div class="header-right">
+    <span id="sync-status" style="font-size:12px;color:var(--t3);margin-right:4px">云端未连接</span>
+    <button class="btn btn-def" onclick="exportJSON()">导出 JSON</button>
+    <button class="btn btn-def" onclick="document.getElementById('import-file').click()">导入 JSON</button>
+    <button class="btn btn-pri" id="add-btn" onclick="openForm()">＋ 新增用户</button>
+  </div>
+</header>
+<input type="file" id="import-file" accept="application/json" style="display:none" onchange="importJSON(event)">
+
+<!-- Body -->
+<div class="body">
+
+  <!-- Tab: Records -->
+  <div class="pane active" id="pane-records">
+    <div class="pane-header">
+      <div>
+        <div class="pane-title">调研记录</div>
+        <div class="pane-desc">每行对应一位受访用户，字段对应 A1–A7 七个画像维度</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="toolbar-field">
+        <label>搜索</label>
+        <input type="text" id="search-input" placeholder="搜索姓名、原话、痛点、工具" oninput="renderTable()">
+      </div>
+      <div class="toolbar-field">
+        <label>目标明确度</label>
+        <select id="filter-goal" onchange="renderTable()">
+          <option value="">全部</option>
+          <option value="明确">明确</option>
+          <option value="大方向">大方向明确</option>
+          <option value="模糊">模糊</option>
+        </select>
+      </div>
+      <div class="toolbar-field">
+        <label>情绪状态</label>
+        <select id="filter-mood" onchange="renderTable()">
+          <option value="">全部</option>
+          <option value="稳定进取">稳定进取</option>
+          <option value="轻度焦虑">轻度焦虑</option>
+          <option value="中度焦虑">中度焦虑</option>
+          <option value="严重内耗">严重内耗</option>
+          <option value="心态崩了">心态崩了</option>
+        </select>
+      </div>
+      <div class="toolbar-field">
+        <label>备考阶段</label>
+        <select id="filter-times" onchange="renderTable()">
+          <option value="">全部</option>
+          <option value="首次备考">首次备考</option>
+          <option value="第2次">第2次</option>
+          <option value="第3次">第3次</option>
+          <option value="4–6次">4–6次</option>
+          <option value="7次以上">7次以上</option>
+        </select>
+      </div>
+      <div class="toolbar-meta">
+        <span>当前结果 <strong id="result-count">0</strong></span>
+        <button class="btn btn-def" onclick="resetFilters()">重置筛选</button>
+      </div>
+    </div>
+    <div class="tbl-card" style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>编号/姓名</th>
+            <th>日期</th>
+            <!-- Q1: 什么样的人 -->
+            <th>年龄段</th>
+            <th>学历</th>
+            <!-- Q2: 跑到了哪步 A2/A3 -->
+            <th>备考次数</th>
+            <th>上次成绩</th>
+            <th>目标考试</th>
+            <th>目标是否明确</th>
+            <!-- Q3: 用什么方式跑 A1/A4 -->
+            <th>每日时长</th>
+            <th>学习时段</th>
+            <th>硬约束</th>
+            <th>使用工具</th>
+            <!-- Q4: 痛点与期待 A5/A7 -->
+            <th>核心痛点</th>
+            <th>情绪状态</th>
+            <th>期待的资源</th>
+            <!-- 原话 -->
+            <th>访谈原话摘要</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="records-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tab: Analytics -->
+  <div class="pane" id="pane-analytics">
+    <div class="ana-wrap" id="ana-content"></div>
+  </div>
+
+</div>
+
+<!-- Form Modal -->
+<div class="form-ov" id="form-ov" onclick="formOvClick(event)">
+<div class="form-box">
+  <div class="form-hd">
+    <div class="form-title">新增用户调研记录</div>
+    <button class="btn btn-ghost" onclick="closeForm()" style="font-size:16px;padding:0 6px">✕</button>
+  </div>
+  <div class="form-body">
+
+    <!-- Q1: 什么样的人 -->
+    <div class="form-sec">
+      <div class="form-sec-title">① 什么样的人</div>
+      <div class="form-row g3">
+        <div class="form-field"><label>编号 / 姓名</label><input type="text" id="f-name" placeholder="用户01 或 匿名"></div>
+        <div class="form-field"><label>访谈日期</label><input type="date" id="f-date"></div>
+        <div class="form-field"><label>年龄段</label>
+          <select id="f-age"><option value="">选择</option><option>22岁以下</option><option>22–25岁</option><option>26–28岁</option><option>29–32岁</option><option>33岁以上</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>学历</label>
+          <select id="f-edu"><option value="">选择</option><option>专科</option><option>本科</option><option>硕士</option><option>博士</option></select></div>
+        <div class="form-field"><label>在职状态</label>
+          <select id="f-job"><option value="">选择</option><option>全职备考</option><option>在职备考</option><option>在校备考</option><option>其他</option></select></div>
+      </div>
+    </div>
+
+    <!-- Q2: 跑到了哪步 A2/A3 -->
+    <div class="form-sec">
+      <div class="form-sec-title">② 跑到了哪步（A2 备考经历 · A3 目标定义）</div>
+      <div class="form-row">
+        <div class="form-field"><label>备考次数</label>
+          <select id="f-times"><option value="">选择</option><option>首次备考</option><option>第2次</option><option>第3次</option><option>4–6次</option><option>7次以上</option></select></div>
+        <div class="form-field"><label>上次笔试成绩（行测+申论，可填"未参加"）</label>
+          <input type="text" id="f-score" placeholder="如：行测 67.5，申论 52"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-field"><label>目标考试</label>
+          <select id="f-exam"><option value="">选择</option><option>国考</option><option>省考</option><option>事业单位</option><option>其他</option><option>尚未确定</option></select></div>
+        <div class="form-field"><label>目标明确程度</label>
+          <select id="f-goal"><option value="">选择</option><option>明确（已定岗位/考试日期）</option><option>大方向明确（定了类型未定岗）</option><option>模糊（只是想考公）</option></select></div>
+      </div>
+    </div>
+
+    <!-- Q3: 用什么方式跑 A1/A4 -->
+    <div class="form-sec">
+      <div class="form-sec-title">③ 用什么方式在跑（A1 时间结构 · A4 硬边界）</div>
+      <div class="form-row">
+        <div class="form-field"><label>每日可用学习时长</label>
+          <select id="f-hours"><option value="">选择</option><option>＜1h</option><option>1–2h</option><option>2–4h</option><option>4–6h</option><option>6h+</option></select></div>
+        <div class="form-field"><label>主要学习时段</label>
+          <select id="f-slot"><option value="">选择</option><option>早晨（6–9点）</option><option>上午（9–12点）</option><option>下午（12–18点）</option><option>晚间（18–23点）</option><option>碎片化·无固定</option></select></div>
+      </div>
+      <div class="form-field" style="margin-bottom:10px">
+        <label>硬边界约束（多选·不可协商的现实限制）</label>
+        <div class="chip-wrap" id="chips-constraint">
+          <span class="chip" data-group="constraint">在职·时间受限</span>
+          <span class="chip" data-group="constraint">带娃·随时被中断</span>
+          <span class="chip" data-group="constraint">通勤·只能碎片</span>
+          <span class="chip" data-group="constraint">无网·线下为主</span>
+          <span class="chip" data-group="constraint">家庭经济压力大</span>
+          <span class="chip" data-group="constraint">无明显硬约束</span>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>使用工具（多选）</label>
+        <div class="chip-wrap" id="chips-tool">
+          <span class="chip" data-group="tool">粉笔</span>
+          <span class="chip" data-group="tool">华图</span>
+          <span class="chip" data-group="tool">腰果</span>
+          <span class="chip" data-group="tool">中公</span>
+          <span class="chip" data-group="tool">ChatGPT</span>
+          <span class="chip" data-group="tool">文心一言</span>
+          <span class="chip" data-group="tool">线下课</span>
+          <span class="chip" data-group="tool">无工具·自学</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4: 痛点与期待 A5/A7 -->
+    <div class="form-sec">
+      <div class="form-sec-title">④ 主要痛点 · 期待什么（A5 动机强度 · A7 学科先验）</div>
+      <div class="form-field" style="margin-bottom:10px">
+        <label>核心痛点（多选）</label>
+        <div class="chip-wrap" id="chips-pain">
+          <span class="chip" data-group="pain">行测提分难</span>
+          <span class="chip" data-group="pain">申论太玄学</span>
+          <span class="chip" data-group="pain">坚持不住·容易放弃</span>
+          <span class="chip" data-group="pain">不知道刷什么</span>
+          <span class="chip" data-group="pain">时间太少</span>
+          <span class="chip" data-group="pain">考试焦虑·情绪波动</span>
+          <span class="chip" data-group="pain">旧方法固化·无法突破</span>
+          <span class="chip" data-group="pain">岗位竞争没把握</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>情绪状态（单选）</label>
+          <div class="chip-wrap" id="chips-mood">
+            <span class="chip" data-group="mood">稳定进取</span>
+            <span class="chip" data-group="mood">轻度焦虑</span>
+            <span class="chip" data-group="mood">中度焦虑</span>
+            <span class="chip" data-group="mood">严重内耗</span>
+            <span class="chip" data-group="mood">心态崩了</span>
+          </div>
+        </div>
+        <div class="form-field">
+          <label>期待的资源 / 服务（多选）</label>
+          <div class="chip-wrap" id="chips-expect">
+            <span class="chip" data-group="expect">精准刷题路径</span>
+            <span class="chip" data-group="expect">申论批改反馈</span>
+            <span class="chip" data-group="expect">情绪陪练支持</span>
+            <span class="chip" data-group="expect">学习计划制定</span>
+            <span class="chip" data-group="expect">进度可视化</span>
+            <span class="chip" data-group="expect">错题归因分析</span>
+          </div>
+        </div>
+      </div>
+      <div class="form-row full" style="margin-top:4px">
+        <div class="form-field"><label>申论 AI 批改的真实反应（关键原话）</label>
+          <textarea id="f-shenl" placeholder='"感觉AI批的不准，不如老师那种针对性"'></textarea></div>
+      </div>
+      <div class="form-row full" style="margin-top:0">
+        <div class="form-field"><label>其他关键原话 / 补充发现</label>
+          <textarea id="f-note" placeholder="意外信息、超出预期的反应等"></textarea></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="form-ft">
+    <button class="btn btn-def" onclick="closeForm()">取消</button>
+    <button class="btn btn-pri" onclick="saveRecord()">保存记录</button>
+  </div>
+</div>
+</div>
+
+<!-- Drill Modal -->
+<div class="ov" id="drill-ov" onclick="drillOvClick(event)">
+  <div class="drill-box" id="drill-content"></div>
+</div>
+
+<script>
+const SKEY = 'gk_v6';
+const API_BASE = window.__API_BASE__ || '';
+let recordsCache = [];
+function ensureArray(v){ return Array.isArray(v) ? v.filter(Boolean) : []; }
+function normalizeRecord(record){
+  const r = record || {};
+  return {
+    ...r,
+    id: r.id || Date.now() + Math.random(),
+    name: r.name || '匿名',
+    date: r.date || '',
+    age: r.age || '',
+    edu: r.edu || '',
+    job: r.job || '',
+    times: r.times || '',
+    score: r.score || '',
+    exam: r.exam || '',
+    goal: r.goal || '',
+    hours: r.hours || '',
+    slot: r.slot || '',
+    constraint: ensureArray(r.constraint),
+    tool: ensureArray(r.tool),
+    pain: ensureArray(r.pain),
+    mood: r.mood || '',
+    expect: ensureArray(r.expect),
+    shenlQ: r.shenlQ || '',
+    note: r.note || '',
+    created_at: r.created_at || '',
+    updated_at: r.updated_at || ''
+  };
+}
+function normalizeRecords(records){ return ensureArray(records).map(normalizeRecord); }
+function loadLocal(){ try{ return normalizeRecords(JSON.parse(localStorage.getItem(SKEY)||'[]')); }catch(e){ return []; } }
+function persistLocal(d){ localStorage.setItem(SKEY, JSON.stringify(normalizeRecords(d))); }
+function setStatus(text, color){
+  const el = document.getElementById('sync-status');
+  if(!el) return;
+  el.textContent = text;
+  if(color) el.style.color = color;
+}
+async function fetchCloudRecords(){
+  const res = await fetch(`${API_BASE}/api/research-records`, { headers: { 'Accept': 'application/json' } });
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  const payload = await res.json();
+  return normalizeRecords(payload.records);
+}
+async function createCloudRecord(record){
+  const res = await fetch(`${API_BASE}/api/research-records`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(record)
+  });
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  const payload = await res.json();
+  return payload.record || record;
+}
+async function deleteCloudRecord(id){
+  const res = await fetch(`${API_BASE}/api/research-records`, {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id })
+  });
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+function downloadFile(filename, content, mimeType){
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+function exportJSON(){
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    version: 'v1',
+    records: recordsCache
+  };
+  downloadFile(`gongkao_research_export_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(payload, null, 2), 'application/json');
+}
+function importJSON(event){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const raw = JSON.parse(String(reader.result || '{}'));
+      const records = Array.isArray(raw) ? raw : raw.records;
+      if(!Array.isArray(records)) throw new Error('文件格式不正确');
+      if(!confirm(`将导入 ${records.length} 条记录，并覆盖当前本地数据，是否继续？`)){
+        event.target.value = '';
+        return;
+      }
+      recordsCache = normalizeRecords(records);
+      persistLocal(recordsCache);
+      renderTable();
+      if(document.getElementById('pane-analytics').classList.contains('active')) renderAnalytics();
+      alert(`导入成功：${records.length} 条记录`);
+    }catch(err){
+      alert('导入失败：JSON 文件格式不正确');
+      console.error(err);
+    }finally{
+      event.target.value = '';
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+/* ── chip state ── */
+let fs = { constraint:[], tool:[], pain:[], mood:'', expect:[] };
+
+document.querySelectorAll('.chip').forEach(c => {
+  c.addEventListener('click', () => {
+    const g = c.dataset.group;
+    if (g === 'mood') {
+      document.querySelectorAll('[data-group="mood"]').forEach(x => x.classList.remove('on','on-warn','on-red'));
+      c.classList.add(moodChipClass(c.textContent));
+      fs.mood = c.textContent;
+    } else {
+      const wasOn = c.classList.contains('on');
+      if (wasOn) { c.classList.remove('on','on-warn','on-red'); fs[g] = fs[g].filter(v => v !== c.textContent); }
+      else { c.classList.add('on'); fs[g].push(c.textContent); }
+    }
+  });
+});
+function moodChipClass(m){
+  if(m==='稳定进取') return 'on';
+  if(m.includes('轻度')||m.includes('中度')) return 'on-warn';
+  return 'on-red';
+}
+
+/* ── tabs ── */
+let chartRefs = {};
+function getFilteredRecords(){
+  const q = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+  const goal = document.getElementById('filter-goal')?.value || '';
+  const mood = document.getElementById('filter-mood')?.value || '';
+  const times = document.getElementById('filter-times')?.value || '';
+  return recordsCache.filter(r => {
+    if(goal && !(r.goal || '').includes(goal)) return false;
+    if(mood && r.mood !== mood) return false;
+    if(times && r.times !== times) return false;
+    if(!q) return true;
+    const haystack = [
+      r.name, r.note, r.shenlQ, r.score, r.exam, r.goal, r.hours, r.slot,
+      r.age, r.edu, r.job, r.mood, r.times,
+      ...ensureArray(r.constraint), ...ensureArray(r.tool), ...ensureArray(r.pain), ...ensureArray(r.expect)
+    ].join(' ').toLowerCase();
+    return haystack.includes(q);
+  });
+}
+function showTab(t, el){
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('pane-'+t).classList.add('active');
+  document.getElementById('add-btn').style.display = t==='records' ? '' : 'none';
+  if(t==='analytics') renderAnalytics();
+}
+function resetFilters(){
+  const ids = ['search-input','filter-goal','filter-mood','filter-times'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  renderTable();
+}
+
+/* ── form ── */
+function openForm(){
+  ['f-name','f-score','f-shenl','f-note'].forEach(id => document.getElementById(id).value='');
+  ['f-age','f-edu','f-job','f-times','f-exam','f-goal','f-hours','f-slot'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('f-date').valueAsDate = new Date();
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on','on-warn','on-red'));
+  fs = { constraint:[], tool:[], pain:[], mood:'', expect:[] };
+  document.getElementById('form-ov').classList.add('show');
+}
+function closeForm(){ document.getElementById('form-ov').classList.remove('show'); }
+function formOvClick(e){ if(e.target===document.getElementById('form-ov')) closeForm(); }
+
+function saveRecord(){
+  const times = document.getElementById('f-times').value;
+  const age   = document.getElementById('f-age').value;
+  if(!times&&!age){ alert('请至少填写备考次数或年龄段'); return; }
+  const rec = {
+    id: Date.now(),
+    name:       document.getElementById('f-name').value.trim()||'匿名',
+    date:       document.getElementById('f-date').value,
+    age:        document.getElementById('f-age').value,
+    edu:        document.getElementById('f-edu').value,
+    job:        document.getElementById('f-job').value,
+    times:      times,
+    score:      document.getElementById('f-score').value.trim(),
+    exam:       document.getElementById('f-exam').value,
+    goal:       document.getElementById('f-goal').value,
+    hours:      document.getElementById('f-hours').value,
+    slot:       document.getElementById('f-slot').value,
+    constraint: [...fs.constraint],
+    tool:       [...fs.tool],
+    pain:       [...fs.pain],
+    mood:       fs.mood,
+    expect:     [...fs.expect],
+    shenlQ:     document.getElementById('f-shenl').value.trim(),
+    note:       document.getElementById('f-note').value.trim(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+  saveRecordAsync(rec);
+}
+async function saveRecordAsync(rec){
+  try{
+    const saved = await createCloudRecord(rec);
+    recordsCache.push(saved);
+    persistLocal(recordsCache);
+    setStatus('已连接云端', 'var(--suc)');
+  }catch(err){
+    console.error(err);
+    recordsCache.push(rec);
+    persistLocal(recordsCache);
+    setStatus('云端失败，已保存本地', 'var(--warn)');
+    alert('云端保存失败，已先保存在本地浏览器。');
+  }
+  closeForm();
+  renderTable();
+  if(document.getElementById('pane-analytics').classList.contains('active')) renderAnalytics();
+}
+
+/* ── table ── */
+function moodTagCls(m){
+  if(!m) return 'tg-gray';
+  if(m==='稳定进取') return 'tg-grn';
+  if(m.includes('轻度')||m.includes('中度')) return 'tg-org';
+  return 'tg-red';
+}
+function goalTagCls(g){
+  if(!g) return 'tg-gray';
+  if(g.startsWith('明确')) return 'tg-grn';
+  if(g.startsWith('大方向')) return 'tg-org';
+  return 'tg-red';
+}
+function timesTagCls(t){
+  if(!t) return 'tg-gray';
+  if(t==='首次备考') return 'tg-blue';
+  if(t.includes('4–6')||t.includes('7次')) return 'tg-red';
+  return 'tg-gray';
+}
+
+function renderTable(){
+  const d = getFilteredRecords().slice().sort((a,b) => String(b.date || '').localeCompare(String(a.date || '')) || Number(b.id || 0) - Number(a.id || 0));
+  const tb = document.getElementById('records-tbody');
+  const countEl = document.getElementById('result-count');
+  if(countEl) countEl.textContent = `${d.length}/${recordsCache.length}`;
+  if(!d.length){
+    const emptyTitle = recordsCache.length ? '没有匹配的筛选结果' : '暂无调研记录';
+    const emptyDesc = recordsCache.length ? '试试清空筛选条件，或调整搜索关键词' : '点击右上角「新增用户」开始录入';
+    tb.innerHTML=`<tr><td colspan="18"><div class="empty-state"><p>${emptyTitle}</p><p>${emptyDesc}</p></div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = d.map((r,i) => `<tr>
+    <td>${i+1}</td>
+    <td class="c-name">${r.name}</td>
+    <td class="c-sm">${r.date}</td>
+    <td class="c-sm">${r.age||'—'}</td>
+    <td class="c-sm">${r.edu||'—'}</td>
+    <td><span class="tag ${timesTagCls(r.times)}">${r.times||'—'}</span></td>
+    <td class="c-sm" style="max-width:110px;white-space:normal;font-size:11px;color:var(--t3)">${r.score||'—'}</td>
+    <td class="c-sm">${r.exam||'—'}</td>
+    <td>${r.goal?`<span class="tag ${goalTagCls(r.goal)}" style="font-size:10px">${r.goal.split('（')[0]}</span>`:'—'}</td>
+    <td class="c-sm">${r.hours||'—'}</td>
+    <td class="c-sm" style="max-width:90px;white-space:normal;font-size:11px">${r.slot||'—'}</td>
+    <td>${r.constraint.slice(0,2).map(c=>`<span class="tag tg-pur" style="font-size:10px">${c}</span>`).join('')||'—'}</td>
+    <td>${r.tool.slice(0,3).map(t=>`<span class="tag tg-blue">${t}</span>`).join('')||'—'}</td>
+    <td>${r.pain.slice(0,2).map(p=>`<span class="tag tg-red">${p}</span>`).join('')||'—'}</td>
+    <td>${r.mood?`<span class="tag ${moodTagCls(r.mood)}">${r.mood}</span>`:'—'}</td>
+    <td>${r.expect.slice(0,2).map(e=>`<span class="tag tg-gray" style="font-size:10px">${e}</span>`).join('')||'—'}</td>
+    <td class="c-note">${r.shenlQ?`"${r.shenlQ.slice(0,36)}${r.shenlQ.length>36?'…':''}"`:r.note?r.note.slice(0,36):'—'}</td>
+    <td><button class="del-btn" onclick="delRec(${r.id})">✕</button></td>
+  </tr>`).join('');
+}
+async function delRec(id){
+  if(!confirm('删除这条记录？')) return;
+  try{
+    await deleteCloudRecord(id);
+    setStatus('已连接云端', 'var(--suc)');
+  }catch(err){
+    console.error(err);
+    setStatus('云端删除失败，已删除本地', 'var(--warn)');
+  }
+  recordsCache = recordsCache.filter(r=>r.id!==id);
+  persistLocal(recordsCache);
+  renderTable();
+  if(document.getElementById('pane-analytics').classList.contains('active')) renderAnalytics();
+}
+
+/* ── analytics ── */
+function cntS(arr){ const o={}; arr.forEach(v=>{if(v)o[v]=(o[v]||0)+1}); return o; }
+function cntM(data,key){ const o={}; data.forEach(r=>(r[key]||[]).forEach(v=>{o[v]=(o[v]||0)+1})); return o; }
+function pct(n,total){ return total?Math.round(n/total*100):0; }
+
+/* ── Persona definitions (based on A1/A2/A3/A4) ── */
+const PERSONAS = [
+  {
+    id:'ready',
+    bar:'#00b42a',
+    pctColor:'#005714',
+    label:'有时间有方向',
+    icon:'🎯',
+    desc:'目标明确且时间充裕，可直接进入系统化备考计划。核心需求是精准题目路径和进度可视化。',
+    dims:'A3目标明确 · A1时间充足 · 方向感强',
+    match: r => {
+      const goalOk = r.goal && r.goal.startsWith('明确');
+      const timeOk = r.hours && (r.hours.includes('4')||r.hours.includes('6'));
+      return goalOk || (timeOk && r.goal && !r.goal.includes('模糊'));
+    }
+  },
+  {
+    id:'searching',
+    bar:'#165dff',
+    pctColor:'#003cb3',
+    label:'有意愿·找方法中',
+    icon:'🔍',
+    desc:'动机足够但方向未定或方法错位，多工具并用效果感知差。需要路径引导和整合型体验。',
+    dims:'A3目标模糊 · A5动机充足 · A2经验不足',
+    match: r => {
+      const goalVague = !r.goal || r.goal.includes('模糊') || r.goal.includes('大方向');
+      const multiTool = r.tool && r.tool.length >= 2;
+      const lostPain  = r.pain && r.pain.includes('不知道刷什么');
+      return goalVague || multiTool || lostPain;
+    }
+  },
+  {
+    id:'stuck',
+    bar:'#f53f3f',
+    pctColor:'#7d0000',
+    label:'约束重·需纠偏',
+    icon:'⚡',
+    desc:'多次备考后旧方法固化，或A4硬边界重导致高疲态。应优先做方法审查，而非直接给计划。',
+    dims:'A2多战·A4硬约束重 · 纠偏优先',
+    match: r => {
+      const multiTimes = r.times && (r.times.includes('4')|| r.times.includes('7'));
+      const hardConst  = r.constraint && r.constraint.filter(c=>c!=='无明显硬约束').length >= 2;
+      const stuckPain  = r.pain && r.pain.includes('旧方法固化·无法突破');
+      const moodBad    = r.mood && (r.mood.includes('严重')||r.mood.includes('崩'));
+      return multiTimes || hardConst || stuckPain || moodBad;
+    }
+  }
+];
+
+function destroyCharts(){
+  Object.values(chartRefs).forEach(c=>{ try{c.destroy()}catch(e){} });
+  chartRefs={};
+}
+
+function makeHBar(id, counts, color){
+  const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const labels = sorted.map(x=>x[0]);
+  const data   = sorted.map(x=>x[1]);
+  chartRefs[id] = new Chart(document.getElementById(id),{
+    type:'bar',
+    data:{ labels, datasets:[{ data, backgroundColor: color, borderRadius:3, borderSkipped:false }] },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ display:false } },
+      scales:{
+        x:{ grid:{color:'#f0f2f5'}, ticks:{font:{size:11},color:'#86909c',precision:0}, border:{dash:[3,3]} },
+        y:{ grid:{display:false}, ticks:{font:{size:11},color:'#4e5969'} }
+      }
+    }
+  });
+}
+function makePie(id, counts){
+  const COLS = ['#165dff','#00b42a','#ff7d00','#f53f3f','#722ed1','#0fc6c2','#f7ba1e'];
+  const entries = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  chartRefs[id] = new Chart(document.getElementById(id),{
+    type:'doughnut',
+    data:{
+      labels: entries.map(x=>x[0]),
+      datasets:[{ data:entries.map(x=>x[1]), backgroundColor:COLS.slice(0,entries.length), borderWidth:2, borderColor:'#fff', hoverOffset:4 }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'60%',
+      plugins:{
+        legend:{ position:'right', labels:{ font:{size:11}, color:'#4e5969', padding:10, boxWidth:10, boxHeight:10 } }
+      }
+    }
+  });
+}
+
+function renderAnalytics(){
+  destroyCharts();
+  const d = recordsCache;
+  const wrap = document.getElementById('ana-content');
+  if(!d.length){
+    wrap.innerHTML=`<div class="no-data"><p>暂无数据</p><span>请先在「调研记录」录入用户</span></div>`;
+    return;
+  }
+  const n = d.length;
+
+  /* KPI */
+  const goalClearN = d.filter(r=>r.goal&&r.goal.startsWith('明确')).length;
+  const multiTimesN= d.filter(r=>r.times&&(r.times.includes('4')||r.times.includes('7'))).length;
+  const highAnxN   = d.filter(r=>r.mood&&(r.mood.includes('严重')||r.mood.includes('崩'))).length;
+  const multiToolN = d.filter(r=>r.tool&&r.tool.length>=2).length;
+  const hardConN   = d.filter(r=>r.constraint&&r.constraint.filter(c=>c!=='无明显硬约束').length>=1).length;
+
+  /* counts */
+  const painC  = cntM(d,'pain');
+  const toolC  = cntM(d,'tool');
+  const moodC  = cntS(d.map(r=>r.mood).filter(Boolean));
+  const timesC = cntS(d.map(r=>r.times).filter(Boolean));
+  const hoursC = cntS(d.map(r=>r.hours).filter(Boolean));
+  const expectC= cntM(d,'expect');
+  const constC = cntM(d,'constraint');
+
+  /* personas */
+  const pData = PERSONAS.map(p=>({ ...p, users: d.filter(p.match) }));
+  const catN  = pData.reduce((s,p)=>s+p.users.length,0);
+  const otherN= Math.max(0, n - catN);
+
+  /* hyps */
+  const hyps = [
+    { q:'H1 · 目标模糊是最大障碍（A3）', src:'目标明确程度字段', n: d.filter(r=>!r.goal||r.goal.includes('模糊')).length, total:n },
+    { q:'H2 · 申论是仅次于行测的高频痛点（A7）', src:'核心痛点', n: d.filter(r=>r.pain&&r.pain.includes('申论太玄学')).length, total:n },
+    { q:'H3 · 情绪焦虑是半途放弃的核心原因（A5）', src:'情绪状态 + 痛点', n: highAnxN + d.filter(r=>r.pain&&r.pain.includes('坚持不住·容易放弃')).length, total: n },
+    { q:'H4 · 多战用户旧方法固化，需纠偏优先（A2）', src:'备考次数', n: multiTimesN, total:n },
+    { q:'H5 · 用户工具分散，缺乏整合体验（A1/A4）', src:'使用工具', n: multiToolN, total:n },
+    { q:'H6 · 硬边界约束限制了大多数用户的学习强度（A4）', src:'硬约束', n: hardConN, total:n },
+  ];
+  const topPain = Object.entries(painC).sort((a,b)=>b[1]-a[1])[0];
+  const topExpect = Object.entries(expectC).sort((a,b)=>b[1]-a[1])[0];
+  const topConstraint = Object.entries(constC).sort((a,b)=>b[1]-a[1])[0];
+
+  wrap.innerHTML = `
+  <div class="ana-head">
+    <div class="pane-title">数据分析</div>
+    <div class="pane-desc" style="margin-top:3px">基于 ${n} 条记录 · 字段覆盖 A1–A7 · 实时更新</div>
+  </div>
+
+  <div class="summary-card">
+    <div class="summary-head">
+      <div>
+        <div class="summary-title">当前样本给出的下一步动作</div>
+        <div class="summary-sub">先把“最常见问题”翻译成产品动作，而不是只停留在看图表。这里的结论会随样本实时变化。</div>
+      </div>
+      <div class="summary-badge">样本量 ${n} 人</div>
+    </div>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="summary-item-label">优先解决</div>
+        <strong>${topPain ? topPain[0] : '等待更多样本'}</strong>
+        <span>${topPain ? `${topPain[1]} 人提到，当前应优先验证它是否值得进入 MVP 首页路径。` : '录入更多原始访谈后，这里会自动给出最高频痛点。'}</span>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-label">优先交付</div>
+        <strong>${topExpect ? topExpect[0] : '等待更多样本'}</strong>
+        <span>${topExpect ? `${topExpect[1]} 人主动提出，适合作为第一版价值主张，而不是在后面补。` : '等样本积累后，这里会自动识别用户最想要的资源。'}</span>
+      </div>
+      <div class="summary-item">
+        <div class="summary-item-label">设计约束</div>
+        <strong>${topConstraint ? topConstraint[0] : '硬约束待确认'}</strong>
+        <span>${topConstraint ? `${topConstraint[1]} 人受此限制，任务块长度、提醒时机和交互密度都应该围绕它设计。` : '继续补充访谈，确认真实生活约束是不是集中在少数几类。'}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi-label">总用户数</div><div class="kpi-val">${n}<span>人</span></div><div class="kpi-sub">已录入调研记录</div></div>
+    <div class="kpi"><div class="kpi-label">目标明确（A3）</div><div class="kpi-val">${pct(goalClearN,n)}<span>%</span></div><div class="kpi-sub">${goalClearN} 人 · 已定考试 / 岗位</div></div>
+    <div class="kpi"><div class="kpi-label">多次备考（A2）</div><div class="kpi-val">${pct(multiTimesN,n)}<span>%</span></div><div class="kpi-sub">${multiTimesN} 人 · 4次及以上</div></div>
+    <div class="kpi"><div class="kpi-label">高焦虑（A5）</div><div class="kpi-val">${pct(highAnxN,n)}<span>%</span></div><div class="kpi-sub">${highAnxN} 人 · 严重内耗/崩</div></div>
+    <div class="kpi"><div class="kpi-label">有硬约束（A4）</div><div class="kpi-val">${pct(hardConN,n)}<span>%</span></div><div class="kpi-sub">${hardConN} 人 · 在职/带娃等</div></div>
+  </div>
+
+  <div class="chart-row cr2">
+    <div class="chart-card">
+      <div class="card-title">核心痛点分布 <span style="font-size:11px;font-weight:400;color:var(--t3)">A5/A7 · 多选</span></div>
+      <div class="card-sub">直接对应系统需要解决的问题</div>
+      <div style="position:relative;height:${Math.max(160, Object.keys(painC).length*32)}px"><canvas id="c-pain"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">期待的资源 / 服务</div>
+      <div class="card-sub">用户主动选择，反映真实需求优先级</div>
+      <div style="position:relative;height:${Math.max(160, Object.keys(expectC).length*32)}px"><canvas id="c-expect"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row cr3">
+    <div class="chart-card">
+      <div class="card-title">情绪状态 <span style="font-size:11px;font-weight:400;color:var(--t3)">A5</span></div>
+      <div class="card-sub">动机强度与焦虑程度</div>
+      <div style="position:relative;height:180px"><canvas id="c-mood"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">备考次数 <span style="font-size:11px;font-weight:400;color:var(--t3)">A2</span></div>
+      <div class="card-sub">经历层次 · 影响入口策略</div>
+      <div style="position:relative;height:180px"><canvas id="c-times"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">每日时长 <span style="font-size:11px;font-weight:400;color:var(--t3)">A1</span></div>
+      <div class="card-sub">时间结构 · 决定任务块大小</div>
+      <div style="position:relative;height:180px"><canvas id="c-hours"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-row cr2">
+    <div class="chart-card">
+      <div class="card-title">使用工具分布 <span style="font-size:11px;font-weight:400;color:var(--t3)">A1 · 多选</span></div>
+      <div class="card-sub">工具分散程度 → 整合需求验证</div>
+      <div style="position:relative;height:${Math.max(140, Object.keys(toolC).length*28)}px"><canvas id="c-tool"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="card-title">硬约束类型 <span style="font-size:11px;font-weight:400;color:var(--t3)">A4 · 多选</span></div>
+      <div class="card-sub">不可协商的现实限制</div>
+      <div style="position:relative;height:${Math.max(140, Object.keys(constC).length*28)}px"><canvas id="c-const"></canvas></div>
+    </div>
+  </div>
+
+  <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;box-shadow:var(--sh);margin-bottom:12px">
+    <div class="card-title" style="margin-bottom:3px">用户画像分类 <span style="font-size:11px;font-weight:400;color:var(--t3)">基于 A1/A2/A3/A4 自动归类 · 点击「查看详情」下钻</span></div>
+    <div class="card-sub" style="margin-bottom:14px">画像是后续系统决策的约束输入，不是描述标签</div>
+    <div class="persona-row">
+      ${pData.map(p=>{
+        const ppct = pct(p.users.length, n);
+        return `<div class="p-card" onclick="openDrill('${p.id}')">
+          <div class="p-card-bar" style="background:${p.bar}"></div>
+          <div class="p-card-body">
+            <div class="p-card-top">
+              <div class="p-card-icon">${p.icon}</div>
+              <div class="p-card-pct" style="color:${p.pctColor}">${ppct}%</div>
+            </div>
+            <div class="p-card-name">${p.label}</div>
+            <div class="p-card-count" style="color:${p.bar}">${p.users.length} 人</div>
+            <div class="p-card-desc">${p.desc}</div>
+            <div class="p-card-link">查看详情 ›</div>
+          </div>
+          <div class="p-card-dims"><span class="p-dim">${p.dims}</span></div>
+        </div>`;
+      }).join('')}
+    </div>
+    ${otherN>0?`<div style="font-size:12px;color:var(--t4);margin-top:10px">另有 ${otherN} 人暂未归入以上类型</div>`:''}
+  </div>
+
+  <div class="hyp-card">
+    <div class="hyp-head-row">
+      <span>假设验证</span>
+      <span style="text-align:right">占比</span>
+      <span style="text-align:center">状态</span>
+    </div>
+    ${hyps.map(h=>{
+      const r = h.total ? h.n/h.total : 0;
+      const p = pct(h.n, h.total);
+      let cls,txt;
+      if(n<3)       { cls='hb-w'; txt='数据不足'; }
+      else if(r>=.5){ cls='hb-y'; txt='初步成立'; }
+      else if(r>=.3){ cls='hb-p'; txt='部分支持'; }
+      else          { cls='hb-n'; txt='尚未支持'; }
+      return `<div class="hyp-row">
+        <div><div class="hyp-q">${h.q}</div><div class="hyp-src" style="font-size:11px;color:var(--t4);margin-top:2px">数据来源：${h.src}</div></div>
+        <div class="hyp-pct">${n>=1?p+'%':'—'}</div>
+        <span class="hyp-badge ${cls}">${txt}</span>
+      </div>`;
+    }).join('')}
+  </div>`;
+
+  setTimeout(()=>{
+    if(Object.keys(painC).length)  makeHBar('c-pain',  painC,  '#f53f3f');
+    if(Object.keys(expectC).length)makeHBar('c-expect', expectC,'#165dff');
+    if(Object.keys(moodC).length)  makePie('c-mood',   moodC);
+    if(Object.keys(timesC).length) makePie('c-times',  timesC);
+    if(Object.keys(hoursC).length) makePie('c-hours',  hoursC);
+    if(Object.keys(toolC).length)  makeHBar('c-tool',  toolC,  '#00b42a');
+    if(Object.keys(constC).length) makeHBar('c-const', constC, '#722ed1');
+  }, 60);
+}
+
+/* ── drill ── */
+function openDrill(pid){
+  const d = recordsCache;
+  const p = PERSONAS.find(x=>x.id===pid);
+  const users = d.filter(p.match);
+  const n = d.length;
+  const painC  = cntM(users,'pain');
+  const toolC  = cntM(users,'tool');
+  const moodC  = cntS(users.map(r=>r.mood).filter(Boolean));
+  const constC = cntM(users,'constraint');
+  const expectC= cntM(users,'expect');
+  const withQ  = users.filter(r=>r.shenlQ||r.note);
+
+  function miniBar(counts, color){
+    const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+    const max = Math.max(...sorted.map(x=>x[1]),1);
+    if(!sorted.length) return '<span style="font-size:12px;color:var(--t4)">暂无数据</span>';
+    return sorted.map(([k,v])=>`<div class="bar-row">
+      <span class="bar-lbl">${k}</span>
+      <div class="bar-tr"><div class="bar-fl" style="width:${Math.round(v/max*100)}%;background:${color}"></div></div>
+      <span class="bar-vl">${v}</span>
+    </div>`).join('');
+  }
+
+  document.getElementById('drill-content').innerHTML = `
+    <div class="drill-hd">
+      <div>
+        <div class="drill-title">${p.icon} ${p.label}</div>
+        <div class="drill-sub">${users.length} 人 · 占全部用户 ${pct(users.length,n)}% · ${p.dims}</div>
+      </div>
+      <button class="btn btn-ghost" onclick="closeDrill()" style="font-size:16px;padding:0 6px">✕</button>
+    </div>
+    <div class="drill-body">
+      <div class="drill-stats">
+        <div class="ds"><div class="ds-n">${users.length}</div><div class="ds-l">该类型人数</div></div>
+        <div class="ds"><div class="ds-n">${pct(users.length,n)}%</div><div class="ds-l">占全部用户</div></div>
+        <div class="ds"><div class="ds-n">${withQ.length}</div><div class="ds-l">有原话记录</div></div>
+      </div>
+      <div class="drill-2col" style="margin-bottom:20px">
+        <div><div class="sec-label">核心痛点</div>${miniBar(painC,'#f53f3f')}</div>
+        <div><div class="sec-label">期待的资源</div>${miniBar(expectC,'#165dff')}</div>
+      </div>
+      <div class="drill-2col" style="margin-bottom:20px">
+        <div><div class="sec-label">工具使用</div>${miniBar(toolC,'#00b42a')}</div>
+        <div><div class="sec-label">硬约束</div>${miniBar(constC,'#722ed1')}</div>
+      </div>
+      <div style="margin-bottom:20px"><div class="sec-label">情绪状态</div>${miniBar(moodC,'#ff7d00')}</div>
+      ${withQ.length?`<div class="sec-label">访谈原话</div>
+      <div class="quotes">${withQ.map(r=>`<div class="quote" style="border-left-color:${p.bar}">
+        <div class="qt">${[r.shenlQ?`"${r.shenlQ}"`:null, r.note&&r.note!==r.shenlQ?r.note:null].filter(Boolean).join('<br>')}</div>
+        <div class="qa">${r.name} · ${r.age||''}${r.edu?' · '+r.edu:''} · ${r.times||''}</div>
+      </div>`).join('')}</div>`:''}
+      <div class="sec-label" style="margin-top:${withQ.length?20:0}px">全部用户（${users.length} 人）</div>
+      <div class="user-rows">${users.map(r=>`<div class="user-row">
+        <div>
+          <div class="ur-name">${r.name}</div>
+          <div class="ur-meta">${r.date} · ${r.age||''}${r.job?' · '+r.job:''} · ${r.times||''}${r.hours?' · '+r.hours:''}</div>
+        </div>
+        <div class="ur-tags">
+          ${r.goal?`<span class="tag ${goalTagCls(r.goal)}" style="font-size:10px">${r.goal.split('（')[0]}</span>`:''}
+          ${r.mood?`<span class="tag ${moodTagCls(r.mood)}">${r.mood}</span>`:''}
+          ${r.pain.slice(0,1).map(p=>`<span class="tag tg-red">${p}</span>`).join('')}
+        </div>
+      </div>`).join('')}
+      </div>
+    </div>`;
+  document.getElementById('drill-ov').classList.add('show');
+}
+function closeDrill(){ document.getElementById('drill-ov').classList.remove('show'); }
+function drillOvClick(e){ if(e.target===document.getElementById('drill-ov')) closeDrill(); }
+
+/* init */
+async function initApp(){
+  try{
+    recordsCache = await fetchCloudRecords();
+    persistLocal(recordsCache);
+    setStatus('已连接云端', 'var(--suc)');
+  }catch(err){
+    console.error(err);
+    recordsCache = loadLocal();
+    setStatus('使用本地数据', 'var(--warn)');
+  }
+  renderTable();
+}
+initApp();
+</script>
+</body>
+</html>
