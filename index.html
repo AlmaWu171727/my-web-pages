@@ -4,68 +4,276 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>我的网页-Alma的脑洞</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --bg: #f7efe2;
+      --paper: rgba(255, 251, 244, 0.72);
+      --ink: #1e2432;
+      --muted: #6d6f7f;
+      --line: rgba(56, 43, 25, 0.14);
+      --peach: #ff8e6e;
+      --gold: #e5a93d;
+      --sky: #88c8ff;
+      --mint: #8bd3a5;
+      --shadow: 0 30px 80px rgba(72, 47, 27, 0.12);
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(255, 142, 110, 0.25), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(136, 200, 255, 0.28), transparent 24%),
+        radial-gradient(circle at 70% 75%, rgba(139, 211, 165, 0.24), transparent 22%),
+        linear-gradient(180deg, #fbf3e8 0%, var(--bg) 100%);
+    }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
-      background: #f4efe7;
-      color: #1f2937;
+      color: var(--ink);
+      font-family: "Noto Serif SC", serif;
+      background: transparent;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(84, 64, 38, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(84, 64, 38, 0.045) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 85%);
     }
     .wrap {
-      max-width: 760px;
+      width: min(1040px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 48px 20px 64px;
+      padding: 44px 0 72px;
+      position: relative;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 40px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background: linear-gradient(135deg, rgba(255, 251, 244, 0.82), rgba(255, 248, 239, 0.58));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -30% auto;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(255, 142, 110, 0.3), transparent 68%);
+      transform: rotate(12deg);
+    }
+    .eyebrow,
+    .meta,
+    .hint,
+    .ticket,
+    .card-no {
+      font-family: "IBM Plex Mono", monospace;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: #7b5a2f;
+      background: rgba(229, 169, 61, 0.14);
+      border: 1px solid rgba(229, 169, 61, 0.28);
+    }
+    .eyebrow::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--gold);
+      box-shadow: 0 0 0 6px rgba(229, 169, 61, 0.12);
     }
     h1 {
-      font-size: 32px;
-      margin: 0 0 12px;
+      margin: 22px 0 12px;
+      max-width: 8em;
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: 0.98;
+      letter-spacing: -0.04em;
     }
-    p {
-      color: #4b5563;
-      line-height: 1.6;
+    .lead {
+      margin: 0;
+      max-width: 620px;
+      font-size: clamp(18px, 2.5vw, 24px);
+      line-height: 1.75;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+      gap: 26px;
+      align-items: end;
+      position: relative;
+      z-index: 1;
+    }
+    .ticket {
+      align-self: stretch;
+      display: grid;
+      gap: 14px;
+      padding: 22px;
+      border-radius: 24px;
+      background: rgba(30, 36, 50, 0.94);
+      color: #fff8ef;
+      box-shadow: 0 24px 60px rgba(30, 36, 50, 0.22);
+    }
+    .ticket-label {
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      color: rgba(255, 248, 239, 0.62);
+    }
+    .ticket-price {
+      font-size: clamp(38px, 6vw, 64px);
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+    .ticket-note {
+      font-size: 14px;
+      line-height: 1.8;
+      color: rgba(255, 248, 239, 0.78);
+    }
+    .hint {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      margin-top: 18px;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
     }
     .list {
       margin-top: 28px;
       display: grid;
-      gap: 14px;
+      gap: 18px;
     }
     a.card {
-      display: block;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
       text-decoration: none;
       color: inherit;
-      background: #fffdf8;
-      border: 1px solid #e5d8c7;
-      border-radius: 16px;
-      padding: 18px 20px;
-      box-shadow: 0 8px 24px rgba(75, 85, 99, 0.06);
+      padding: 24px;
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, rgba(255, 252, 247, 0.9), rgba(255, 247, 236, 0.64));
+      box-shadow: 0 16px 40px rgba(86, 64, 41, 0.08);
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
+      backdrop-filter: blur(12px);
+    }
+    a.card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 52px rgba(86, 64, 41, 0.12);
+      border-color: rgba(86, 64, 41, 0.22);
+    }
+    .card-no {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      font-size: 14px;
+      color: #7b5a2f;
+      background: linear-gradient(135deg, rgba(229, 169, 61, 0.2), rgba(255, 142, 110, 0.18));
+      border: 1px solid rgba(229, 169, 61, 0.28);
     }
     .name {
-      font-size: 18px;
-      font-weight: 600;
       margin-bottom: 6px;
+      font-size: clamp(22px, 3vw, 28px);
+      line-height: 1.25;
     }
     .meta {
       font-size: 13px;
-      color: #6b7280;
+      letter-spacing: 0.02em;
+      color: var(--muted);
+    }
+    .arrow {
+      font-size: 26px;
+      color: #9a7656;
+      transform: translateX(0);
+      transition: transform 0.24s ease;
+    }
+    a.card:hover .arrow {
+      transform: translateX(4px);
+    }
+    @media (max-width: 820px) {
+      .hero {
+        padding: 28px;
+      }
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+      a.card {
+        grid-template-columns: 1fr;
+      }
+      .arrow {
+        display: none;
+      }
+      .hint {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>我的网页-Alma的脑洞</h1>
-    <p>嘻嘻！是谁在偷窥我的脑洞呀！要门票，5毛～</p>
+    <section class="hero">
+      <div class="eyebrow">ALMA IDEA MUSEUM</div>
+      <div class="hero-grid">
+        <div>
+          <h1>我的网页<br />Alma的脑洞</h1>
+          <p class="lead">嘻嘻！是谁在偷窥我的脑洞呀！要门票，5毛～ 这里摆着我最近做的几个网页，每一个都像一块被我偷偷拼好的展板。</p>
+          <div class="hint">
+            <span>请随意逛逛</span>
+            <span>但记得带走一点灵感</span>
+          </div>
+        </div>
+        <aside class="ticket">
+          <div class="ticket-label">BRAIN ENTRY TICKET</div>
+          <div class="ticket-price">¥0.5</div>
+          <div class="ticket-note">入场后可随意翻看，允许惊讶，允许发呆，也允许一边看一边想：“这人脑子里到底装了什么？”</div>
+        </aside>
+      </div>
+    </section>
     <div class="list">
       <a class="card" href="./88888.html">
-        <div class="name">公考智能备考引擎——设计文档 v3.0</div>
-        <div class="meta">88888.html</div>
+        <div class="card-no">01</div>
+        <div>
+          <div class="name">公考智能备考引擎——设计文档 v3.0</div>
+          <div class="meta">88888.html</div>
+        </div>
+        <div class="arrow">↗</div>
       </a>
       <a class="card" href="./legao.html">
-        <div class="name">乐高构建体系解析</div>
-        <div class="meta">legao.html</div>
+        <div class="card-no">02</div>
+        <div>
+          <div class="name">乐高构建体系解析</div>
+          <div class="meta">legao.html</div>
+        </div>
+        <div class="arrow">↗</div>
       </a>
       <a class="card" href="./openmaic-v3.html">
-        <div class="name">一堂AI课是怎么活起来的</div>
-        <div class="meta">openmaic-v3.html</div>
+        <div class="card-no">03</div>
+        <div>
+          <div class="name">一堂AI课是怎么活起来的</div>
+          <div class="meta">openmaic-v3.html</div>
+        </div>
+        <div class="arrow">↗</div>
       </a>
     </div>
   </div>
