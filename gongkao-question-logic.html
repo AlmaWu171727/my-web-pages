@@ -412,6 +412,23 @@
     }
 
     .viewer-content { padding: 12px; }
+    .viewer-guide {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--ink-dim);
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.02);
+    }
+    .viewer-block-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-dim);
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
     .stage-view { display: none; }
     .stage-view.active { display: block; }
 
@@ -424,18 +441,19 @@
     .role-card {
       border: 1px solid var(--line);
       border-radius: 10px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.05);
       padding: 11px;
       cursor: pointer;
+      min-height: 140px;
     }
     .role-card.active { outline: 2px solid rgba(230,179,95,0.4); }
     .role-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       margin-bottom: 6px;
     }
     .role-row {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--ink-dim);
       margin-bottom: 4px;
       line-height: 1.55;
@@ -460,9 +478,15 @@
       flex-wrap: wrap;
     }
     .delivery-head .title {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--ink);
       font-weight: 700;
+    }
+    .delivery-head .current {
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--ink-dim);
+      font-weight: 500;
     }
     .type-pills { display: flex; gap: 6px; flex-wrap: wrap; }
     .type-pill {
@@ -491,7 +515,7 @@
       padding: 11px;
     }
     .delivery-col h4 {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--ink-dim);
       letter-spacing: .08em;
       text-transform: uppercase;
@@ -504,7 +528,7 @@
     }
     .fi:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
     .fi-name {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--ink);
       font-weight: 700;
       margin-bottom: 4px;
@@ -518,7 +542,7 @@
       font-family: var(--mono);
       font-weight: 700;
     }
-    .fi-desc { font-size: 11px; color: var(--ink-dim); }
+    .fi-desc { font-size: 12px; color: var(--ink-dim); }
     .fi-why {
       font-size: 10px;
       margin-top: 6px;
@@ -533,7 +557,7 @@
     }
     .flow-box h5,
     .trigger-box h5 {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--ink-dim);
       letter-spacing: .08em;
       text-transform: uppercase;
@@ -557,13 +581,13 @@
       margin-bottom: 3px;
     }
     .flow-form {
-      font-size: 11px;
+      font-size: 12px;
       color: var(--ink);
       font-weight: 700;
       margin-bottom: 2px;
     }
     .flow-feedback {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--ink-dim);
       line-height: 1.5;
     }
@@ -584,7 +608,7 @@
       font-weight: 700;
       padding-top: 1px;
     }
-    .trigger-text { font-size: 11px; color: var(--ink-dim); }
+    .trigger-text { font-size: 12px; color: var(--ink-dim); }
     .trigger-signal {
       margin-top: 3px;
       font-size: 10px;
@@ -867,6 +891,7 @@
       <div class="section-kicker">阶段切换查看器</div>
       <h2 class="section-title" style="font-size:30px;">从观点到动作：角色 / 驱动 / 动作 / 数据信号同步可见</h2>
       <p class="section-sub">选择阶段后，下方会同步展示该阶段下三类题型的角色定位，并联动“阶段 × 题型”的完整交付配置。</p>
+      <div class="viewer-guide">阅读顺序：1）先选阶段；2）看三类题型在该阶段的角色差异；3）点选题型，查看完整交付配置、推荐序列与触发逻辑。</div>
 
       <div class="viewer-shell">
         <div class="viewer-controls">
@@ -1111,6 +1136,7 @@
       const ex = EXECUTION[stageId];
       return `
         <section class="stage-view" id="sv-${stageId}">
+          <div class="viewer-block-title">A. 阶段角色层（固定三类并排）</div>
           <div class="role-grid">
             ${["xc", "sl", "ms"].map((t) => `
               <article class="role-card" data-type="${t}">
@@ -1125,7 +1151,10 @@
 
           <div class="delivery-panel" id="dp-${stageId}">
             <div class="delivery-head">
-              <div class="title">选定阶段 × 题型组合：下方同步展示完整交付配置</div>
+              <div>
+                <div class="title">B. 阶段 × 题型交付层：下方同步展示完整交付配置</div>
+                <div class="current" id="current-${stageId}"></div>
+              </div>
               <div class="type-pills">
                 <button type="button" class="type-pill" data-stage="${stageId}" data-type="xc">行测</button>
                 <button type="button" class="type-pill" data-stage="${stageId}" data-type="sl">申论</button>
@@ -1180,6 +1209,10 @@
 
     function renderDeliveryFor(stageId, typeId) {
       const d = getDelivery(stageId, typeId);
+      const stageName = STAGES[stageId] ? STAGES[stageId].name : `阶段${stageId + 1}`;
+      const typeName = TYPE_META[typeId] ? TYPE_META[typeId].name : typeId;
+      const current = document.getElementById(`current-${stageId}`);
+      if (current) current.textContent = `当前查看：${stageName} × ${typeName}`;
       const renderItems = (items) => items.map((it) => `
         <article class="fi">
           <div class="fi-name">
