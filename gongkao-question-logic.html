@@ -423,19 +423,6 @@ body{
   line-height:1.65;
 }
 .sum-row strong{color:var(--ink);}
-.detail-toggle{
-  margin-bottom:12px;
-  border:1px solid var(--ink-15);
-  background:#fff;
-  color:var(--ink-70);
-  border-radius:10px;
-  padding:8px 12px;
-  font-size:12px;
-  cursor:pointer;
-}
-.detail-toggle:hover{border-color:var(--ink-40);color:var(--ink);}
-.stage-detail{display:none;}
-.stage-detail.open{display:block;}
 
 /* Stage selector */
 .stage-selector{
@@ -1373,8 +1360,6 @@ function renderContents() {
           </article>
         `).join('')}
       </div>
-      <button class="detail-toggle" type="button" data-stage="${si}">展开详情</button>
-      <div class="stage-detail" id="sd${si}">
       <!-- State banner -->
       <div class="state-banner">
         <div class="sb-left">
@@ -1475,7 +1460,6 @@ function renderContents() {
           <div class="aud-text">${getAudienceText(s, 'data')}</div>
         </div>
       </div>
-      </div>
     </div>`;
   }).join('');
 }
@@ -1518,7 +1502,6 @@ function getAudienceText(s, role) {
 
 // ══════════ INTERACTION ══════════
 let currentStage = 0;
-const stageExpanded = STAGES.map(() => true);
 
 function activateStage(i, opt = {}) {
   if (i < 0 || i > STAGES.length - 1) return;
@@ -1544,16 +1527,6 @@ function syncStageUi() {
   document.getElementById('stageNext').disabled = currentStage === STAGES.length - 1;
   document.querySelectorAll('.mini-stage-btn').forEach((btn) => {
     btn.classList.toggle('act', Number(btn.dataset.stage) === currentStage);
-  });
-}
-
-function syncStageExpansion() {
-  STAGES.forEach((_, i) => {
-    const detail = document.getElementById(`sd${i}`);
-    const btn = document.querySelector(`.detail-toggle[data-stage="${i}"]`);
-    if (!detail || !btn) return;
-    detail.classList.toggle('open', stageExpanded[i]);
-    btn.textContent = stageExpanded[i] ? '收起详情' : '展开详情';
   });
 }
 
@@ -1607,14 +1580,6 @@ document.getElementById('stageSelector').addEventListener('click', (e) => {
   activateStage(Number(item.dataset.stage), { scroll: false });
 });
 
-document.getElementById('stageContents').addEventListener('click', (e) => {
-  const btn = e.target.closest('.detail-toggle');
-  if (!btn) return;
-  const i = Number(btn.dataset.stage);
-  stageExpanded[i] = !stageExpanded[i];
-  syncStageExpansion();
-});
-
 document.getElementById('stagePrev').addEventListener('click', () => {
   activateStage(currentStage - 1, { scroll: false });
 });
@@ -1660,7 +1625,6 @@ renderPreview();
 renderSelector();
 renderContents();
 renderMiniNav();
-syncStageExpansion();
 syncStageUi();
 activateStage(0, { scroll: false });
 window.dispatchEvent(new Event('scroll'));
