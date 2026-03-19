@@ -10,6 +10,7 @@
 - `exam-prep-engine-v3.html`
 - `lego-construction-system.html`
 - `ai-class-comes-alive.html`
+- `gongkao-question-logic.html`
 - `index.html`
 
 ## 同步规则

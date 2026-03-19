@@ -6,19 +6,20 @@
   <title>我的网页-Alma的脑洞</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f7efe2;
-      --paper: rgba(255, 251, 244, 0.72);
-      --ink: #1e2432;
-      --muted: #6d6f7f;
-      --line: rgba(56, 43, 25, 0.14);
-      --peach: #ff8e6e;
-      --gold: #e5a93d;
-      --sky: #88c8ff;
-      --mint: #8bd3a5;
-      --shadow: 0 30px 80px rgba(72, 47, 27, 0.12);
+      --bg: #f4ecdf;
+      --card: rgba(255, 251, 244, 0.72);
+      --ink: #1f2433;
+      --muted: #6a6f7e;
+      --line: rgba(71, 48, 23, 0.16);
+      --gold: #dea74c;
+      --peach: #f58f67;
+      --deep: #303749;
+      --shadow: 0 32px 80px rgba(84, 54, 31, 0.14);
+      --ok: #1f7a52;
+      --warn: #a5482a;
     }
     * {
       box-sizing: border-box;
@@ -26,10 +27,10 @@
     html {
       min-height: 100%;
       background:
-        radial-gradient(circle at top left, rgba(255, 142, 110, 0.25), transparent 30%),
-        radial-gradient(circle at 85% 20%, rgba(136, 200, 255, 0.28), transparent 24%),
-        radial-gradient(circle at 70% 75%, rgba(139, 211, 165, 0.24), transparent 22%),
-        linear-gradient(180deg, #fbf3e8 0%, var(--bg) 100%);
+        radial-gradient(circle at 16% 9%, rgba(245, 143, 103, 0.25), transparent 28%),
+        radial-gradient(circle at 88% 20%, rgba(131, 204, 255, 0.26), transparent 24%),
+        radial-gradient(circle at 72% 84%, rgba(145, 211, 164, 0.24), transparent 20%),
+        linear-gradient(180deg, #faf4e9 0%, var(--bg) 100%);
     }
     body {
       margin: 0;
@@ -43,201 +44,356 @@
       inset: 0;
       pointer-events: none;
       background-image:
-        linear-gradient(rgba(84, 64, 38, 0.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(84, 64, 38, 0.045) 1px, transparent 1px);
+        linear-gradient(rgba(96, 73, 45, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(96, 73, 45, 0.045) 1px, transparent 1px);
       background-size: 32px 32px;
-      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 85%);
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6), transparent 85%);
+    }
+    .mono {
+      font-family: "IBM Plex Mono", monospace;
     }
     .wrap {
-      width: min(1040px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 44px 0 72px;
       position: relative;
+      width: min(1080px, calc(100% - 30px));
+      margin: 0 auto;
+      padding: 42px 0 76px;
     }
     .hero {
       position: relative;
       overflow: hidden;
-      padding: 40px;
       border: 1px solid var(--line);
-      border-radius: 32px;
-      background: linear-gradient(135deg, rgba(255, 251, 244, 0.82), rgba(255, 248, 239, 0.58));
+      border-radius: 34px;
+      background: linear-gradient(140deg, rgba(255, 252, 246, 0.86), rgba(254, 245, 233, 0.66));
       box-shadow: var(--shadow);
       backdrop-filter: blur(16px);
+      padding: 40px;
     }
     .hero::after {
       content: "";
       position: absolute;
-      inset: auto -10% -30% auto;
-      width: 320px;
-      height: 320px;
-      background: radial-gradient(circle, rgba(255, 142, 110, 0.3), transparent 68%);
-      transform: rotate(12deg);
-    }
-    .eyebrow,
-    .meta,
-    .hint,
-    .ticket,
-    .card-no,
-    .slug {
-      font-family: "IBM Plex Mono", monospace;
+      right: -140px;
+      bottom: -180px;
+      width: 460px;
+      height: 460px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 143, 103, 0.28), transparent 65%);
+      pointer-events: none;
     }
     .eyebrow {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 10px 14px;
+      padding: 9px 14px;
+      border: 1px solid rgba(222, 167, 76, 0.33);
       border-radius: 999px;
-      font-size: 12px;
       letter-spacing: 0.08em;
-      color: #7b5a2f;
-      background: rgba(229, 169, 61, 0.14);
-      border: 1px solid rgba(229, 169, 61, 0.28);
+      font-size: 12px;
+      color: #855f28;
+      background: rgba(222, 167, 76, 0.14);
     }
     .eyebrow::before {
       content: "";
       width: 8px;
       height: 8px;
-      border-radius: 999px;
+      border-radius: 50%;
       background: var(--gold);
-      box-shadow: 0 0 0 6px rgba(229, 169, 61, 0.12);
+      box-shadow: 0 0 0 5px rgba(222, 167, 76, 0.17);
+    }
+    .hero-grid {
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.8fr);
+      gap: 28px;
+      align-items: end;
     }
     h1 {
-      margin: 22px 0 12px;
-      max-width: 8em;
+      margin: 0;
       font-size: clamp(42px, 7vw, 82px);
-      line-height: 0.98;
+      line-height: 0.96;
       letter-spacing: -0.04em;
     }
     .lead {
-      margin: 0;
-      max-width: 620px;
-      font-size: clamp(18px, 2.5vw, 24px);
-      line-height: 1.75;
+      margin: 16px 0 0;
+      max-width: 640px;
+      font-size: clamp(18px, 2.4vw, 24px);
+      line-height: 1.7;
     }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
-      gap: 26px;
-      align-items: end;
-      position: relative;
-      z-index: 1;
+    .quick-row {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .quick-chip {
+      border: 1px dashed rgba(71, 48, 23, 0.2);
+      border-radius: 999px;
+      padding: 5px 10px;
+      background: rgba(255, 255, 255, 0.38);
     }
     .ticket {
-      align-self: stretch;
-      display: grid;
-      gap: 14px;
-      padding: 22px;
-      border-radius: 24px;
-      background: rgba(30, 36, 50, 0.94);
+      border-radius: 26px;
+      background: rgba(38, 45, 61, 0.95);
       color: #fff8ef;
-      box-shadow: 0 24px 60px rgba(30, 36, 50, 0.22);
+      padding: 22px;
+      display: grid;
+      gap: 12px;
+      box-shadow: 0 22px 56px rgba(28, 33, 43, 0.27);
     }
     .ticket-label {
-      font-size: 12px;
-      letter-spacing: 0.14em;
       color: rgba(255, 248, 239, 0.62);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
     .ticket-price {
-      font-size: clamp(38px, 6vw, 64px);
+      font-size: clamp(36px, 6vw, 58px);
       line-height: 1;
       letter-spacing: -0.06em;
     }
     .ticket-note {
+      color: rgba(255, 248, 239, 0.8);
       font-size: 14px;
       line-height: 1.8;
-      color: rgba(255, 248, 239, 0.78);
     }
-    .hint {
+    .control {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: minmax(220px, 340px) 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+    .search {
+      width: 100%;
+      border: 1px solid rgba(71, 48, 23, 0.24);
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 13px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .18s;
+    }
+    .search:focus {
+      border-color: rgba(71, 48, 23, 0.42);
+    }
+    .filters {
       display: flex;
-      justify-content: space-between;
-      gap: 18px;
-      margin-top: 18px;
-      font-size: 12px;
-      letter-spacing: 0.08em;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .filter-btn {
+      border: 1px solid rgba(71, 48, 23, 0.2);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.48);
       color: var(--muted);
-      text-transform: uppercase;
+      padding: 7px 12px;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: all .18s;
+    }
+    .filter-btn.active {
+      border-color: rgba(71, 48, 23, 0.4);
+      color: var(--ink);
+      background: rgba(222, 167, 76, 0.16);
+    }
+    .verify-hint {
+      justify-self: end;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .verify-hint.ok {
+      color: var(--ok);
+      font-weight: 600;
     }
     .list {
-      margin-top: 28px;
+      margin-top: 18px;
       display: grid;
-      gap: 18px;
+      gap: 16px;
     }
-    a.card {
+    .card {
+      position: relative;
       display: grid;
       grid-template-columns: auto 1fr auto;
-      gap: 18px;
+      gap: 16px;
       align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255, 253, 249, 0.92), rgba(255, 248, 238, 0.7));
+      box-shadow: 0 14px 34px rgba(86, 64, 41, 0.09);
       text-decoration: none;
       color: inherit;
-      padding: 24px;
-      border-radius: 26px;
-      border: 1px solid var(--line);
-      background: linear-gradient(135deg, rgba(255, 252, 247, 0.9), rgba(255, 247, 236, 0.64));
-      box-shadow: 0 16px 40px rgba(86, 64, 41, 0.08);
-      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
-      backdrop-filter: blur(12px);
+      padding: 20px;
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, opacity .2s ease;
+      opacity: 0;
+      transform: translateY(14px);
     }
-    a.card:hover {
+    .card.reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 24px 52px rgba(86, 64, 41, 0.12);
-      border-color: rgba(86, 64, 41, 0.22);
+      border-color: rgba(71, 48, 23, 0.28);
+      box-shadow: 0 20px 46px rgba(86, 64, 41, 0.14);
+    }
+    .card.hidden {
+      display: none;
     }
     .card-no {
-      width: 58px;
-      height: 58px;
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
       display: grid;
       place-items: center;
-      border-radius: 18px;
+      color: #7a5725;
+      border: 1px solid rgba(222, 167, 76, 0.35);
+      background: linear-gradient(130deg, rgba(222, 167, 76, 0.2), rgba(245, 143, 103, 0.2));
       font-size: 14px;
-      color: #7b5a2f;
-      background: linear-gradient(135deg, rgba(229, 169, 61, 0.2), rgba(255, 142, 110, 0.18));
-      border: 1px solid rgba(229, 169, 61, 0.28);
     }
     .name {
+      font-size: clamp(21px, 3vw, 29px);
+      line-height: 1.22;
       margin-bottom: 6px;
-      font-size: clamp(22px, 3vw, 28px);
-      line-height: 1.25;
     }
     .meta {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      letter-spacing: 0.02em;
+      gap: 8px;
       color: var(--muted);
+      font-size: 13px;
     }
     .slug {
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(86, 64, 41, 0.12);
+      border: 1px solid rgba(71, 48, 23, 0.15);
       background: rgba(255, 255, 255, 0.45);
+      border-radius: 999px;
+      padding: 3px 8px;
       font-size: 12px;
-      color: #7a624f;
     }
     .arrow {
-      font-size: 26px;
+      font-size: 24px;
       color: #9a7656;
-      transform: translateX(0);
-      transition: transform 0.24s ease;
+      transition: transform .22s ease;
     }
-    a.card:hover .arrow {
+    .card:hover .arrow {
       transform: translateX(4px);
     }
-    @media (max-width: 820px) {
+    .empty {
+      display: none;
+      border: 1px dashed rgba(71, 48, 23, 0.26);
+      border-radius: 18px;
+      padding: 18px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.36);
+    }
+    .empty.show {
+      display: block;
+    }
+    .gate {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(26, 28, 34, 0.5);
+      backdrop-filter: blur(4px);
+    }
+    .gate.show {
+      display: flex;
+    }
+    .gate-panel {
+      width: min(520px, 100%);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.55);
+      background: linear-gradient(160deg, rgba(255, 253, 248, 0.96), rgba(255, 248, 237, 0.93));
+      box-shadow: 0 28px 64px rgba(27, 30, 38, 0.24);
+      padding: 20px;
+    }
+    .gate-title {
+      margin: 0 0 6px;
+      font-size: 24px;
+      line-height: 1.3;
+    }
+    .gate-sub {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+    .gate-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .gate-label {
+      display: grid;
+      gap: 6px;
+      font-size: 13px;
+      color: #5d5448;
+    }
+    .gate-input {
+      border: 1px solid rgba(71, 48, 23, 0.23);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: rgba(255, 255, 255, 0.84);
+      font-size: 15px;
+      color: var(--ink);
+      outline: none;
+    }
+    .gate-input:focus {
+      border-color: rgba(71, 48, 23, 0.45);
+    }
+    .gate-error {
+      min-height: 20px;
+      margin: 2px 0 0;
+      color: var(--warn);
+      font-size: 12px;
+    }
+    .gate-actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .btn {
+      border: 1px solid rgba(71, 48, 23, 0.24);
+      border-radius: 10px;
+      padding: 9px 14px;
+      background: rgba(255, 255, 255, 0.55);
+      color: #5c5345;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .btn.primary {
+      border-color: rgba(36, 60, 88, 0.4);
+      background: var(--deep);
+      color: #fff9f1;
+    }
+    @media (max-width: 920px) {
       .hero {
         padding: 28px;
       }
       .hero-grid {
         grid-template-columns: 1fr;
       }
-      a.card {
+      .control {
+        grid-template-columns: 1fr;
+      }
+      .verify-hint {
+        justify-self: start;
+      }
+      .card {
         grid-template-columns: 1fr;
       }
       .arrow {
         display: none;
-      }
-      .hint {
-        flex-direction: column;
       }
     }
   </style>
@@ -245,49 +401,208 @@
 <body>
   <div class="wrap">
     <section class="hero">
-      <div class="eyebrow">ALMA IDEA MUSEUM</div>
+      <div class="eyebrow mono">ALMA IDEA MUSEUM</div>
       <div class="hero-grid">
         <div>
           <h1>我的网页<br />Alma的脑洞</h1>
           <p class="lead">嘻嘻！是谁在偷窥我的脑洞呀！要门票，5分～ 这里摆着我最近做的几个网页，每一个都像一块被我偷偷拼好的展板。</p>
-          <div class="hint">
-            <span>请随意逛逛</span>
-            <span>但记得带走一点灵感</span>
+          <div class="quick-row mono">
+            <span class="quick-chip">四份作品</span>
+            <span class="quick-chip">支持搜索</span>
+            <span class="quick-chip">支持分类浏览</span>
           </div>
         </div>
-        <aside class="ticket">
+        <aside class="ticket mono">
           <div class="ticket-label">BRAIN ENTRY TICKET</div>
           <div class="ticket-price">5分</div>
-          <div class="ticket-note">入场后可随意翻看，允许惊讶，允许发呆，也允许一边看一边想：“这人脑子里到底装了什么？”</div>
+          <div class="ticket-note">首次访问二级页需通过一次信息验证，通过后本机浏览器不再重复验证。</div>
         </aside>
       </div>
     </section>
-    <div class="list">
-      <a class="card" href="./exam-prep-engine-v3.html">
-        <div class="card-no">01</div>
+
+    <section class="control">
+      <input id="searchInput" class="search" type="search" placeholder="搜索页面标题或文件名..." aria-label="搜索页面" />
+      <div class="filters mono">
+        <button class="filter-btn active" type="button" data-filter="all">全部</button>
+        <button class="filter-btn" type="button" data-filter="公考">公考</button>
+        <button class="filter-btn" type="button" data-filter="ai">AI</button>
+        <button class="filter-btn" type="button" data-filter="方法">方法</button>
+      </div>
+      <div id="verifyHint" class="verify-hint mono">未验证</div>
+    </section>
+
+    <section class="list" id="cardList">
+      <a class="card" href="./exam-prep-engine-v3.html" data-tags="公考 方法">
+        <div class="card-no mono">01</div>
         <div>
           <div class="name">公考智能备考引擎——设计文档 v3.0</div>
-          <div class="meta"><span class="slug">exam-prep-engine-v3.html</span></div>
+          <div class="meta mono"><span class="slug">exam-prep-engine-v3.html</span></div>
         </div>
         <div class="arrow">↗</div>
       </a>
-      <a class="card" href="./lego-construction-system.html">
-        <div class="card-no">02</div>
+      <a class="card" href="./lego-construction-system.html" data-tags="方法 结构">
+        <div class="card-no mono">02</div>
         <div>
           <div class="name">乐高构建体系解析</div>
-          <div class="meta"><span class="slug">lego-construction-system.html</span></div>
+          <div class="meta mono"><span class="slug">lego-construction-system.html</span></div>
         </div>
         <div class="arrow">↗</div>
       </a>
-      <a class="card" href="./ai-class-comes-alive.html">
-        <div class="card-no">03</div>
+      <a class="card" href="./ai-class-comes-alive.html" data-tags="AI 方法">
+        <div class="card-no mono">03</div>
         <div>
           <div class="name">一堂AI课是怎么活起来的</div>
-          <div class="meta"><span class="slug">ai-class-comes-alive.html</span></div>
+          <div class="meta mono"><span class="slug">ai-class-comes-alive.html</span></div>
         </div>
         <div class="arrow">↗</div>
       </a>
+      <a class="card" href="./gongkao-question-logic.html" data-tags="公考 方法">
+        <div class="card-no mono">04</div>
+        <div>
+          <div class="name">公考"题"逻辑全解</div>
+          <div class="meta mono"><span class="slug">gongkao-question-logic.html</span></div>
+        </div>
+        <div class="arrow">↗</div>
+      </a>
+    </section>
+
+    <div id="emptyState" class="empty">没有匹配结果，试试其他关键词或切换分类。</div>
+  </div>
+
+  <div id="gate" class="gate" aria-hidden="true">
+    <div class="gate-panel">
+      <h2 class="gate-title">进入前请验证</h2>
+      <p class="gate-sub">仅首次验证一次。验证信息：姓名 + 项目名。</p>
+      <div class="gate-grid">
+        <label class="gate-label">我的名字：
+          <input id="nameInput" class="gate-input" type="text" placeholder="请输入姓名" />
+        </label>
+        <label class="gate-label">我的项目名：
+          <input id="projectInput" class="gate-input" type="text" placeholder="请输入项目名" />
+        </label>
+      </div>
+      <p id="gateError" class="gate-error"></p>
+      <div class="gate-actions">
+        <button id="cancelBtn" class="btn" type="button">取消</button>
+        <button id="submitBtn" class="btn primary" type="button">验证并进入</button>
+      </div>
     </div>
   </div>
+
+  <script>
+    const GATE_KEY = "alma_gate_verified_v1";
+    const expectedName = "吴世慧";
+    const expectedProject = "上岸仓";
+    let pendingHref = "";
+
+    const cards = [...document.querySelectorAll(".card")];
+    const filterButtons = [...document.querySelectorAll(".filter-btn")];
+    const searchInput = document.getElementById("searchInput");
+    const emptyState = document.getElementById("emptyState");
+    const verifyHint = document.getElementById("verifyHint");
+
+    const gate = document.getElementById("gate");
+    const nameInput = document.getElementById("nameInput");
+    const projectInput = document.getElementById("projectInput");
+    const gateError = document.getElementById("gateError");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const normalize = (v) => v.trim();
+    const hasVerified = () => localStorage.getItem(GATE_KEY) === "ok";
+
+    const setVerified = () => {
+      localStorage.setItem(GATE_KEY, "ok");
+      verifyHint.textContent = "已验证";
+      verifyHint.classList.add("ok");
+    };
+
+    const setUnverified = () => {
+      verifyHint.textContent = "未验证";
+      verifyHint.classList.remove("ok");
+    };
+
+    const showGate = () => {
+      gate.classList.add("show");
+      gate.setAttribute("aria-hidden", "false");
+      gateError.textContent = "";
+      nameInput.value = "";
+      projectInput.value = "";
+      nameInput.focus();
+    };
+
+    const hideGate = () => {
+      gate.classList.remove("show");
+      gate.setAttribute("aria-hidden", "true");
+      gateError.textContent = "";
+    };
+
+    const applyFilter = () => {
+      const q = searchInput.value.trim().toLowerCase();
+      const activeFilter = document.querySelector(".filter-btn.active").dataset.filter;
+      let shown = 0;
+      cards.forEach((card) => {
+        const text = card.textContent.toLowerCase();
+        const tags = (card.dataset.tags || "").toLowerCase();
+        const matchSearch = !q || text.includes(q);
+        const matchFilter = activeFilter === "all" || tags.includes(activeFilter);
+        const visible = matchSearch && matchFilter;
+        card.classList.toggle("hidden", !visible);
+        if (visible) shown += 1;
+      });
+      emptyState.classList.toggle("show", shown === 0);
+    };
+
+    cards.forEach((card, idx) => {
+      card.style.transitionDelay = `${idx * 40}ms`;
+      requestAnimationFrame(() => card.classList.add("reveal"));
+      card.addEventListener("click", (e) => {
+        if (hasVerified()) return;
+        e.preventDefault();
+        pendingHref = card.getAttribute("href") || "";
+        showGate();
+      });
+    });
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach((x) => x.classList.remove("active"));
+        btn.classList.add("active");
+        applyFilter();
+      });
+    });
+
+    searchInput.addEventListener("input", applyFilter);
+
+    submitBtn.addEventListener("click", () => {
+      const nameOk = normalize(nameInput.value) === expectedName;
+      const projectOk = normalize(projectInput.value) === expectedProject;
+      if (!nameOk || !projectOk) {
+        gateError.textContent = "验证未通过，请检查姓名和项目名。";
+        return;
+      }
+      setVerified();
+      hideGate();
+      if (pendingHref) location.href = pendingHref;
+    });
+
+    cancelBtn.addEventListener("click", () => {
+      pendingHref = "";
+      hideGate();
+    });
+
+    gate.addEventListener("click", (e) => {
+      if (e.target === gate) hideGate();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && gate.classList.contains("show")) hideGate();
+      if (e.key === "Enter" && gate.classList.contains("show")) submitBtn.click();
+    });
+
+    if (hasVerified()) setVerified();
+    else setUnverified();
+    applyFilter();
+  </script>
 </body>
 </html>

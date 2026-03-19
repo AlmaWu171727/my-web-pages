@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公考"题"逻辑全解</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:      #181612;
+  --ink-70:   #4a4740;
+  --ink-40:   #9a9690;
+  --ink-15:   #dedad2;
+  --ink-06:   #f2efe8;
+  --ink-03:   #f8f6f2;
+  --gold:     #b07d20;
+  --gold-lt:  #f5e8cc;
+  --gold-dim: rgba(176,125,32,0.15);
+  --xc:       #1a4a78;
+  --xc-lt:    #e2ecf6;
+  --xc-mid:   rgba(26,74,120,0.12);
+  --sl:       #1e5c38;
+  --sl-lt:    #e2f0e8;
+  --sl-mid:   rgba(30,92,56,0.12);
+  --ms:       #7a2e14;
+  --ms-lt:    #f5e4de;
+  --ms-mid:   rgba(122,46,20,0.12);
+  --serif: 'Noto Serif SC', serif;
+  --sans:  'Noto Sans SC', sans-serif;
+  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:var(--sans);
+  background:#f7f4ee;
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ══ NAV ══ */
+.nav{
+  position:fixed;top:0;left:0;right:0;height:48px;
+  background:rgba(247,244,238,0.94);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--ink-15);
+  z-index:300;
+  display:flex;align-items:center;
+  padding:0 40px;gap:32px;
+}
+.nav-brand{
+  font-family:var(--serif);font-size:13px;font-weight:700;
+  color:var(--ink);letter-spacing:0.03em;white-space:nowrap;
+}
+.nav-divider{width:1px;height:16px;background:var(--ink-15);}
+.nav-hint{font-size:11px;color:var(--ink-40);letter-spacing:0.02em;}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
+.nav-section-label{
+  font-size:11px;color:var(--ink-40);
+  transition:color .2s;
+}
+.nav-section-label.vis{color:var(--gold);font-weight:500;}
+.home-entry{
+  position:fixed;right:22px;bottom:22px;z-index:420;
+  display:inline-flex;align-items:center;gap:10px;
+  padding:11px 14px;border-radius:999px;
+  background:rgba(255,255,255,0.9);
+  border:1px solid var(--ink-15);
+  box-shadow:0 14px 32px rgba(24,22,18,0.12);
+  color:var(--ink);text-decoration:none;
+  transition:transform .2s var(--ease), box-shadow .2s var(--ease);
+}
+.home-entry:hover{
+  transform:translateY(-2px);
+  box-shadow:0 20px 36px rgba(24,22,18,0.16);
+}
+.home-entry-label{
+  display:flex;flex-direction:column;line-height:1.25;
+}
+.home-entry-kicker{
+  font-size:9px;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--ink-40);
+}
+.home-entry-title{
+  font-size:12px;font-weight:600;color:var(--ink-70);
+}
+
+/* ══ HERO ══ */
+.hero{
+  padding:96px 40px 80px;
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:start;
+}
+.hero-left{}
+.hero-eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:0.16em;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:20px;
+}
+.hero-h{
+  font-family:var(--serif);
+  font-size:clamp(36px,4vw,56px);
+  font-weight:900;line-height:1.1;
+  color:var(--ink);margin-bottom:28px;
+}
+.hero-h em{
+  font-style:normal;
+  color:var(--gold);
+  border-bottom:3px solid var(--gold);
+}
+.hero-argument{
+  font-size:15px;color:var(--ink-70);
+  line-height:1.9;margin-bottom:24px;
+  max-width:520px;
+}
+.hero-argument strong{color:var(--ink);}
+.hero-pull{
+  font-family:var(--serif);
+  font-size:18px;font-weight:600;
+  color:var(--ink);line-height:1.5;
+  border-left:3px solid var(--gold);
+  padding:14px 0 14px 20px;
+  margin:28px 0;
+  max-width:480px;
+}
+.hero-prop{
+  background:var(--ink);color:#fff;
+  padding:24px 28px;
+  margin-top:32px;
+  max-width:520px;
+}
+.hero-prop-label{
+  font-size:10px;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:10px;font-weight:500;
+}
+.hero-prop-text{
+  font-family:var(--serif);
+  font-size:16px;font-weight:600;
+  color:#fff;line-height:1.6;
+}
+
+/* Hero right — system preview */
+.hero-right{
+  position:sticky;top:72px;
+}
+.system-preview{
+  background:#fff;
+  border:1px solid var(--ink-15);
+  padding:28px;
+}
+.sp-title{
+  font-size:10px;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--ink-40);
+  margin-bottom:20px;font-weight:500;
+}
+.sp-axis{
+  display:flex;justify-content:space-between;
+  margin-bottom:8px;
+}
+.sp-stage-label{
+  font-size:10px;color:var(--ink-40);
+  text-align:center;flex:1;
+}
+.sp-stage-label.branch{color:var(--gold);}
+.sp-tracks{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
+.sp-track{display:flex;align-items:center;gap:8px;}
+.sp-track-label{
+  font-size:10px;font-weight:700;
+  width:36px;flex-shrink:0;
+}
+.sp-track-bars{
+  flex:1;display:flex;gap:3px;
+}
+.sp-bar{
+  flex:1;height:24px;
+  border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;color:#fff;
+  transition:opacity .2s;
+  cursor:pointer;
+}
+.sp-bar:hover{opacity:0.8;}
+.sp-legend{
+  display:flex;gap:16px;
+  border-top:1px solid var(--ink-06);
+  padding-top:14px;
+}
+.sp-legend-item{
+  display:flex;align-items:center;gap:6px;
+  font-size:11px;color:var(--ink-40);
+}
+.sp-legend-dot{
+  width:8px;height:8px;border-radius:50%;
+}
+.sp-insight{
+  margin-top:16px;
+  font-size:12px;color:var(--ink-70);
+  line-height:1.7;
+  border-top:1px solid var(--ink-06);
+  padding-top:14px;
+}
+.sp-insight strong{color:var(--ink);}
+
+/* ══ SECTION DIVIDER ══ */
+.sec-divider{
+  max-width:1200px;margin:0 auto;
+  padding:0 40px;
+}
+.sec-divider-line{
+  border:none;border-top:1px solid var(--ink-15);
+  margin:0;
+}
+
+/* ══ OVERVIEW SECTION ══ */
+.overview-section{
+  max-width:1200px;margin:0 auto;
+  padding:72px 40px;
+  scroll-margin-top:48px;
+}
+.ov-header{
+  display:flex;align-items:baseline;gap:16px;
+  margin-bottom:40px;
+}
+.ov-chapter{
+  font-size:10px;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--gold);
+  font-weight:700;
+}
+.ov-title{
+  font-family:var(--serif);
+  font-size:24px;font-weight:700;color:var(--ink);
+}
+.ov-desc{
+  font-size:13px;color:var(--ink-40);
+  margin-left:auto;max-width:300px;text-align:right;
+}
+
+/* Overview: the three type cards */
+.type-overview{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--ink-15);
+  border:1px solid var(--ink-15);
+  margin-bottom:40px;
+  overflow:hidden;
+}
+.to-col{background:#fff;display:flex;flex-direction:column;}
+.to-head{
+  padding:20px 22px;color:#fff;
+  display:flex;flex-direction:column;gap:4px;
+}
+.to-head-name{font-size:14px;font-weight:700;}
+.to-head-sub{font-size:11px;opacity:0.7;}
+.to-body{padding:22px;flex:1;}
+.to-var-row{
+  display:flex;justify-content:space-between;
+  align-items:center;padding:7px 0;
+  border-bottom:1px solid var(--ink-06);
+  font-size:12px;
+}
+.to-var-row:last-child{border-bottom:none;}
+.to-var-name{color:var(--ink-40);}
+.to-var-bar{
+  display:flex;align-items:center;gap:6px;
+}
+.to-bar-track{
+  width:60px;height:4px;
+  background:var(--ink-06);border-radius:2px;overflow:hidden;
+}
+.to-bar-fill{
+  height:100%;border-radius:2px;
+  transition:width .6s var(--ease);
+}
+.to-var-val{
+  font-size:11px;font-weight:600;
+  min-width:28px;text-align:right;
+}
+.to-foot{
+  padding:16px 22px;
+  background:var(--ink-06);
+  border-top:1px solid var(--ink-15);
+  font-size:12px;color:var(--ink-70);
+  line-height:1.7;
+}
+.to-foot strong{color:var(--ink);}
+.boundary-tag{
+  display:inline-block;
+  font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:20px;
+  margin-bottom:8px;color:#fff;
+  letter-spacing:0.04em;
+}
+
+/* ══ MAIN STAGE VIEWER ══ */
+.stage-viewer{
+  max-width:1200px;margin:0 auto;
+  padding:0 40px 96px;
+  scroll-margin-top:48px;
+}
+.sv-header{margin-bottom:40px;}
+.sv-chapter{
+  font-size:10px;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--gold);
+  font-weight:700;margin-bottom:8px;
+}
+.sv-title{
+  font-family:var(--serif);
+  font-size:24px;font-weight:700;color:var(--ink);
+  margin-bottom:6px;
+}
+.sv-desc{font-size:13px;color:var(--ink-40);}
+
+/* Stage selector */
+.stage-selector{
+  display:flex;align-items:stretch;
+  gap:0;margin-bottom:40px;
+  border:1px solid var(--ink-15);
+  overflow:hidden;
+  background:var(--ink-06);
+}
+.ss-item{
+  flex:1;padding:16px 12px;
+  cursor:pointer;
+  border-right:1px solid var(--ink-15);
+  transition:all .2s var(--ease);
+  display:flex;flex-direction:column;gap:4px;
+  background:var(--ink-06);
+  position:relative;
+}
+.ss-item:last-child{border-right:none;}
+.ss-item.act{
+  background:#fff;
+  box-shadow:inset 0 3px 0 var(--gold);
+}
+.ss-item.branch-item{
+  flex:0.7;
+  background:rgba(176,125,32,0.04);
+  border-left:1px dashed var(--ink-15);
+}
+.ss-item.branch-item.act{
+  background:var(--gold-lt);
+  box-shadow:inset 0 3px 0 var(--gold);
+}
+.ss-num{
+  font-size:10px;color:var(--gold);
+  font-weight:700;letter-spacing:0.1em;
+}
+.ss-name{
+  font-size:13px;font-weight:700;color:var(--ink);
+  line-height:1.2;
+}
+.ss-task{
+  font-size:10px;color:var(--ink-40);
+  line-height:1.4;margin-top:2px;
+}
+.ss-branch-tag{
+  font-size:9px;color:var(--gold);
+  font-weight:500;letter-spacing:0.06em;
+  text-transform:uppercase;
+}
+
+/* Stage content */
+.stage-content{
+  display:none;
+  animation:fadeIn .25s var(--ease);
+}
+.stage-content.vis{display:block;}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+/* State banner */
+.state-banner{
+  padding:24px 28px;
+  border:1px solid var(--ink-15);
+  background:#fff;
+  margin-bottom:20px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:40px;
+  align-items:center;
+}
+.sb-left{}
+.sb-stage-name{
+  font-family:var(--serif);
+  font-size:20px;font-weight:700;color:var(--ink);
+  margin-bottom:4px;
+}
+.sb-task{
+  font-size:13px;color:var(--ink-40);
+  margin-bottom:10px;
+}
+.sb-char{
+  font-size:13px;color:var(--ink-70);
+  line-height:1.75;
+  max-width:580px;
+}
+.sb-right{}
+.sb-decision{
+  background:var(--ink);
+  padding:16px 20px;
+  font-size:12px;color:rgba(255,255,255,0.8);
+  line-height:1.7;
+  max-width:260px;
+}
+.sb-decision-label{
+  font-size:10px;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--gold);
+  font-weight:700;margin-bottom:8px;
+}
+.sb-decision strong{color:#fff;}
+
+/* The three-track view — core of the tool */
+.track-view{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--ink-15);
+  border:1px solid var(--ink-15);
+  margin-bottom:20px;
+  overflow:hidden;
+}
+.track-col{
+  background:#fff;
+  display:flex;flex-direction:column;
+}
+.tc-head{
+  padding:16px 20px;
+  display:flex;justify-content:space-between;
+  align-items:center;
+}
+.tc-head-left{}
+.tc-type-name{
+  font-size:13px;font-weight:700;color:#fff;
+  margin-bottom:2px;
+}
+.tc-type-sub{font-size:10px;opacity:0.65;color:#fff;}
+.tc-role-badge{
+  font-size:10px;font-weight:700;
+  padding:3px 10px;border-radius:20px;
+  background:rgba(255,255,255,0.18);
+  color:#fff;
+  white-space:nowrap;
+}
+
+/* Value indicator */
+.tc-value{
+  display:flex;align-items:center;gap:0;
+  border-bottom:1px solid var(--ink-06);
+}
+.tc-value-seg{
+  flex:1;height:6px;
+  transition:background .4s var(--ease);
+}
+
+/* Drive keyword — the most prominent element */
+.tc-drive{
+  padding:20px 20px 14px;
+  border-bottom:1px solid var(--ink-06);
+}
+.tc-drive-label{
+  font-size:10px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--ink-40);
+  margin-bottom:8px;font-weight:500;
+}
+.tc-drive-keyword{
+  font-family:var(--serif);
+  font-size:28px;font-weight:900;
+  line-height:1;margin-bottom:8px;
+}
+.tc-drive-mechanism{
+  font-size:12px;color:var(--ink-70);
+  line-height:1.75;
+}
+
+/* What the type does this stage */
+.tc-what{
+  padding:16px 20px;
+  border-bottom:1px solid var(--ink-06);
+  flex:1;
+}
+.tc-what-label{
+  font-size:10px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--ink-40);
+  margin-bottom:8px;font-weight:500;
+}
+.tc-what-text{
+  font-size:12px;color:var(--ink-70);
+  line-height:1.75;
+}
+
+/* Product action */
+.tc-product{
+  padding:14px 20px;
+  border-bottom:1px solid var(--ink-06);
+  background:var(--ink-03);
+}
+.tc-product-label{
+  font-size:10px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--ink-40);
+  margin-bottom:6px;font-weight:500;
+}
+.tc-product-text{
+  font-size:12px;color:var(--ink);
+  line-height:1.7;font-weight:500;
+}
+.tc-product-form{
+  font-size:11px;color:var(--ink-40);
+  margin-top:4px;font-style:italic;
+}
+
+/* Data signal */
+.tc-data{
+  padding:12px 20px;
+  background:var(--ink-06);
+}
+.tc-data-label{
+  font-size:10px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--ink-40);
+  margin-bottom:6px;font-weight:500;
+}
+.tc-data-signal{
+  font-size:11px;color:var(--ink-70);
+  line-height:1.6;
+}
+.data-tag{
+  display:inline-block;
+  font-size:10px;font-weight:600;
+  padding:2px 7px;border-radius:20px;
+  background:var(--ink-15);
+  color:var(--ink-70);
+  margin:2px 2px 2px 0;
+}
+
+/* Attention note */
+.attention-row{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--ink-15);
+  border:1px solid var(--ink-15);
+  margin-bottom:20px;
+  overflow:hidden;
+}
+.att-cell{
+  padding:14px 18px;
+  background:var(--ink-06);
+  font-size:12px;color:var(--ink-70);
+  line-height:1.7;
+}
+.att-cell strong{color:var(--ink);}
+.att-cell.warn{
+  background:var(--gold-dim);
+}
+.att-cell.warn strong{color:var(--gold);}
+.att-tag{
+  font-size:10px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  margin-bottom:6px;
+  display:block;
+}
+
+/* Audience row */
+.audience-row{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  background:var(--ink-15);
+  border:1px solid var(--ink-15);
+  overflow:hidden;
+}
+.aud-cell{
+  background:#fff;
+  padding:16px 18px;
+}
+.aud-role{
+  font-size:10px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--ink-40);margin-bottom:8px;
+}
+.aud-text{
+  font-size:12px;color:var(--ink-70);
+  line-height:1.75;
+}
+.aud-text strong{color:var(--ink);}
+
+/* ══ CONCLUSION ══ */
+.conclusion{
+  background:var(--ink);
+  padding:64px 40px;
+}
+.conclusion-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:280px 1fr;
+  gap:80px;align-items:start;
+}
+.conclusion-left{}
+.conclusion-label{
+  font-size:10px;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--gold);
+  font-weight:700;margin-bottom:16px;
+}
+.conclusion-h{
+  font-family:var(--serif);
+  font-size:28px;font-weight:700;
+  color:#fff;line-height:1.35;
+}
+.conclusion-right{}
+.cl-lines{display:flex;flex-direction:column;gap:0;}
+.cl-line{
+  display:grid;
+  grid-template-columns:130px 1fr;
+  gap:24px;align-items:start;
+  padding:18px 0;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+.cl-line:first-child{border-top:none;padding-top:0;}
+.cl-key{
+  font-size:13px;font-weight:700;color:var(--gold);
+  line-height:1.4;
+}
+.cl-val{
+  font-size:13px;color:rgba(255,255,255,0.7);
+  line-height:1.8;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--ink-15);border-radius:2px;}
+</style>
+</head>
+<body>
+<a class="home-entry" href="./index.html" aria-label="返回脑洞展厅">
+  <span>←</span>
+  <span class="home-entry-label">
+    <span class="home-entry-kicker">Back to Home</span>
+    <span class="home-entry-title">返回脑洞展厅</span>
+  </span>
+</a>
+
+<nav class="nav">
+  <span class="nav-brand">公考"题"逻辑全解</span>
+  <div class="nav-divider"></div>
+  <span class="nav-hint">阶段驱动型题目产品框架</span>
+  <div class="nav-right">
+    <span class="nav-section-label" id="navLabel">内部研究文档</span>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section style="padding-top:48px;">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-eyebrow">内部研究文档 · 教研 & 产品指导</div>
+      <h1 class="hero-h">题的价值<br>不由内容决定<br>由<em>用户状态</em>决定</h1>
+
+      <div class="hero-argument">
+        <p>公考备考市场的主流逻辑：课是主体，题是工具。课定义学习路径，题用来检验效果。在这个逻辑里，题的价值由它所附属的课来定义。</p>
+        <p style="margin-top:14px;">这个逻辑有一个盲区——它忽略了题本身对用户的作用机制。课告诉学生考试是什么，但只有做题才能让学生真实感受到自己和考试之间的距离、能力边界在哪里、压力下会发生什么。这三件事，课永远做不到。</p>
+      </div>
+
+      <div class="hero-pull">同一道申论题，启动期做是挫败感，强化期做是能力边界的认知，收敛期做是失分点的定向消除。题没有变，但它在三个阶段对用户做了三件完全不同的事。</div>
+
+      <div class="hero-prop">
+        <div class="hero-prop-label">核心命题</div>
+        <div class="hero-prop-text">用阶段定义状态，用题型匹配任务，用驱动设计反馈，用调度控制节奏</div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="system-preview">
+        <div class="sp-title">三类题型 × 五个阶段 · 价值强度全局视图</div>
+        <div class="sp-axis" id="spAxis"></div>
+        <div class="sp-tracks" id="spTracks"></div>
+        <div class="sp-legend">
+          <div class="sp-legend-item"><div class="sp-legend-dot" style="background:var(--xc)"></div>行测</div>
+          <div class="sp-legend-item"><div class="sp-legend-dot" style="background:var(--sl)"></div>申论/综应</div>
+          <div class="sp-legend-item"><div class="sp-legend-dot" style="background:var(--ms)"></div>面试</div>
+        </div>
+        <div class="sp-insight" id="spInsight"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"><hr class="sec-divider-line"></div>
+
+<!-- ══════════ TYPE OVERVIEW ══════════ -->
+<section class="overview-section" id="sec-types">
+  <div class="ov-header">
+    <span class="ov-chapter">前置认知</span>
+    <h2 class="ov-title">三类题型的结构特性</h2>
+    <span class="ov-desc">自我校准力是决定独立价值边界的核心变量</span>
+  </div>
+
+  <div class="type-overview">
+    <div class="to-col">
+      <div class="to-head" style="background:var(--xc)">
+        <div class="to-head-name">行测（客观题）</div>
+        <div class="to-head-sub">做完即知对错 · 独立价值最强</div>
+      </div>
+      <div class="to-body">
+        <div class="to-var-row">
+          <span class="to-var-name">接受门槛</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:85%;background:var(--sl)"></div></div>
+            <span class="to-var-val" style="color:var(--sl)">低</span>
+          </div>
+        </div>
+        <div class="to-var-row">
+          <span class="to-var-name">即时反馈强度</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:90%;background:var(--xc)"></div></div>
+            <span class="to-var-val" style="color:var(--xc)">高</span>
+          </div>
+        </div>
+        <div class="to-var-row">
+          <span class="to-var-name">训练连续性</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:88%;background:var(--xc)"></div></div>
+            <span class="to-var-val" style="color:var(--xc)">高</span>
+          </div>
+        </div>
+        <div class="to-var-row">
+          <span class="to-var-name">自我校准力 ★</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:92%;background:var(--xc)"></div></div>
+            <span class="to-var-val" style="color:var(--xc)">高</span>
+          </div>
+        </div>
+      </div>
+      <div class="to-foot">
+        <div class="boundary-tag" style="background:var(--xc)">独立价值完整</div><br>
+        全程不依赖外部反馈独立成立。产品竞争力在于<strong>结果如何被呈现</strong>——不同阶段需要激活不同的驱动状态。
+      </div>
+    </div>
+    <div class="to-col">
+      <div class="to-head" style="background:var(--sl)">
+        <div class="to-head-name">申论 / 综应（主观题）</div>
+        <div class="to-head-sub">反馈延迟 · 必须依赖外部评判</div>
+      </div>
+      <div class="to-body">
+        <div class="to-var-row">
+          <span class="to-var-name">接受门槛</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:25%;background:var(--ms)"></div></div>
+            <span class="to-var-val" style="color:var(--ms)">高</span>
+          </div>
+        </div>
+        <div class="to-var-row">
+          <span class="to-var-name">即时反馈强度</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:15%;background:var(--ms)"></div></div>
+            <span class="to-var-val" style="color:var(--ms)">低</span>
+          </div>
+        </div>
+        <div class="to-var-row">
+          <span class="to-var-name">训练连续性</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:45%;background:var(--gold)"></div></div>
+            <span class="to-var-val" style="color:var(--gold)">中</span>
+          </div>
+        </div>
+        <div class="to-var-row">
+          <span class="to-var-name">自我校准力 ★</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:12%;background:var(--ms)"></div></div>
+            <span class="to-var-val" style="color:var(--ms)">低</span>
+          </div>
+        </div>
+      </div>
+      <div class="to-foot">
+        <div class="boundary-tag" style="background:var(--sl)">独立价值有天花板</div><br>
+        没有批改的申论题价值接近于零——不是低，是接近零。<strong>批改不是增值服务，是产品存在的前提。</strong>
+      </div>
+    </div>
+    <div class="to-col">
+      <div class="to-head" style="background:var(--ms)">
+        <div class="to-head-name">面试题</div>
+        <div class="to-head-sub">必须开口 · 价值依赖训练环境</div>
+      </div>
+      <div class="to-body">
+        <div class="to-var-row">
+          <span class="to-var-name">接受门槛</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:20%;background:var(--ms)"></div></div>
+            <span class="to-var-val" style="color:var(--ms)">高</span>
+          </div>
+        </div>
+        <div class="to-var-row">
+          <span class="to-var-name">即时反馈强度</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:10%;background:var(--ms)"></div></div>
+            <span class="to-var-val" style="color:var(--ms)">低</span>
+          </div>
+        </div>
+        <div class="to-var-row">
+          <span class="to-var-name">训练连续性</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:18%;background:var(--ms)"></div></div>
+            <span class="to-var-val" style="color:var(--ms)">低</span>
+          </div>
+        </div>
+        <div class="to-var-row">
+          <span class="to-var-name">自我校准力 ★</span>
+          <div class="to-var-bar">
+            <div class="to-bar-track"><div class="to-bar-fill" style="width:8%;background:var(--ms)"></div></div>
+            <span class="to-var-val" style="color:var(--ms)">极低</span>
+          </div>
+        </div>
+      </div>
+      <div class="to-foot">
+        <div class="boundary-tag" style="background:var(--ms)">价值完全依赖环境</div><br>
+        书面思考面试题，价值折损极大。进面前低频预埋，进面后<strong>价值断崖式跃升</strong>为绝对核心。
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-divider"><hr class="sec-divider-line"></div>
+
+<!-- ══════════ STAGE VIEWER ══════════ -->
+<section class="stage-viewer" id="sec-stages">
+  <div class="sv-header">
+    <div class="sv-chapter">核心工具</div>
+    <div class="sv-title">选择阶段，查看完整截面</div>
+    <div class="sv-desc">用户当前处于哪个阶段 → 三类题型的角色、驱动机制、产品动作、数据信号同时可见</div>
+  </div>
+
+  <!-- Stage selector -->
+  <div class="stage-selector" id="stageSelector"></div>
+
+  <!-- Stage contents -->
+  <div id="stageContents"></div>
+</section>
+
+<div class="sec-divider"><hr class="sec-divider-line"></div>
+
+<!-- ══════════ CONCLUSION ══════════ -->
+<div class="conclusion">
+  <div class="conclusion-inner">
+    <div class="conclusion-left">
+      <div class="conclusion-label">一句话框架</div>
+      <div class="conclusion-h">按题型建资源<br>按阶段做分发<br>按驱动做留存<br>按结果做转化</div>
+    </div>
+    <div class="conclusion-right">
+      <div class="cl-lines">
+        <div class="cl-line">
+          <div class="cl-key">按题型建资源</div>
+          <div class="cl-val">行测、申论、面试三类资源的自我校准力根本不同，独立价值边界不同，不能用同一套逻辑设计。</div>
+        </div>
+        <div class="cl-line">
+          <div class="cl-key">按阶段做分发</div>
+          <div class="cl-val">同一类题在不同阶段承担不同角色。资源价值不是固定的，随用户心理状态动态迁移。阶段是调度逻辑，题型是资源。</div>
+        </div>
+        <div class="cl-line">
+          <div class="cl-key">按驱动做留存</div>
+          <div class="cl-val">识别当前阶段做题结果激活的心理状态——存在感、定位感、进步感、确定感、消除感、排名感知——用产品机制匹配和放大它。</div>
+        </div>
+        <div class="cl-line">
+          <div class="cl-key">按结果做转化</div>
+          <div class="cl-val">题的独立价值边界到达之后，批改/模拟/服务才是自然延伸，不是强行推销。转化是结果，不是设计目标。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════ DATA ══════════
+
+const VALUE_LEVELS = {
+  '极高': { w: 1.0, label: '极高' },
+  '高':   { w: 0.82, label: '高' },
+  '中':   { w: 0.55, label: '中' },
+  '低':   { w: 0.28, label: '低' },
+  '极低': { w: 0.08, label: '极低' },
+  '退场': { w: 0.06, label: '退场' }
+};
+
+const STAGES = [
+  {
+    id: 0, num: '01', name: '启动期', branch: false,
+    task: '核心心理任务：确认自己和考试之间的距离',
+    char: '目标感弱、习惯未建立、信心不稳定、容易拖延。学生最大的障碍不是"不会"，而是"不知道自己处于什么位置"。此阶段最需要的不是最强训练，而是先建立行动。',
+    decision: '启动期产品原则：<strong>低门槛进入，完成感优先于正确感</strong>。不要在这个阶段用错误率刺激用户。',
+    types: [
+      {
+        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
+        role: '主角 · 校准器', value: '高',
+        keyword: '存在感',
+        mechanism: '"我今天做了"比"我今天对了几道"更重要。做完这个动作本身才是驱动力来源，对错率在启动期的心理权重极低。',
+        what: '接受门槛最低、即时反馈最强。做完10道题学生就能感知自己和考试的真实距离——这件事不需要老师，题本身就能完成。行测是整个备考体系唯一适合做冷启动的入口。',
+        product: '完成感设计优先于正确率展示。闯关形式、打卡仪式感、"今日已完成"比分数报告更有留存价值。',
+        form: '每日一练 · 快速测评 · 闯关刷题',
+        data: ['次日留存率', '完成率 > 正确率', '连续打卡天数'],
+        attention: { type: 'warn', tag: '预埋窗口', text: '同步轻度投放申论认知——不推作答，只让学生感受到"主观题也需要准备"。错过这个预埋，定向期申论的接受度会更低。' }
+      },
+      {
+        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
+        role: '辅助 · 启蒙器', value: '低',
+        keyword: '距离感知',
+        mechanism: '结果的价值是让用户第一次感受到主观表达与标准答案之间的距离。没有对照就没有距离感，没有距离感就没有任何驱动。',
+        what: '接受门槛高、反馈延迟、挫败感强，用户容易回避。但不能完全不碰——越晚接触，后期积压越严重。核心任务是建立最小闭环，不是高强度作答。',
+        product: '最小闭环设计：写一点 → 看答案 → 感受距离。不要强制全文作答，轻任务形式让用户完成第一次接触。',
+        form: '读题拆解 · 得分点识别 · 范文对照',
+        data: ['阅读完成率', '范文查看率', '是否触发下一题'],
+        attention: { type: 'normal', tag: '注意', text: '申论在此阶段不以转化为目标，只做认知预埋。强推作答会适得其反。' }
+      },
+      {
+        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
+        role: '预埋 · 认知铺垫', value: '极低',
+        keyword: '近于零',
+        mechanism: '不开口则无感知，无感知则无驱动。书面思考面试题，训练价值折损极大。此阶段结果等于零信息。',
+        what: '距离结果还远，训练形式又容易让人尴尬，接受度极低。强推面试训练会引发回避。唯一有意义的是让用户建立"面试也需要准备"的认知。',
+        product: '低频认知展示，不做转化主推。内容形态应为信息性的，而非训练性的。',
+        form: '面试认知课 · 热点表达 · 小题快答',
+        data: ['内容点击率（仅监测）'],
+        attention: { type: 'normal', tag: '原则', text: '启动期面试内容只做心智预埋，不设转化目标，不考核转化率。' }
+      }
+    ]
+  },
+  {
+    id: 1, num: '02', name: '定向期', branch: false,
+    task: '核心心理任务：把模糊的弱项感知变成具体的能力缺口',
+    char: '开始了解考试结构，能持续投入，开始分辨强弱项。用户不再是"能不能开始"，而是"开始知道自己哪里有问题"——但这个"知道"还是模糊的，需要被具体化。',
+    decision: '定向期产品原则：<strong>让用户看见自己的短板，但不要一下推到最高强度</strong>。弱项画像是这个阶段最核心的产品能力。',
+    types: [
+      {
+        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
+        role: '主角 · 分层工具', value: '高',
+        keyword: '定位感',
+        mechanism: '学生开始用错题描绘能力轮廓。单次对错无意义，错误的分布才有意义——哪类题错得多、做得慢、靠蒙对。',
+        what: '从泛刷转向专项识别。需要把结果从"这次对了几道"升级为"你的弱项在哪里"。累积数据的价值远高于单次数据。',
+        product: '弱项标签体系是核心产品能力。模块错误分布图、能力画像报告，让学生第一次真实看到自己的能力轮廓。',
+        form: '专项训练 · 弱项标签 · 能力画像报告',
+        data: ['各模块错误率分布', '专项训练点击率', '弱项模块复练率'],
+        attention: { type: 'warn', tag: '预埋窗口', text: '开始投放申论方法启蒙内容。不推完整作答，推"为什么答案和我写的不一样"这类认知冲击。' }
+      },
+      {
+        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
+        role: '成长 · 方法启蒙', value: '中',
+        keyword: '方法需求',
+        mechanism: '驱动力不来自"你错了"，来自"你错在这里，因为缺少这个方法"。反馈颗粒度决定方法需求被激活的程度。',
+        what: '接受度开始上升。用户意识到"我不是不会写，我是不知道怎么写"。这个阶段要让方法缺口变得清晰可见，而不是推高强度作答。',
+        product: '诊断性反馈，而非字数差异提示。"你漏掉了材料里的第三个隐含信息"比"你少写了50字"更有方法驱动力。',
+        form: '分题型训练 · 结构模板 · 小题批注',
+        data: ['小题完成率', '答案对照查看率', '方法课点击率'],
+        attention: { type: 'normal', tag: '注意', text: '此阶段申论仍不以批改为主推，批改作为可选项存在，为强化期转化做铺垫。' }
+      },
+      {
+        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
+        role: '预埋 · 轻度介入', value: '低',
+        keyword: '开口冲击',
+        mechanism: '"说出来比想的难得多"——这个冲击本身是驱动力。录音回放比看答案价值更高，它让用户直接面对自己的真实表达。',
+        what: '开始有轻度预埋价值。核心任务是制造第一次真实的开口体验，让用户感受到说出来和想的完全不一样。',
+        product: '录音 → 回放 → 自我对比。冲击感比答案质量更重要。开口这个行为本身是这个阶段面试产品的全部目标。',
+        form: '基础表达训练 · 录音体验 · 框架认知',
+        data: ['开口率（是否使用录音功能）', '录音回放率'],
+        attention: { type: 'normal', tag: '原则', text: '定向期面试的成功指标只有一个：让用户完成第一次录音。' }
+      }
+    ]
+  },
+  {
+    id: 2, num: '03', name: '强化期', branch: false,
+    task: '核心心理任务：在已知弱点上建立可感知的进步',
+    char: '意识到短板，方法开始稳定，开始接受更高强度训练。这个阶段是产品转化价值最高的窗口，也是最容易被浪费的阶段——申论在这里有且只有一次成为核心产品的机会。',
+    decision: '强化期产品原则：<strong>从题目消费转向反馈消费</strong>。申论接棒成为主角，批改是这个阶段一切的前提。',
+    types: [
+      {
+        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
+        role: '补强 · 进步感载体', value: '高',
+        keyword: '进步感',
+        mechanism: '绝对值不重要，趋势重要。同样错5道，上周错8道和上周错3道，对用户的驱动力完全相反。没有历史数据的单次结果，在这个阶段是浪费的。',
+        what: '角色从主入口迁移为补短板工具。纵向对比功能成为关键——用户需要看到趋势，不只是当次分数。',
+        product: '纵向趋势对比是必须功能，不是可选项。"你这周数量关系正确率比上周提升了8%"比任何激励文案都有驱动力。',
+        form: '限时专项 · 趋势报告 · 错题回炉',
+        data: ['模块正确率周环比', '主动复练率', '弱项模块趋势'],
+        attention: { type: 'normal', tag: '角色变化', text: '行测在强化期从主角退为辅助，但不应该缺席。纵向进步数据是维持连续训练的关键锚点。' }
+      },
+      {
+        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
+        role: '主角 · 核心转化', value: '极高',
+        keyword: '能力可见性',
+        mechanism: '申论价值窗口期。用户最需要知道"我到底是什么水平"，但自我校准力极低，外部批改是唯一路径。批改质量直接决定这个阶段的产品价值。',
+        what: '结果关联感和接受度同时达到最高点。这是申论从"启蒙形态"转变为"核心训练产品"的唯一窗口。错过这个窗口，收敛期就只剩精准修正，价值密度大幅下降。',
+        product: '批改不是增值服务，是产品存在的前提。批改颗粒度要足够细——不只是给分，要让用户第一次真实看到自己能力的边界在哪里。',
+        form: '完整作答 · 逐题批改 · 得分点复盘 · 修改前后对照',
+        data: ['批改服务转化率', '完整作答提交率', '批改后二次作答率'],
+        attention: { type: 'warn', tag: '转化核心', text: '强化期是申论产品价值最高点，也是付费转化的核心窗口。批改服务的体验质量在这个阶段直接影响整体留存和口碑。' }
+      },
+      {
+        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
+        role: '成长 · 体验渗透', value: '中',
+        keyword: '表达可见性',
+        mechanism: '自我校准力极低，外部评判是唯一路径。面试评判比申论更复杂——涉及逻辑、表达方式、情绪状态多个维度，单一评分无法产生足够驱动。',
+        what: '开始有真实预埋价值。产品核心任务：让用户从"看题"变成"开口答题"。录音、计时、自评是面试题在这个阶段能否成立的前提机制。',
+        product: '多维度反馈让进步可见。强制开口机制是核心设计——不开口，面试题在这个阶段等于零。',
+        form: '开口练习 · 录音自评 · 模拟答题体验',
+        data: ['开口完成率', '录音时长分布', '体验课转化率'],
+        attention: { type: 'normal', tag: '预埋窗口', text: '强化期是面试服务预埋的最佳时机。高意愿用户在这个阶段开始接受"进面后需要系统训练"的认知。' }
+      }
+    ]
+  },
+  {
+    id: 3, num: '04', name: '收敛期', branch: false,
+    task: '核心心理任务：把训练成果转化为压力下可靠的发挥',
+    char: '时间压力上升，关注提分效率、命中性、实战稳定性。用户不再想要大而全，而是要快、准、贴近考试。每类题型都向最高强度形态迁移，产品密度上升。',
+    decision: '收敛期产品原则：<strong>减少认知负担，增加结果导向</strong>。三线同时收敛，面试开始为决战期接棒做准备。',
+    types: [
+      {
+        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
+        role: '稳定 · 压力容器', value: '高',
+        keyword: '确定感',
+        mechanism: '不再需要进步感，需要验证压力下不崩。结果的功能变为心理锚点——"我在模拟考试里稳住了，真实考试我也能稳住"。',
+        what: '不再是知识复习，而是验证高压下的稳定性。轻松状态下的高分没有驱动力，结果必须来自高仿真压力环境才有效。',
+        product: '全真模考是核心产品形态。稳定性指标（标准差、极值）比均值更有意义。产品形态如果还停留在专项刷题，就和这个阶段的心理任务错位了。',
+        form: '全真模考 · 节奏控制训练 · 稳定性分析',
+        data: ['模考完成率', '成绩稳定性（标准差）', '模考 vs 专项正确率差值'],
+        attention: { type: 'normal', tag: '形态转变', text: '收敛期行测的产品形态必须从专项训练转向全真模考，这是这个阶段用户心理任务的直接要求。' }
+      },
+      {
+        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
+        role: '修正 · 失分追踪', value: '中',
+        keyword: '消除感',
+        mechanism: '"这个问题我上次错，这次对了"——具体问题的消除感，比总分提升3分更有驱动力。结果必须和历史问题库关联才能产生这个驱动。',
+        what: '数量不重要，针对性强。一道针对自己薄弱点的题配合针对性反馈，比泛刷十道题价值高。用户需要看到具体问题被逐一消除。',
+        product: '失分点追踪可视化是核心产品能力。让用户看到历史失分点的消除进度，比任何激励机制都有效。热点押题降低的是焦虑，不是能力。',
+        form: '失分点定向训练 · 热点押题 · 限时冲刺批改',
+        data: ['同类失分点二次正确率', '历史错误消除率', '热点题完成率'],
+        attention: { type: 'normal', tag: '角色变化', text: '申论在收敛期从主角退为精准修正工具，重心从全面提升转向定点清除。' }
+      },
+      {
+        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
+        role: '主角 · 仿真训练', value: '高',
+        keyword: '确定感',
+        mechanism: '"我见过这种题，我有应对方案"。覆盖感比质量感更重要——做过的题型越多，未知威胁越少。消除空白，不是证明卓越。',
+        what: '单独做题价值已非常有限，必须和服务密度绑定。高仿真环境成为前提——追问、录像复盘、场景覆盖度构成产品核心竞争力。',
+        product: '题型覆盖率 > 单题打磨深度。高仿真训练环境的建设是这个阶段面试产品的核心投入方向。',
+        form: '模拟面试 · 追问训练 · 场景实战 · 录像复盘',
+        data: ['模拟面试完成次数', '题型覆盖率', '录像复盘率'],
+        attention: { type: 'warn', tag: '接棒准备', text: '收敛期面试开始承担高价值服务的转化任务，为决战期接棒做准备。进面通知一旦发出，这批用户的行为模式会立刻切换。' }
+      }
+    ]
+  },
+  {
+    id: 4, num: '05', name: '决战期', branch: true,
+    task: '进面通知触发 · 在极短窗口内建立考场确定感',
+    char: '由外部事件（进面通知）触发，不是主链路的自然延伸。目标极强，备考窗口极短（通常2—4周），对训练强度和反馈密度的接受度断崖式提升。这个阶段和前四个阶段有质的不同。',
+    decision: '决战期产品原则：<strong>高密度反馈、高仿真训练、高服务承诺感</strong>。面试成为唯一核心，行测申论退出主推。',
+    types: [
+      {
+        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
+        role: '退场', value: '退场',
+        keyword: '退场',
+        mechanism: '学生注意力完全转向面试，行测结果驱动力几乎消失。除非仍有笔试任务，行测在这个阶段退出主驱动位置。',
+        what: '进面后行测价值基本消失。行测结果只有在出现严重异常时才会重新激活焦虑。强推行测会分散用户的备考注意力。',
+        product: '轻量维持，不主推。不设行测专属转化目标。',
+        form: '轻量维持练习（可选）',
+        data: ['无需重点监测'],
+        attention: { type: 'normal', tag: '原则', text: '决战期不对行测设转化目标。资源和注意力集中到面试。' }
+      },
+      {
+        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
+        role: '退场', value: '退场',
+        keyword: '退场',
+        mechanism: '笔试结束后申论价值基本消失。除非是综合选拔类考试中申论仍在链路里，否则退出主驱动位置。',
+        what: '进面后申论退场。综合选拔类考试中申论仍在链路里的，承担补强角色，但不是主推方向。',
+        product: '退出主驱动位置。综合选拔类考试提供补强包，但不作为主线产品推进。',
+        form: '综合选拔类：补强训练包',
+        data: ['无需重点监测'],
+        attention: { type: 'normal', tag: '例外', text: '综合选拔类考试（部分选调生等）申论可能仍在链路里，需单独判断。' }
+      },
+      {
+        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
+        role: '绝对核心', value: '极高',
+        keyword: '排名感知',
+        mechanism: '进面后增加了行测和申论没有的驱动维度：排名感知。用户不只关心自己好不好，更关心比别人好不好。横向排名是这个阶段独有的驱动机制，也是产品最大的差异化机会。',
+        what: '面试成为唯一焦点。题的密度、追问设计、场景覆盖度、横向比较机制构成产品核心竞争力。高仿真是前提，横向排名是差异化。',
+        product: '"你的这道题在同期参训学员里处于什么水平"——这个横向反馈比任何纵向进步数据都有驱动力。一对一、群面、录像复盘全线启动。',
+        form: '一对一模拟 · 群面实战 · 录像复盘 · 横向排名反馈 · 考前冲刺营',
+        data: ['模拟面试频次', '横向排名感知满意度', '口碑推荐率', '上岸率'],
+        attention: { type: 'warn', tag: '差异化核心', text: '横向排名反馈是决战期面试产品的最大差异化机会。"你在同期学员中处于前30%"这个信号，是目前市场上几乎没有产品在做的驱动机制。' }
+      }
+    ]
+  }
+];
+
+// Preview bar heights (visual intensity)
+const PREVIEW = {
+  xc: [82, 82, 78, 75, 8],
+  sl: [20, 42, 95, 55, 8],
+  ms: [5,  18, 45, 72, 95]
+};
+
+const PREVIEW_INSIGHTS = [
+  '行测全程可用但角色在迁移；申论强化期是唯一价值高点；面试进面后断崖式跃升',
+  '点击阶段节点查看该阶段三类题型的完整截面',
+  '三条曲线的交叉点揭示了产品资源调度的优先级',
+  '申论的高点（强化期）和面试的高点（决战期）不重叠——这是产品节奏设计的基础',
+  '没有哪个阶段三类题型的价值是均等的——不均等才是调度的依据'
+];
+
+// ══════════ RENDER PREVIEW ══════════
+function renderPreview() {
+  const axis = document.getElementById('spAxis');
+  axis.innerHTML = STAGES.map(s =>
+    `<div class="sp-stage-label ${s.branch ? 'branch' : ''}">${s.name}</div>`
+  ).join('');
+
+  const tracks = document.getElementById('spTracks');
+  const types = [
+    { key: 'xc', label: '行测', color: 'var(--xc)' },
+    { key: 'sl', label: '申论', color: 'var(--sl)' },
+    { key: 'ms', label: '面试', color: 'var(--ms)' }
+  ];
+  tracks.innerHTML = types.map(t => `
+    <div class="sp-track">
+      <div class="sp-track-label" style="color:${t.color}">${t.label}</div>
+      <div class="sp-track-bars">
+        ${PREVIEW[t.key].map((h, i) => `
+          <div class="sp-bar" style="background:${t.color};opacity:${0.15 + h/100*0.85};height:${Math.max(h*0.32, 4)}px;cursor:pointer;"
+               onclick="activateStage(${i})" title="${STAGES[i].name}">
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  const insight = document.getElementById('spInsight');
+  let idx = 0;
+  insight.innerHTML = `<strong>读图要点：</strong>${PREVIEW_INSIGHTS[0]}`;
+  setInterval(() => {
+    idx = (idx + 1) % PREVIEW_INSIGHTS.length;
+    insight.style.opacity = 0;
+    setTimeout(() => {
+      insight.innerHTML = idx === 0
+        ? `<strong>读图要点：</strong>${PREVIEW_INSIGHTS[0]}`
+        : PREVIEW_INSIGHTS[idx];
+      insight.style.opacity = 1;
+    }, 300);
+  }, 3200);
+  insight.style.transition = 'opacity .3s';
+}
+
+// ══════════ RENDER STAGE SELECTOR ══════════
+function renderSelector() {
+  const sel = document.getElementById('stageSelector');
+  sel.innerHTML = STAGES.map((s, i) => `
+    <div class="ss-item ${i === 0 ? 'act' : ''} ${s.branch ? 'branch-item' : ''}"
+         onclick="activateStage(${i})">
+      ${s.branch ? `<div class="ss-branch-tag">外部触发</div>` : ''}
+      <div class="ss-num">${s.num}</div>
+      <div class="ss-name">${s.name}</div>
+      <div class="ss-task">${s.task.replace('核心心理任务：','')}</div>
+    </div>
+  `).join('');
+}
+
+// ══════════ RENDER STAGE CONTENT ══════════
+function renderContents() {
+  const c = document.getElementById('stageContents');
+  c.innerHTML = STAGES.map((s, si) => {
+    const typeColors = ['var(--xc)', 'var(--sl)', 'var(--ms)'];
+    return `
+    <div class="stage-content ${si === 0 ? 'vis' : ''}" id="sc${si}">
+      <!-- State banner -->
+      <div class="state-banner">
+        <div class="sb-left">
+          <div class="sb-stage-name">${s.name}</div>
+          <div class="sb-task">${s.task}</div>
+          <div class="sb-char">${s.char}</div>
+        </div>
+        <div class="sb-right">
+          <div class="sb-decision">
+            <div class="sb-decision-label">本阶段产品原则</div>
+            ${s.decision}
+          </div>
+        </div>
+      </div>
+
+      <!-- Three-track view -->
+      <div class="track-view">
+        ${s.types.map((t, ti) => {
+          const vLevel = VALUE_LEVELS[t.value] || VALUE_LEVELS['低'];
+          const segs = Math.round(vLevel.w * 5);
+          const isRetire = t.value === '退场';
+          return `
+          <div class="track-col">
+            <div class="tc-head" style="background:${t.color}">
+              <div class="tc-head-left">
+                <div class="tc-type-name">${t.type}</div>
+                <div class="tc-type-sub">${ti===0?'客观题':ti===1?'主观题':'表达性题目'}</div>
+              </div>
+              <div class="tc-role-badge">${t.role}</div>
+            </div>
+
+            <!-- Value indicator bar -->
+            <div class="tc-value">
+              ${[1,2,3,4,5].map(seg => `
+                <div class="tc-value-seg" style="background:${seg <= segs && !isRetire ? t.color : 'var(--ink-06)'}"></div>
+              `).join('')}
+            </div>
+
+            <!-- Drive keyword -->
+            <div class="tc-drive">
+              <div class="tc-drive-label">结果激活的驱动状态</div>
+              <div class="tc-drive-keyword" style="color:${isRetire ? 'var(--ink-40)' : t.color}">${t.keyword}</div>
+              <div class="tc-drive-mechanism">${t.mechanism}</div>
+            </div>
+
+            <!-- What -->
+            <div class="tc-what">
+              <div class="tc-what-label">这个阶段这类题在做什么</div>
+              <div class="tc-what-text">${t.what}</div>
+            </div>
+
+            <!-- Product -->
+            <div class="tc-product">
+              <div class="tc-product-label">产品如何响应</div>
+              <div class="tc-product-text">${t.product}</div>
+              <div class="tc-product-form">${t.form}</div>
+            </div>
+
+            <!-- Data signal -->
+            <div class="tc-data">
+              <div class="tc-data-label">可观测数据信号</div>
+              <div class="tc-data-signal">
+                ${t.data.map(d => `<span class="data-tag">${d}</span>`).join('')}
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- Attention row -->
+      <div class="attention-row">
+        ${s.types.map(t => `
+          <div class="att-cell ${t.attention.type === 'warn' ? 'warn' : ''}">
+            <span class="att-tag" style="color:${t.attention.type === 'warn' ? 'var(--gold)' : 'var(--ink-40)'}">
+              ${t.type} · ${t.attention.tag}
+            </span>
+            ${t.attention.text}
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Audience row -->
+      <div class="audience-row">
+        <div class="aud-cell">
+          <div class="aud-role">战略</div>
+          <div class="aud-text">${getAudienceText(s, 'strategy')}</div>
+        </div>
+        <div class="aud-cell">
+          <div class="aud-role">产品</div>
+          <div class="aud-text">${getAudienceText(s, 'product')}</div>
+        </div>
+        <div class="aud-cell">
+          <div class="aud-role">教研</div>
+          <div class="aud-text">${getAudienceText(s, 'edu')}</div>
+        </div>
+        <div class="aud-cell">
+          <div class="aud-role">数据</div>
+          <div class="aud-text">${getAudienceText(s, 'data')}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function getAudienceText(s, role) {
+  const texts = {
+    0: {
+      strategy: '启动期是<strong>用户获取和冷启动</strong>的核心窗口。行测是唯一能独立成立的入口，申论和面试在这个阶段的战略价值在于预埋，不在转化。',
+      product: '<strong>完成感设计优先于正确感</strong>。核心指标是次日留存率和连续打卡天数，不是正确率。申论最小闭环是这个阶段的产品创新点。',
+      edu: '启动期题目设计原则：<strong>低门槛、快反馈、单题短小</strong>。不要在启动期出现高难度题和复杂解析，会打断行动感建立。',
+      data: '重点采集：<strong>开始率、完成率、次日回访率</strong>。这三个指标共同判断用户是否完成了启动期的核心任务。阶段迁移信号：连续打卡7天且完成首次弱项测评。'
+    },
+    1: {
+      strategy: '定向期是<strong>用户分层和产品分叉</strong>的关键节点。弱项画像的质量决定了后续所有阶段产品个性化的基础。',
+      product: '<strong>弱项标签体系</strong>是这个阶段最重要的产品能力。没有弱项画像，强化期的产品推荐就是盲目的。申论诊断性反馈是这个阶段的产品差异化方向。',
+      edu: '定向期申论内容设计：<strong>诊断性优先于提升性</strong>。让用户看到方法缺口比让用户做更多题更重要。行测内容要开始按模块分发而非全题随机。',
+      data: '重点采集：<strong>各模块错误率分布、专项训练点击率</strong>。阶段迁移信号：弱项模块被明确标记且用户开始主动复练，申论小题完成率 > 60%。'
+    },
+    2: {
+      strategy: '强化期是<strong>申论产品的唯一战略窗口</strong>。批改服务在这个阶段的转化质量，直接决定整体产品的口碑和复购。这个窗口期错过不会再来。',
+      product: '<strong>批改是前提，不是增值服务</strong>。这个阶段的产品核心是：让用户第一次真实看到自己的能力边界。纵向趋势对比是行测这个阶段的必须功能。',
+      edu: '强化期是教研投入回报最高的阶段。申论批改的颗粒度和准确性直接决定用户的进步感知。<strong>批改标准的统一性</strong>是教研在这个阶段最重要的质量控制目标。',
+      data: '重点采集：<strong>批改服务转化率、批改后二次作答率、模块正确率周环比</strong>。阶段迁移信号：批改完成 > 3次，行测综合正确率稳定在65%以上，开始主动查询面试题。'
+    },
+    3: {
+      strategy: '收敛期是<strong>面试服务转化</strong>的关键预埋期。进面通知发出后用户行为会立刻切换，在这之前建立"进面需要系统训练"的认知是战略投入。',
+      product: '<strong>产品形态要从训练性切换到压力验证性</strong>。行测全真模考、申论失分点追踪、面试高仿真训练——三线同时向最高强度形态迁移。',
+      edu: '收敛期内容设计：<strong>减少新知识，增加实战验证</strong>。行测侧重稳定性，申论侧重失分点定点清除，面试侧重场景覆盖度。',
+      data: '重点采集：<strong>模考完成率、成绩稳定性、面试模拟频次</strong>。阶段迁移信号（进入决战期）：收到进面通知，面试相关行为频次突然上升。'
+    },
+    4: {
+      strategy: '决战期是<strong>高客单服务交付</strong>的核心窗口，也是口碑产生的关键时刻。上岸率和推荐率是这个阶段最重要的战略指标，直接影响下一轮获客成本。',
+      product: '<strong>横向排名反馈机制</strong>是这个阶段最大的产品差异化机会。"你在同期学员中处于什么位置"这个信号，目前市场上几乎没有产品在做。',
+      edu: '决战期教研核心任务：<strong>追问设计和场景覆盖</strong>。标准答案不是重点，追问应对和临场反应才是。教研需要建立真实考场的题型覆盖库。',
+      data: '重点采集：<strong>模拟面试频次、横向排名感知满意度、上岸率、推荐率</strong>。这个阶段的数据直接服务于下一轮产品迭代和获客素材。'
+    }
+  };
+  return texts[s.id][role];
+}
+
+// ══════════ INTERACTION ══════════
+let currentStage = 0;
+
+function activateStage(i) {
+  currentStage = i;
+  document.querySelectorAll('.ss-item').forEach((el, idx) =>
+    el.classList.toggle('act', idx === i));
+  document.querySelectorAll('.stage-content').forEach((el, idx) =>
+    el.classList.toggle('vis', idx === i));
+  document.getElementById('sec-stages').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Scroll nav label
+const sections = [
+  { id: 'sec-types', label: '前置认知 · 三类题型特性' },
+  { id: 'sec-stages', label: '核心工具 · 阶段截面查询' }
+];
+window.addEventListener('scroll', () => {
+  const y = window.scrollY + 80;
+  let current = '内部研究文档';
+  sections.forEach(s => {
+    const el = document.getElementById(s.id);
+    if (el && el.offsetTop <= y) current = s.label;
+  });
+  document.getElementById('navLabel').textContent = current;
+});
+
+// ══════════ INIT ══════════
+renderPreview();
+renderSelector();
+renderContents();
+</script>
+</body>
+</html>
