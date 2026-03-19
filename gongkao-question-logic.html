@@ -50,12 +50,25 @@ body{
   display:flex;align-items:center;
   padding:0 40px;gap:32px;
 }
+.read-prog{
+  position:fixed;top:0;left:0;height:2px;width:0;
+  background:var(--gold);z-index:460;
+  transition:width .08s linear;
+}
 .nav-brand{
   font-family:var(--serif);font-size:13px;font-weight:700;
   color:var(--ink);letter-spacing:0.03em;white-space:nowrap;
 }
 .nav-divider{width:1px;height:16px;background:var(--ink-15);}
 .nav-hint{font-size:11px;color:var(--ink-40);letter-spacing:0.02em;}
+.nav-links{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
+.nav-link{
+  font-size:11px;color:var(--ink-40);text-decoration:none;
+  padding:4px 8px;border-radius:999px;border:1px solid transparent;
+  transition:all .2s var(--ease);
+}
+.nav-link:hover{color:var(--ink);border-color:var(--ink-15);background:rgba(255,255,255,.6)}
+.nav-link.act{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-lt);font-weight:600}
 .nav-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
 .nav-section-label{
   font-size:11px;color:var(--ink-40);
@@ -312,6 +325,24 @@ body{
   margin-bottom:6px;
 }
 .sv-desc{font-size:13px;color:var(--ink-40);}
+.sv-tools{
+  margin:18px 0 12px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.sv-stage-indicator{
+  font-size:12px;color:var(--ink-70);
+  border:1px solid var(--ink-15);
+  background:#fff;padding:8px 12px;border-radius:10px;
+}
+.sv-actions{display:flex;align-items:center;gap:8px}
+.sv-btn{
+  border:1px solid var(--ink-15);background:#fff;color:var(--ink-70);
+  padding:8px 12px;border-radius:10px;font-size:12px;cursor:pointer;
+  transition:all .2s var(--ease);
+}
+.sv-btn:hover{border-color:var(--ink-40);color:var(--ink)}
+.sv-btn:disabled{opacity:.45;cursor:not-allowed}
+.sv-hint{font-size:11px;color:var(--ink-40);}
 
 /* Stage selector */
 .stage-selector{
@@ -629,6 +660,34 @@ body{
   line-height:1.8;
 }
 
+@media (max-width:1100px){
+  .nav{padding:0 20px;gap:14px}
+  .nav-hint{display:none}
+  .hero{grid-template-columns:1fr;gap:34px;padding:84px 20px 64px}
+  .hero-right{position:static}
+  .sec-divider,.overview-section,.stage-viewer{padding-left:20px;padding-right:20px}
+  .conclusion{padding:48px 20px}
+  .conclusion-inner{grid-template-columns:1fr;gap:28px}
+  .home-entry{right:14px;bottom:14px}
+}
+@media (max-width:860px){
+  .nav-right{display:none}
+  .nav-links{margin-left:auto}
+  .type-overview,.track-view,.attention-row,.audience-row{grid-template-columns:1fr}
+  .state-banner{grid-template-columns:1fr;gap:16px;padding:18px}
+  .sv-tools{flex-direction:column;align-items:flex-start}
+  .sv-stage-indicator{width:100%}
+  .ss-task{display:none}
+}
+@media (max-width:620px){
+  .hero-h{font-size:clamp(30px,9vw,42px)}
+  .hero-argument{font-size:14px}
+  .hero-pull{font-size:16px}
+  .hero-prop{padding:18px}
+  .home-entry-title{display:none}
+  .home-entry{padding:10px 12px}
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar{width:4px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -636,6 +695,7 @@ body{
 </style>
 </head>
 <body>
+<div class="read-prog" id="readProg"></div>
 <a class="home-entry" href="./index.html" aria-label="返回脑洞展厅">
   <span>←</span>
   <span class="home-entry-label">
@@ -648,6 +708,10 @@ body{
   <span class="nav-brand">公考"题"逻辑全解</span>
   <div class="nav-divider"></div>
   <span class="nav-hint">阶段驱动型题目产品框架</span>
+  <div class="nav-links">
+    <a class="nav-link" href="#sec-types" data-target="sec-types">题型特性</a>
+    <a class="nav-link" href="#sec-stages" data-target="sec-stages">阶段截面</a>
+  </div>
   <div class="nav-right">
     <span class="nav-section-label" id="navLabel">内部研究文档</span>
   </div>
@@ -831,6 +895,15 @@ body{
     <div class="sv-chapter">核心工具</div>
     <div class="sv-title">选择阶段，查看完整截面</div>
     <div class="sv-desc">用户当前处于哪个阶段 → 三类题型的角色、驱动机制、产品动作、数据信号同时可见</div>
+  </div>
+
+  <div class="sv-tools">
+    <div class="sv-stage-indicator" id="stageIndicator">01 / 05 · 启动期</div>
+    <div class="sv-actions">
+      <button type="button" class="sv-btn" id="stagePrev">← 上一阶段</button>
+      <button type="button" class="sv-btn" id="stageNext">下一阶段 →</button>
+    </div>
+    <div class="sv-hint">可用键盘左右方向键快速切换阶段</div>
   </div>
 
   <!-- Stage selector -->
@@ -1126,7 +1199,7 @@ function renderPreview() {
       <div class="sp-track-bars">
         ${PREVIEW[t.key].map((h, i) => `
           <div class="sp-bar" style="background:${t.color};opacity:${0.15 + h/100*0.85};height:${Math.max(h*0.32, 4)}px;cursor:pointer;"
-               onclick="activateStage(${i})" title="${STAGES[i].name}">
+               data-stage="${i}" title="${STAGES[i].name}">
           </div>
         `).join('')}
       </div>
@@ -1153,8 +1226,7 @@ function renderPreview() {
 function renderSelector() {
   const sel = document.getElementById('stageSelector');
   sel.innerHTML = STAGES.map((s, i) => `
-    <div class="ss-item ${i === 0 ? 'act' : ''} ${s.branch ? 'branch-item' : ''}"
-         onclick="activateStage(${i})">
+    <div class="ss-item ${i === 0 ? 'act' : ''} ${s.branch ? 'branch-item' : ''}" data-stage="${i}">
       ${s.branch ? `<div class="ss-branch-tag">外部触发</div>` : ''}
       <div class="ss-num">${s.num}</div>
       <div class="ss-name">${s.name}</div>
@@ -1313,13 +1385,28 @@ function getAudienceText(s, role) {
 // ══════════ INTERACTION ══════════
 let currentStage = 0;
 
-function activateStage(i) {
+function activateStage(i, opt = {}) {
+  if (i < 0 || i > STAGES.length - 1) return;
+  const shouldScroll = opt.scroll !== false;
   currentStage = i;
   document.querySelectorAll('.ss-item').forEach((el, idx) =>
     el.classList.toggle('act', idx === i));
   document.querySelectorAll('.stage-content').forEach((el, idx) =>
     el.classList.toggle('vis', idx === i));
-  document.getElementById('sec-stages').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.sp-bar').forEach((el) =>
+    el.style.outline = Number(el.dataset.stage) === i ? '2px solid rgba(176,125,32,0.6)' : 'none');
+  syncStageUi();
+  if (shouldScroll) {
+    document.getElementById('sec-stages').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function syncStageUi() {
+  const stage = STAGES[currentStage];
+  const indicator = document.getElementById('stageIndicator');
+  indicator.textContent = `${stage.num} / ${String(STAGES.length).padStart(2, '0')} · ${stage.name}`;
+  document.getElementById('stagePrev').disabled = currentStage === 0;
+  document.getElementById('stageNext').disabled = currentStage === STAGES.length - 1;
 }
 
 // Scroll nav label
@@ -1330,17 +1417,70 @@ const sections = [
 window.addEventListener('scroll', () => {
   const y = window.scrollY + 80;
   let current = '内部研究文档';
+  let currentId = '';
   sections.forEach(s => {
     const el = document.getElementById(s.id);
-    if (el && el.offsetTop <= y) current = s.label;
+    if (el && el.offsetTop <= y) {
+      current = s.label;
+      currentId = s.id;
+    }
   });
   document.getElementById('navLabel').textContent = current;
+
+  document.querySelectorAll('.nav-link').forEach((a) => {
+    a.classList.toggle('act', a.dataset.target === currentId);
+  });
+
+  const doc = document.documentElement;
+  const max = doc.scrollHeight - window.innerHeight;
+  const ratio = max > 0 ? (window.scrollY / max) * 100 : 0;
+  document.getElementById('readProg').style.width = `${ratio}%`;
+});
+
+document.getElementById('spTracks').addEventListener('click', (e) => {
+  const bar = e.target.closest('.sp-bar');
+  if (!bar) return;
+  activateStage(Number(bar.dataset.stage), { scroll: true });
+});
+
+document.getElementById('stageSelector').addEventListener('click', (e) => {
+  const item = e.target.closest('.ss-item');
+  if (!item) return;
+  activateStage(Number(item.dataset.stage), { scroll: false });
+});
+
+document.getElementById('stagePrev').addEventListener('click', () => {
+  activateStage(currentStage - 1, { scroll: false });
+});
+
+document.getElementById('stageNext').addEventListener('click', () => {
+  activateStage(currentStage + 1, { scroll: false });
+});
+
+document.querySelectorAll('.nav-link').forEach((link) => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = link.dataset.target;
+    const target = document.getElementById(id);
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+window.addEventListener('keydown', (e) => {
+  const tag = document.activeElement && document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (e.key === 'ArrowLeft') activateStage(currentStage - 1, { scroll: false });
+  if (e.key === 'ArrowRight') activateStage(currentStage + 1, { scroll: false });
 });
 
 // ══════════ INIT ══════════
 renderPreview();
 renderSelector();
 renderContents();
+syncStageUi();
+activateStage(0, { scroll: false });
+window.dispatchEvent(new Event('scroll'));
 </script>
 </body>
 </html>
