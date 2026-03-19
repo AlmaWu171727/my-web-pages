@@ -536,14 +536,14 @@
       <div class="research-list">
         <a class="research-link" href="https://wanted-purse-entire-stanford.trycloudflare.com/" target="_blank" rel="noopener noreferrer">
           <div>
-            <p class="research-name">Cloudflare 临时调研入口</p>
+            <p class="research-name">公考行业调研</p>
             <div class="research-url mono">https://wanted-purse-entire-stanford.trycloudflare.com/</div>
           </div>
           <div class="research-arrow">↗</div>
         </a>
         <a class="research-link" href="https://gongkao-research.pages.dev/gongkao_research" target="_blank" rel="noopener noreferrer">
           <div>
-            <p class="research-name">公考研究页（Pages）</p>
+            <p class="research-name">公考用户调研</p>
             <div class="research-url mono">https://gongkao-research.pages.dev/gongkao_research</div>
           </div>
           <div class="research-arrow">↗</div>
@@ -579,8 +579,11 @@
     const expectedName = "吴世慧";
     const expectedProject = "上岸仓";
     let pendingHref = "";
+    let pendingTargetBlank = false;
 
     const cards = [...document.querySelectorAll(".card")];
+    const researchLinks = [...document.querySelectorAll(".research-link")];
+    const gatedLinks = [...cards, ...researchLinks];
     const filterButtons = [...document.querySelectorAll(".filter-btn")];
     const searchInput = document.getElementById("searchInput");
     const emptyState = document.getElementById("emptyState");
@@ -641,10 +644,14 @@
     cards.forEach((card, idx) => {
       card.style.transitionDelay = `${idx * 40}ms`;
       requestAnimationFrame(() => card.classList.add("reveal"));
-      card.addEventListener("click", (e) => {
+    });
+
+    gatedLinks.forEach((link) => {
+      link.addEventListener("click", (e) => {
         if (hasVerified()) return;
         e.preventDefault();
-        pendingHref = card.getAttribute("href") || "";
+        pendingHref = link.getAttribute("href") || "";
+        pendingTargetBlank = (link.getAttribute("target") || "").toLowerCase() === "_blank";
         showGate();
       });
     });
@@ -668,11 +675,17 @@
       }
       setVerified();
       hideGate();
-      if (pendingHref) location.href = pendingHref;
+      if (pendingHref) {
+        if (pendingTargetBlank) window.open(pendingHref, "_blank", "noopener");
+        else location.href = pendingHref;
+      }
+      pendingHref = "";
+      pendingTargetBlank = false;
     });
 
     cancelBtn.addEventListener("click", () => {
       pendingHref = "";
+      pendingTargetBlank = false;
       hideGate();
     });
 
