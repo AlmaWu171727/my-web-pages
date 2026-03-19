@@ -1339,8 +1339,8 @@
                 <div id="trigger-${stageId}"></div>
               </div>
             </div>
-            <div class="compare-toggle" data-stage="${stageId}">↕ 展开该题型跨所有阶段的交付形式对比</div>
-            <div class="compare-panel" id="compare-${stageId}"></div>
+            <div class="compare-toggle" data-stage="${stageId}">↑ 收起该题型跨所有阶段的交付形式对比</div>
+            <div class="compare-panel open" id="compare-${stageId}"></div>
           </div>
         </section>
       `;
@@ -1471,6 +1471,9 @@
         const stageId = Number(toggle.dataset.stage);
         const panel = document.getElementById(`compare-${stageId}`);
         panel.classList.toggle("open");
+        toggle.textContent = panel.classList.contains("open")
+          ? "↑ 收起该题型跨所有阶段的交付形式对比"
+          : "↓ 展开该题型跨所有阶段的交付形式对比";
       }
     });
 
