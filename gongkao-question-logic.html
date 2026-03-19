@@ -178,7 +178,10 @@
       margin-top: 12px;
       border: 1px solid var(--line);
       border-radius: 12px;
-      background: rgba(15, 20, 29, 0.68);
+      background:
+        radial-gradient(circle at 85% 10%, rgba(106,176,255,0.12), transparent 28%),
+        radial-gradient(circle at 15% 80%, rgba(255,157,122,0.12), transparent 28%),
+        rgba(15, 20, 29, 0.72);
       padding: 14px;
     }
     .overview-map-title {
@@ -188,10 +191,37 @@
       letter-spacing: .08em;
       margin-bottom: 12px;
     }
+    .overview-scale {
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.02);
+    }
+    .overview-scale-label {
+      font-family: var(--mono);
+      color: var(--ink-dim);
+      font-size: 10px;
+      letter-spacing: .08em;
+      margin-bottom: 6px;
+    }
+    .overview-scale-bar {
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(173,193,225,.2), rgba(106,176,255,.75), rgba(88,196,139,.75), rgba(255,157,122,.8));
+    }
+    .overview-scale-ticks {
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: var(--ink-dim);
+    }
     .heatmap {
       display: grid;
       grid-template-columns: 64px repeat(5, 1fr);
-      gap: 4px;
+      column-gap: 4px;
+      row-gap: 6px;
       align-items: center;
       border-bottom: 1px solid var(--line);
       padding-bottom: 10px;
@@ -211,9 +241,18 @@
     .hm-type.sl { color: var(--sl); }
     .hm-type.ms { color: var(--ms); }
     .hm-cell {
-      height: 30px;
-      border-radius: 4px;
+      height: 36px;
+      border-radius: 8px;
       border: 1px solid rgba(255, 255, 255, 0.05);
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+    .hm-cell span {
+      font-size: 10px;
+      color: rgba(235,242,255,0.88);
+      font-weight: 700;
+      letter-spacing: .03em;
     }
     .hm-xc-1 { background: rgba(106,176,255,.62); }
     .hm-xc-2 { background: rgba(106,176,255,.68); }
@@ -233,6 +272,10 @@
       background: rgba(255,157,122,.8);
       border-color: rgba(230,179,95,.65);
       box-shadow: inset 0 0 0 1px rgba(230,179,95,.32);
+    }
+    .hm-peak {
+      outline: 2px solid rgba(230,179,95,.55);
+      outline-offset: -2px;
     }
     .overview-legend {
       margin-top: 10px;
@@ -361,7 +404,7 @@
       margin-top: 12px;
       border: 1px solid var(--line);
       border-radius: 12px;
-      background: rgba(15, 20, 29, 0.52);
+      background: linear-gradient(180deg, rgba(14, 22, 34, 0.88), rgba(14, 19, 30, 0.74));
       overflow: hidden;
     }
     .viewer-controls {
@@ -410,6 +453,18 @@
       overflow-x: auto;
       padding-bottom: 2px;
     }
+    .stage-track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .stage-track-fill {
+      height: 100%;
+      width: 20%;
+      background: linear-gradient(90deg, rgba(106,176,255,.85), rgba(230,179,95,.88));
+      transition: width .22s ease;
+    }
     .stage-pill {
       border: 1px solid var(--line);
       border-radius: 999px;
@@ -430,20 +485,41 @@
     .viewer-content { padding: 12px; }
     .viewer-guide {
       margin-top: 8px;
-      font-size: 12px;
-      color: var(--ink-dim);
-      border: 1px dashed var(--line);
+      border: 1px dashed rgba(173,193,225,.24);
       border-radius: 8px;
-      padding: 8px 10px;
+      padding: 10px;
       background: rgba(255,255,255,0.02);
     }
+    .guide-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .guide-step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 7px 8px;
+      background: rgba(255,255,255,0.02);
+      font-size: 12px;
+      color: var(--ink-dim);
+    }
+    .guide-step strong { color: var(--ink); font-family: var(--mono); margin-right: 6px; }
     .viewer-block-title {
       font-family: var(--mono);
       font-size: 11px;
       color: var(--ink-dim);
       letter-spacing: .06em;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       text-transform: uppercase;
+      border-left: 3px solid rgba(230,179,95,.6);
+      padding-left: 8px;
+    }
+    .role-block {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      padding: 10px;
+      margin-bottom: 12px;
     }
     .stage-view { display: none; }
     .stage-view.active { display: block; }
@@ -457,30 +533,45 @@
     .role-card {
       border: 1px solid var(--line);
       border-radius: 10px;
-      background: rgba(255,255,255,0.05);
+      background: linear-gradient(160deg, rgba(37,47,65,.74), rgba(30,38,54,.72));
       padding: 11px;
       cursor: pointer;
       min-height: 140px;
     }
     .role-card.active { outline: 2px solid rgba(230,179,95,0.4); }
+    .role-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .role-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(255,255,255,0.03);
+    }
     .role-title {
       font-size: 15px;
       font-weight: 700;
-      margin-bottom: 6px;
+      margin-bottom: 0;
     }
     .role-row {
       font-size: 13px;
       color: var(--ink-dim);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       line-height: 1.55;
+      display: grid;
+      grid-template-columns: 62px 1fr;
+      gap: 8px;
     }
-    .role-row strong { color: var(--ink); }
+    .role-row strong { color: var(--ink); font-weight: 700; }
+    .role-row:last-child { margin-bottom: 0; }
 
     .delivery-panel {
-      margin-top: 10px;
       border: 1px solid var(--line);
-      border-radius: 10px;
-      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
       overflow: hidden;
     }
     .delivery-head {
@@ -523,12 +614,25 @@
     .delivery-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--line);
+      gap: 10px;
+      padding: 10px;
     }
     .delivery-col {
       background: #1a202d;
-      padding: 11px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      position: relative;
+    }
+    .delivery-col::before {
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(230,179,95,.8), rgba(106,176,255,.8));
     }
     .delivery-col h4 {
       font-size: 12px;
@@ -568,8 +672,17 @@
     }
     .flow-box,
     .trigger-box {
-      border-top: 1px solid var(--line);
+      border: 1px solid var(--line);
+      border-radius: 10px;
       padding: 10px 11px;
+      background: rgba(255,255,255,0.02);
+    }
+    .ops-grid {
+      border-top: 1px solid var(--line);
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 10px;
     }
     .flow-box h5,
     .trigger-box h5 {
@@ -608,8 +721,8 @@
       line-height: 1.5;
     }
     .trigger-item {
-      border-top: 1px solid var(--line);
-      padding: 7px 0;
+      border-top: 1px solid rgba(173,193,225,.14);
+      padding: 8px 0;
       display: grid;
       grid-template-columns: 90px 1fr;
       gap: 10px;
@@ -632,7 +745,7 @@
       font-style: italic;
     }
     .compare-toggle {
-      margin-top: 8px;
+      margin: 10px;
       border: 1px dashed var(--line);
       border-radius: 8px;
       background: rgba(255,255,255,0.03);
@@ -642,7 +755,7 @@
       padding: 7px;
       cursor: pointer;
     }
-    .compare-panel { display: none; margin-top: 8px; }
+    .compare-panel { display: none; margin: 0 10px 10px; }
     .compare-panel.open { display: block; }
     .compare-grid {
       display: grid;
@@ -730,8 +843,10 @@
 
     @media (max-width: 1100px) {
       .stages-grid { grid-template-columns: repeat(2, 1fr); }
+      .guide-steps { grid-template-columns: 1fr; }
       .role-grid { grid-template-columns: 1fr; }
       .delivery-grid { grid-template-columns: 1fr; }
+      .ops-grid { grid-template-columns: 1fr; }
       .flow-steps { grid-template-columns: 1fr 1fr; }
       .usage-grid { grid-template-columns: 1fr 1fr; }
     }
@@ -784,6 +899,13 @@
       <h2 class="section-title" style="font-size:30px;">三类题型 × 五个阶段 · 价值强度全局视图</h2>
       <div class="overview-map">
         <div class="overview-map-title">三类题型 × 五个阶段 · 价值强度全局视图</div>
+        <div class="overview-scale">
+          <div class="overview-scale-label">VALUE INTENSITY SCALE</div>
+          <div class="overview-scale-bar"></div>
+          <div class="overview-scale-ticks">
+            <span>低相关</span><span>中相关</span><span>高相关</span><span>核心相关</span>
+          </div>
+        </div>
         <div class="heatmap">
           <div></div>
           <div class="hm-head">启动期</div>
@@ -793,25 +915,25 @@
           <div class="hm-head" style="color:var(--gold);">决战期</div>
 
           <div class="hm-type xc">行测</div>
-          <div class="hm-cell hm-xc-1"></div>
-          <div class="hm-cell hm-xc-2"></div>
-          <div class="hm-cell hm-xc-3"></div>
-          <div class="hm-cell hm-xc-4"></div>
-          <div class="hm-cell hm-xc-5"></div>
+          <div class="hm-cell hm-xc-1"><span>入口</span></div>
+          <div class="hm-cell hm-xc-2"><span>定位</span></div>
+          <div class="hm-cell hm-xc-3"><span>强化</span></div>
+          <div class="hm-cell hm-xc-4"><span>稳态</span></div>
+          <div class="hm-cell hm-xc-5"><span>补位</span></div>
 
           <div class="hm-type sl">申论</div>
-          <div class="hm-cell hm-sl-1"></div>
-          <div class="hm-cell hm-sl-2"></div>
-          <div class="hm-cell hm-sl-3"></div>
-          <div class="hm-cell hm-sl-4"></div>
-          <div class="hm-cell hm-sl-5"></div>
+          <div class="hm-cell hm-sl-1"><span>预埋</span></div>
+          <div class="hm-cell hm-sl-2"><span>过渡</span></div>
+          <div class="hm-cell hm-sl-3 hm-peak"><span>高点</span></div>
+          <div class="hm-cell hm-sl-4"><span>收口</span></div>
+          <div class="hm-cell hm-sl-5"><span>维持</span></div>
 
           <div class="hm-type ms">面试</div>
-          <div class="hm-cell hm-ms-1"></div>
-          <div class="hm-cell hm-ms-2"></div>
-          <div class="hm-cell hm-ms-3"></div>
-          <div class="hm-cell hm-ms-4"></div>
-          <div class="hm-cell hm-ms-5"></div>
+          <div class="hm-cell hm-ms-1"><span>铺垫</span></div>
+          <div class="hm-cell hm-ms-2"><span>开口</span></div>
+          <div class="hm-cell hm-ms-3"><span>提速</span></div>
+          <div class="hm-cell hm-ms-4"><span>冲刺</span></div>
+          <div class="hm-cell hm-ms-5 hm-peak"><span>决战</span></div>
         </div>
         <div class="overview-legend">
           <span><i class="dot-xc"></i>行测</span>
@@ -908,7 +1030,13 @@
       <div class="section-kicker">阶段切换查看器</div>
       <h2 class="section-title" style="font-size:30px;">从观点到动作：角色 / 驱动 / 动作 / 数据信号同步可见</h2>
       <p class="section-sub">选择阶段后，下方会同步展示该阶段下三类题型的角色定位，并联动“阶段 × 题型”的完整交付配置。</p>
-      <div class="viewer-guide">阅读顺序：1）先选阶段；2）看三类题型在该阶段的角色差异；3）点选题型，查看完整交付配置、推荐序列与触发逻辑。</div>
+      <div class="viewer-guide">
+        <div class="guide-steps">
+          <div class="guide-step"><strong>STEP 1</strong>选择阶段</div>
+          <div class="guide-step"><strong>STEP 2</strong>查看三类题型角色差异</div>
+          <div class="guide-step"><strong>STEP 3</strong>点选题型查看交付配置</div>
+        </div>
+      </div>
 
       <div class="viewer-shell">
         <div class="viewer-controls">
@@ -920,6 +1048,7 @@
             </div>
           </div>
           <div class="stage-pills" id="stagePills"></div>
+          <div class="stage-track"><div class="stage-track-fill" id="stageTrackFill"></div></div>
         </div>
         <div class="viewer-content" id="stageViews"></div>
       </div>
@@ -1153,17 +1282,22 @@
       const ex = EXECUTION[stageId];
       return `
         <section class="stage-view" id="sv-${stageId}">
-          <div class="viewer-block-title">A. 阶段角色层（固定三类并排）</div>
-          <div class="role-grid">
-            ${["xc", "sl", "ms"].map((t) => `
-              <article class="role-card" data-type="${t}">
-                <div class="role-title" style="color:${TYPE_META[t].color}">${TYPE_META[t].name}</div>
-                <div class="role-row"><strong>角色：</strong>${ex[t].role}</div>
-                <div class="role-row"><strong>驱动机制：</strong>${ex[t].drive}</div>
-                <div class="role-row"><strong>推荐动作：</strong>${ex[t].action}</div>
-                <div class="role-row"><strong>数据信号：</strong>${ex[t].data}</div>
-              </article>
-            `).join("")}
+          <div class="role-block">
+            <div class="viewer-block-title">A. 阶段角色层（固定三类并排）</div>
+            <div class="role-grid">
+              ${["xc", "sl", "ms"].map((t) => `
+                <article class="role-card" data-type="${t}">
+                  <div class="role-top">
+                    <span class="role-dot" style="background:${TYPE_META[t].color};"></span>
+                    <div class="role-title" style="color:${TYPE_META[t].color}">${TYPE_META[t].name}</div>
+                  </div>
+                  <div class="role-row"><strong>角色</strong><span>${ex[t].role}</span></div>
+                  <div class="role-row"><strong>驱动</strong><span>${ex[t].drive}</span></div>
+                  <div class="role-row"><strong>动作</strong><span>${ex[t].action}</span></div>
+                  <div class="role-row"><strong>数据</strong><span>${ex[t].data}</span></div>
+                </article>
+              `).join("")}
+            </div>
           </div>
 
           <div class="delivery-panel" id="dp-${stageId}">
@@ -1192,13 +1326,15 @@
                 <div id="principle-${stageId}"></div>
               </div>
             </div>
-            <div class="flow-box">
-              <h5>推荐使用序列（用户典型路径）</h5>
-              <div class="flow-steps" id="flow-${stageId}"></div>
-            </div>
-            <div class="trigger-box">
-              <h5>智能推送触发逻辑</h5>
-              <div id="trigger-${stageId}"></div>
+            <div class="ops-grid">
+              <div class="flow-box">
+                <h5>推荐使用序列（用户典型路径）</h5>
+                <div class="flow-steps" id="flow-${stageId}"></div>
+              </div>
+              <div class="trigger-box">
+                <h5>智能推送触发逻辑</h5>
+                <div id="trigger-${stageId}"></div>
+              </div>
             </div>
             <div class="compare-toggle" data-stage="${stageId}">↕ 展开该题型跨所有阶段的交付形式对比</div>
             <div class="compare-panel" id="compare-${stageId}"></div>
@@ -1284,6 +1420,8 @@
     function syncUI() {
       const stage = STAGES[currentStage];
       document.getElementById("stageIndicator").textContent = `${stage.num} / ${String(STAGES.length).padStart(2, "0")} · ${stage.name}`;
+      const stageTrackFill = document.getElementById("stageTrackFill");
+      if (stageTrackFill) stageTrackFill.style.width = `${((currentStage + 1) / STAGES.length) * 100}%`;
       document.getElementById("stagePrev").disabled = currentStage === 0;
       document.getElementById("stageNext").disabled = currentStage === STAGES.length - 1;
 
