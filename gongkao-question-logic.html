@@ -13,6 +13,7 @@
   --ink-15:   #dedad2;
   --ink-06:   #f2efe8;
   --ink-03:   #f8f6f2;
+  --paper:    rgba(255,255,255,0.82);
   --gold:     #b07d20;
   --gold-lt:  #f5e8cc;
   --gold-dim: rgba(176,125,32,0.15);
@@ -33,7 +34,11 @@
 html{scroll-behavior:smooth;}
 body{
   font-family:var(--sans);
-  background:#f7f4ee;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(176,125,32,0.07), transparent 24%),
+    radial-gradient(circle at 92% 18%, rgba(26,74,120,0.08), transparent 26%),
+    radial-gradient(circle at 76% 82%, rgba(30,92,56,0.07), transparent 24%),
+    #f7f4ee;
   color:var(--ink);
   font-size:14px;
   line-height:1.7;
@@ -43,12 +48,13 @@ body{
 /* ══ NAV ══ */
 .nav{
   position:fixed;top:0;left:0;right:0;height:48px;
-  background:rgba(247,244,238,0.94);
+  background:rgba(247,244,238,0.9);
   backdrop-filter:blur(16px);
   border-bottom:1px solid var(--ink-15);
   z-index:300;
   display:flex;align-items:center;
   padding:0 40px;gap:32px;
+  box-shadow:0 8px 24px rgba(24,22,18,0.05);
 }
 .read-prog{
   position:fixed;top:0;left:0;height:2px;width:0;
@@ -106,6 +112,10 @@ body{
   max-width:1200px;margin:0 auto;
   display:grid;grid-template-columns:1fr 1fr;
   gap:80px;align-items:start;
+  background:linear-gradient(140deg, rgba(255,255,255,0.66), rgba(255,250,242,0.55));
+  border:1px solid rgba(222,218,210,0.65);
+  border-radius:26px;
+  box-shadow:0 24px 58px rgba(24,22,18,0.08);
 }
 .hero-left{}
 .hero-eyebrow{
@@ -135,15 +145,19 @@ body{
   font-size:18px;font-weight:600;
   color:var(--ink);line-height:1.5;
   border-left:3px solid var(--gold);
+  background:rgba(176,125,32,0.06);
+  border-radius:0 10px 10px 0;
   padding:14px 0 14px 20px;
   margin:28px 0;
   max-width:480px;
 }
 .hero-prop{
-  background:var(--ink);color:#fff;
+  background:linear-gradient(145deg, #1f1c18, #12110f);color:#fff;
   padding:24px 28px;
   margin-top:32px;
   max-width:520px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.08);
 }
 .hero-prop-label{
   font-size:10px;letter-spacing:0.14em;
@@ -161,9 +175,11 @@ body{
   position:sticky;top:72px;
 }
 .system-preview{
-  background:#fff;
+  background:var(--paper);
   border:1px solid var(--ink-15);
   padding:28px;
+  border-radius:14px;
+  box-shadow:0 14px 30px rgba(24,22,18,0.08);
 }
 .sp-title{
   font-size:10px;letter-spacing:0.12em;
@@ -259,6 +275,8 @@ body{
   border:1px solid var(--ink-15);
   margin-bottom:40px;
   overflow:hidden;
+  border-radius:14px;
+  box-shadow:0 14px 28px rgba(24,22,18,0.06);
 }
 .to-col{background:#fff;display:flex;flex-direction:column;}
 .to-head{
@@ -356,7 +374,9 @@ body{
   gap:0;margin-bottom:40px;
   border:1px solid var(--ink-15);
   overflow:hidden;
-  background:var(--ink-06);
+  background:rgba(242,239,232,0.84);
+  border-radius:14px;
+  box-shadow:0 10px 20px rgba(24,22,18,0.05);
 }
 .ss-item{
   flex:1;padding:16px 12px;
@@ -371,6 +391,9 @@ body{
 .ss-item.act{
   background:#fff;
   box-shadow:inset 0 3px 0 var(--gold);
+}
+.ss-item:hover{
+  background:#fff;
 }
 .ss-item.branch-item{
   flex:0.7;
@@ -415,12 +438,14 @@ body{
 .state-banner{
   padding:24px 28px;
   border:1px solid var(--ink-15);
-  background:#fff;
+  background:var(--paper);
   margin-bottom:20px;
   display:grid;
   grid-template-columns:1fr auto;
   gap:40px;
   align-items:center;
+  border-radius:14px;
+  box-shadow:0 10px 22px rgba(24,22,18,0.05);
 }
 .sb-left{}
 .sb-stage-name{
@@ -461,10 +486,17 @@ body{
   border:1px solid var(--ink-15);
   margin-bottom:20px;
   overflow:hidden;
+  border-radius:14px;
+  box-shadow:0 12px 24px rgba(24,22,18,0.05);
 }
 .track-col{
   background:#fff;
   display:flex;flex-direction:column;
+  transition:transform .22s var(--ease), box-shadow .22s var(--ease);
+}
+.track-col:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 22px rgba(24,22,18,0.08);
 }
 .tc-head{
   padding:16px 20px;
@@ -583,6 +615,7 @@ body{
   border:1px solid var(--ink-15);
   margin-bottom:20px;
   overflow:hidden;
+  border-radius:12px;
 }
 .att-cell{
   padding:14px 18px;
@@ -610,6 +643,8 @@ body{
   background:var(--ink-15);
   border:1px solid var(--ink-15);
   overflow:hidden;
+  border-radius:12px;
+  box-shadow:0 8px 18px rgba(24,22,18,0.04);
 }
 .aud-cell{
   background:#fff;
@@ -628,7 +663,7 @@ body{
 
 /* ══ CONCLUSION ══ */
 .conclusion{
-  background:var(--ink);
+  background:linear-gradient(145deg, #191713, #13120f);
   padding:64px 40px;
 }
 .conclusion-inner{
