@@ -727,6 +727,165 @@ body{
 }
 .aud-text strong{color:var(--ink);}
 
+/* ══ DELIVERY PANEL ══ */
+.track-col{
+  cursor:pointer;
+}
+.track-col.delivery-focus{
+  outline:2px solid var(--gold-dim);
+  outline-offset:-2px;
+}
+.delivery-panel{
+  margin-top:16px;
+  border:1px solid var(--ink-15);
+  border-radius:14px;
+  background:rgba(255,255,255,.84);
+  overflow:hidden;
+}
+.dp-top{
+  padding:12px 14px;
+  border-bottom:1px solid var(--ink-10);
+  background:var(--ink-05);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.dp-title{
+  font-size:12px;font-weight:700;color:var(--ink);
+}
+.dp-sub{
+  font-size:11px;color:var(--ink-60);
+}
+.dp-type-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.dp-type-pill{
+  border:1px solid var(--ink-15);
+  background:#fff;
+  color:var(--ink-60);
+  border-radius:999px;
+  padding:5px 10px;
+  font-size:11px;
+  cursor:pointer;
+}
+.dp-type-pill.act{
+  border-color:var(--gold-dim);
+  background:var(--gold-lt);
+  color:var(--gold);
+  font-weight:700;
+}
+.delivery-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:var(--ink-15);
+  border-top:1px solid var(--ink-15);
+}
+.dg-col{background:#fff;display:flex;flex-direction:column;}
+.dg-head{
+  padding:12px 14px;
+  border-bottom:1px solid var(--ink-10);
+  background:var(--ink-05);
+}
+.dg-head-label{
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-60);font-weight:700;margin-bottom:2px;
+}
+.dg-head-name{font-size:12px;font-weight:700;color:var(--ink);}
+.dg-body{padding:13px 14px;}
+.form-item{
+  margin-bottom:12px;
+  padding-bottom:12px;
+  border-bottom:1px solid var(--ink-10);
+}
+.form-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
+.fi-name{
+  font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.fi-badge{
+  font-size:9px;font-weight:700;letter-spacing:.06em;
+  padding:1px 6px;border-radius:20px;color:#fff;
+}
+.fi-desc{font-size:11px;color:var(--ink-60);line-height:1.65;}
+.fi-why{
+  margin-top:6px;
+  font-size:11px;color:var(--ink);
+  background:var(--ink-05);
+  border-left:2px solid var(--gold);
+  padding:6px 8px;
+  line-height:1.6;
+}
+.seq-box{
+  margin-top:10px;
+  background:#fff;border:1px solid var(--ink-10);
+  border-radius:10px;
+  padding:12px 14px;
+}
+.seq-label{
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-60);font-weight:700;margin-bottom:10px;
+}
+.seq-steps{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+}
+.seq-step{
+  border:1px solid var(--ink-10);
+  border-radius:8px;
+  padding:8px 9px;
+  background:var(--ink-05);
+}
+.seq-step-num{
+  font-size:9px;letter-spacing:.08em;color:var(--ink-60);font-weight:700;margin-bottom:3px;
+}
+.seq-step-form{
+  font-size:11px;font-weight:700;color:var(--ink);margin-bottom:2px;
+}
+.seq-step-feedback{
+  font-size:10px;color:var(--ink-60);line-height:1.5;
+}
+.trigger-box{
+  margin-top:10px;
+  background:var(--ink);
+  border-radius:10px;
+  padding:13px 14px;
+}
+.tb-label{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px;
+}
+.tb-trigger{
+  padding:8px 0;
+  border-top:1px solid rgba(255,255,255,.08);
+  display:grid;grid-template-columns:95px 1fr;gap:10px;
+}
+.tb-trigger:first-child{border-top:none;padding-top:0;}
+.tt-type{
+  font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);font-weight:700;padding-top:1px;
+}
+.tt-desc{font-size:11px;color:rgba(255,255,255,.78);line-height:1.6;}
+.tt-signal{font-size:10px;color:rgba(255,255,255,.45);margin-top:3px;font-style:italic;}
+.compare-hint{
+  margin-top:10px;
+  border:1px dashed var(--ink-15);
+  background:var(--ink-05);
+  border-radius:10px;
+  text-align:center;
+  padding:8px 10px;
+  font-size:11px;color:var(--ink-60);
+  cursor:pointer;
+}
+.compare-panel{display:none;margin-top:8px;}
+.compare-panel.vis{display:block;}
+.compare-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);
+  gap:1px;background:var(--ink-15);border:1px solid var(--ink-15);border-radius:10px;overflow:hidden;
+}
+.cg-col{background:#fff;}
+.cg-head{padding:8px 10px;text-align:center;font-size:10px;font-weight:700;color:#fff;}
+.cg-row,.cg-row-label{
+  padding:8px 10px;border-top:1px solid var(--ink-10);font-size:10px;line-height:1.5;text-align:center;color:var(--ink-60);
+}
+.cg-row-label{font-weight:700;background:var(--ink-05);text-transform:uppercase;letter-spacing:.05em;}
+.cg-row.highlight{background:var(--ink-05);color:var(--ink);font-weight:700;}
+
 /* ══ CONCLUSION ══ */
 .conclusion{
   background:linear-gradient(145deg, #191713, #13120f);
@@ -787,6 +946,8 @@ body{
   .sv-tools{flex-wrap:wrap;justify-content:flex-start}
   .sv-stage-indicator{width:auto}
   .sv-controls-panel{position:static}
+  .delivery-grid,.seq-steps,.compare-grid{grid-template-columns:1fr}
+  .tb-trigger{grid-template-columns:1fr}
 }
 @media (max-width:620px){
   .hero-h{font-size:clamp(30px,9vw,42px)}
@@ -1301,6 +1462,271 @@ const PREVIEW_INSIGHTS = [
   '没有哪个阶段三类题型的价值是均等的——不均等才是调度的依据'
 ];
 
+const DELIVERY_TYPES = {
+  xc: { name: '行测', color: 'var(--xc)' },
+  sl: { name: '申论', color: 'var(--sl)' },
+  ms: { name: '面试', color: 'var(--ms)' }
+};
+
+const DELIVERY_DATA = {
+  '0_xc': {
+    present: [
+      { name: '单题即练', badge: '主推', badgeColor: 'var(--xc)', desc: '一道题做完即出答案与简析。', why: '启动期先建立行动，不强调难度。' },
+      { name: '快速测评包', badge: '引导', badgeColor: 'var(--ink-60)', desc: '10题一组覆盖核心模块。', why: '给定向期分层建立样本。' }
+    ],
+    feedback: [
+      { name: '即时对错', badge: '必须', badgeColor: 'var(--xc)', desc: '做完立刻出结果，不延迟。', why: '即时反馈是启动期行测的核心价值。' },
+      { name: '简短解析', badge: '配套', badgeColor: 'var(--ink-60)', desc: '错题一句话解析，信息轻量。', why: '降低认知负担，保持继续做题。' },
+      { name: '完成感标记', badge: '关键', badgeColor: 'var(--gold)', desc: '优先展示完成数量和连续天数。', why: '完成感优先于正确感。' }
+    ],
+    principle: [
+      { name: '完成感 > 正确感', badge: '核心原则', badgeColor: 'var(--gold)', desc: '先强化“我做了”，再强化“我做对了”。', why: '过早强调错误率会触发回避。' },
+      { name: '不做弱项诊断', badge: '禁忌', badgeColor: 'var(--ms)', desc: '启动期不展示复杂能力雷达图。', why: '数据样本不足时诊断失真。' }
+    ],
+    sequence: [
+      { num: '01', form: '快速测评', feedback: '即时对错' },
+      { num: '02', form: '单题即练', feedback: '简短解析' },
+      { num: '03', form: '每日打卡', feedback: '完成感标记' }
+    ],
+    triggers: [
+      { type: '日常节奏', desc: '按用户活跃时段推5-10题轻练。', signal: '信号：注册后次日启动' },
+      { type: '冷启动', desc: '首次使用后推模块测评建立基线。', signal: '信号：首次打开' },
+      { type: '断签触发', desc: '2日未活跃推一题低门槛重启题。', signal: '信号：2日未活跃' }
+    ],
+    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
+    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
+  },
+  '1_xc': {
+    present: [
+      { name: '专项题组', badge: '主推', badgeColor: 'var(--xc)', desc: '同模块8-12题连续训练。', why: '让弱项可见。' },
+      { name: '错题复练', badge: '配套', badgeColor: 'var(--ink-60)', desc: '按历史错题集中回炉。', why: '识别重复错误模式。' }
+    ],
+    feedback: [
+      { name: '模块分布图', badge: '核心', badgeColor: 'var(--xc)', desc: '展示模块失分分布，而非总分。', why: '定位感来自分布。' },
+      { name: '弱项标签', badge: '主推', badgeColor: 'var(--xc)', desc: '输出具体弱项标签用于后续推送。', why: '把模糊问题变成具体缺口。' }
+    ],
+    principle: [
+      { name: '分布 > 总分', badge: '核心原则', badgeColor: 'var(--xc)', desc: '反馈围绕弱项结构展开。', why: '总分无法指导动作。' },
+      { name: '诊断语气', badge: '语气原则', badgeColor: 'var(--gold)', desc: '强调缺口与方法，不做评判。', why: '避免挫败感上升。' }
+    ],
+    sequence: [
+      { num: '01', form: '专项题组', feedback: '模块分布' },
+      { num: '02', form: '错题复练', feedback: '弱项标签' },
+      { num: '03', form: '跨模块测评', feedback: '弱项画像' }
+    ],
+    triggers: [
+      { type: '弱项触发', desc: '同类错误累计后推对应专项题。', signal: '信号：同类错误≥3次' },
+      { type: '完成触发', desc: '测评后推最弱模块专项。', signal: '信号：测评完成' }
+    ],
+    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
+    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
+  },
+  '2_xc': {
+    present: [
+      { name: '限时专项', badge: '主推', badgeColor: 'var(--xc)', desc: '限定时间完成模块题组。', why: '强化速度与正确率协同。' },
+      { name: '弱项强化包', badge: '核心', badgeColor: 'var(--xc)', desc: '按弱项标签定向分发。', why: '聚焦突破，避免泛刷。' }
+    ],
+    feedback: [
+      { name: '纵向趋势对比', badge: '必须', badgeColor: 'var(--xc)', desc: '周环比展示正确率与用时。', why: '强化期核心驱动是进步感。' },
+      { name: '弱项消灭进度', badge: '激励', badgeColor: 'var(--gold)', desc: '显示弱项项清单的消灭率。', why: '让提升可见。' }
+    ],
+    principle: [
+      { name: '趋势 > 绝对值', badge: '核心原则', badgeColor: 'var(--xc)', desc: '优先展示变化方向。', why: '强化期需要看到“在变好”。' }
+    ],
+    sequence: [
+      { num: '01', form: '弱项强化包', feedback: '消灭进度' },
+      { num: '02', form: '限时专项', feedback: '速度指标' },
+      { num: '03', form: '错题回炉', feedback: '趋势对比' }
+    ],
+    triggers: [
+      { type: '进步触发', desc: '周环比明显提升时推正反馈。', signal: '信号：提升≥8%' },
+      { type: '停滞触发', desc: '连续停滞时推方法课+题包。', signal: '信号：连续2周无提升' }
+    ],
+    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
+    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
+  },
+  '3_xc': {
+    present: [
+      { name: '全真模考', badge: '主推', badgeColor: 'var(--xc)', desc: '完整套卷+严格计时。', why: '验证压力场景稳定性。' },
+      { name: '节奏控制练习', badge: '配套', badgeColor: 'var(--ink-60)', desc: '模块时间分配专项练。', why: '防止考场节奏崩溃。' }
+    ],
+    feedback: [
+      { name: '稳定性分析', badge: '核心', badgeColor: 'var(--xc)', desc: '展示波动范围和底线分。', why: '收敛期目标是“稳”。' },
+      { name: '模考vs专项差值', badge: '诊断', badgeColor: 'var(--ink-60)', desc: '暴露压力环境下衰减。', why: '定位真实风险点。' }
+    ],
+    principle: [
+      { name: '稳定性 > 峰值', badge: '核心原则', badgeColor: 'var(--xc)', desc: '优先保证下限稳定。', why: '考场是一次性场景。' }
+    ],
+    sequence: [
+      { num: '01', form: '节奏练习', feedback: '时间分配分析' },
+      { num: '02', form: '全真模考', feedback: '稳定性分析' },
+      { num: '03', form: '易错点速览', feedback: '考前清单' }
+    ],
+    triggers: [
+      { type: '倒计时', desc: '21/14/7天节点触发模考。', signal: '信号：考试倒计时' },
+      { type: '异常预警', desc: '模考下滑明显时推补强。', signal: '信号：差值>15分' }
+    ],
+    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
+    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
+  },
+  '4_xc': {
+    present: [
+      { name: '轻量维持练习', badge: '可选', badgeColor: 'var(--ink-60)', desc: '每日5题维持手感。', why: '进面后行测退场。' }
+    ],
+    feedback: [
+      { name: '完成确认', badge: '唯一', badgeColor: 'var(--ink-60)', desc: '仅显示完成，不做分析。', why: '避免分散面试注意力。' }
+    ],
+    principle: [
+      { name: '不干扰', badge: '核心原则', badgeColor: 'var(--ink-60)', desc: '存在但不打扰。', why: '决战期注意力集中面试。' }
+    ],
+    sequence: [{ num: '01', form: '轻量维持', feedback: '完成确认' }],
+    triggers: [{ type: '进面事件', desc: '进面后自动切轻量模式。', signal: '信号：进面状态' }],
+    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
+    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
+  },
+  '0_sl': {
+    present: [
+      { name: '读题感知', badge: '唯一推荐', badgeColor: 'var(--sl)', desc: '材料+参考答案，不强制作答。', why: '启动期先建立距离感。' },
+      { name: '要点速写', badge: '可选', badgeColor: 'var(--ink-60)', desc: '写3个要点，低门槛参与。', why: '降低申论挫败感。' }
+    ],
+    feedback: [
+      { name: '得分点对照', badge: '核心', badgeColor: 'var(--sl)', desc: '逐条比对覆盖了哪些要点。', why: '距离感必须可见。' },
+      { name: '距离可视化', badge: '设计要点', badgeColor: 'var(--gold)', desc: '用覆盖率条显示差距。', why: '数字化才有驱动。' }
+    ],
+    principle: [
+      { name: '不评判只展示', badge: '核心原则', badgeColor: 'var(--sl)', desc: '展示差距，不给负面标签。', why: '避免启动期回避。' }
+    ],
+    sequence: [
+      { num: '01', form: '读题感知', feedback: '得分点展示' },
+      { num: '02', form: '要点速写', feedback: '覆盖率对比' }
+    ],
+    triggers: [
+      { type: '行测连带', desc: '行测连续打卡后穿插申论轻题。', signal: '信号：连续3日打卡' }
+    ],
+    compare_form: ['读题感知', '要点速写', '完整作答', '定向修正', '—'],
+    compare_feedback: ['距离可视化', '诊断性批改', '能力边界报告', '消除感追踪', '—']
+  },
+  '2_sl': {
+    present: [
+      { name: '单题完整作答', badge: '核心', badgeColor: 'var(--sl)', desc: '完整作答+提交批改。', why: '强化期申论价值窗口。' },
+      { name: '限时完整作答', badge: '进阶', badgeColor: 'var(--sl)', desc: '引入时间压力。', why: '为收敛期做准备。' }
+    ],
+    feedback: [
+      { name: '逐条批改报告', badge: '核心', badgeColor: 'var(--sl)', desc: '写了/漏了/偏了逐条标注。', why: '能力边界需要颗粒化反馈。' },
+      { name: '修改前后对照', badge: '进步可视化', badgeColor: 'var(--gold)', desc: '展示改前改后差异。', why: '让进步可见。' }
+    ],
+    principle: [
+      { name: '批改质量决定价值', badge: '核心原则', badgeColor: 'var(--sl)', desc: '批改不准等于价值归零。', why: '用户完全依赖外部反馈。' }
+    ],
+    sequence: [
+      { num: '01', form: '完整作答', feedback: '逐条批改' },
+      { num: '02', form: '修改重写', feedback: '前后对比' },
+      { num: '03', form: '同类再练', feedback: '进步确认' }
+    ],
+    triggers: [
+      { type: '批改完成', desc: '24小时内推同类再练。', signal: '信号：批改已读' },
+      { type: '诊断触发', desc: '3次同题型后生成边界报告。', signal: '信号：作答≥3次' }
+    ],
+    compare_form: ['读题感知', '要点速写', '完整作答', '定向修正', '—'],
+    compare_feedback: ['距离可视化', '诊断性批改', '能力边界报告', '消除感追踪', '—']
+  },
+  '3_sl': {
+    present: [
+      { name: '定向修正练习', badge: '主推', badgeColor: 'var(--sl)', desc: '围绕历史失分点定向出题。', why: '收敛期核心是消除问题。' },
+      { name: '热点押题作答', badge: '配套', badgeColor: 'var(--ink-60)', desc: '热点题完整作答+快批。', why: '降低考场陌生焦虑。' }
+    ],
+    feedback: [
+      { name: '失分点消除追踪', badge: '核心', badgeColor: 'var(--sl)', desc: '可视化已消除与待处理清单。', why: '消除感来自清单推进。' },
+      { name: '快速批改', badge: '时效要求', badgeColor: 'var(--ms)', desc: '12小时内回传反馈。', why: '收敛期节奏优先。' }
+    ],
+    principle: [
+      { name: '清单消灭思维', badge: '核心原则', badgeColor: 'var(--sl)', desc: '反馈从“提升”转为“消灭问题”。', why: '更匹配倒计时心理。' }
+    ],
+    sequence: [
+      { num: '01', form: '定向修正', feedback: '快速批改' },
+      { num: '02', form: '验证练习', feedback: '消除确认' },
+      { num: '03', form: '热点押题', feedback: '覆盖确认' }
+    ],
+    triggers: [
+      { type: '失分追踪', desc: '按高频失分点定向推题。', signal: '信号：失分累计≥2次' },
+      { type: '倒计时', desc: '考前7天每日推热点押题。', signal: '信号：距考试≤7日' }
+    ],
+    compare_form: ['读题感知', '要点速写', '完整作答', '定向修正', '—'],
+    compare_feedback: ['距离可视化', '诊断性批改', '能力边界报告', '消除感追踪', '—']
+  },
+  '0_ms': {
+    present: [{ name: '文字浏览', badge: '唯一形态', badgeColor: 'var(--ms)', desc: '仅示例与认知内容，不作答。', why: '启动期面试接受度极低。' }],
+    feedback: [{ name: '无反馈', badge: '原则', badgeColor: 'var(--ink-60)', desc: '不要求输出，不做评分。', why: '避免早期压力。' }],
+    principle: [{ name: '认知铺垫', badge: '核心原则', badgeColor: 'var(--ms)', desc: '只建立“面试也要准备”的心智。', why: '不抢主链路资源。' }],
+    sequence: [{ num: '01', form: '认知内容', feedback: '仅浏览' }],
+    triggers: [{ type: '低频穿插', desc: '每7天穿插一条面试认知卡。', signal: '信号：注册满7天' }],
+    compare_form: ['文字浏览', '开口体验', '录音练习', '全流程模拟', '高仿真模拟'],
+    compare_feedback: ['无', '回放冲击', '多维点评', '仿真报告', '横向排名']
+  },
+  '1_ms': {
+    present: [{ name: '自主开口录音', badge: '核心任务', badgeColor: 'var(--ms)', desc: '看题后录音作答，不限时。', why: '先开口，再谈质量。' }],
+    feedback: [
+      { name: '录音回放', badge: '唯一有效', badgeColor: 'var(--ms)', desc: '作答后立刻回放，不评分。', why: '冲击感来自“听见自己”。' },
+      { name: '流畅度自评', badge: '轻量引导', badgeColor: 'var(--ink-60)', desc: '1-5星自评流畅度。', why: '先建自我感知。' }
+    ],
+    principle: [{ name: '冲击感优先', badge: '核心原则', badgeColor: 'var(--ms)', desc: '禁止过早外部评判。', why: '防止防御心理。' }],
+    sequence: [
+      { num: '01', form: '首次录音', feedback: '回放冲击' },
+      { num: '02', form: '再次作答', feedback: '自评对比' }
+    ],
+    triggers: [
+      { type: '首次开口激励', desc: '首次录音后立即推下一题。', signal: '信号：首次录音完成' },
+      { type: '间隔触发', desc: '72小时内推第二道题。', signal: '信号：首次开口后72小时' }
+    ],
+    compare_form: ['文字浏览', '开口体验', '录音练习', '全流程模拟', '高仿真模拟'],
+    compare_feedback: ['无', '回放冲击', '多维点评', '仿真报告', '横向排名']
+  },
+  '2_ms': {
+    present: [
+      { name: '标准计时作答', badge: '主推', badgeColor: 'var(--ms)', desc: '按真实时长计时录音。', why: '开始训练效率与稳定性。' },
+      { name: '追问模拟', badge: '进阶', badgeColor: 'var(--ms)', desc: '主题后追加追问。', why: '贴近真实场景。' }
+    ],
+    feedback: [
+      { name: '多维点评', badge: '核心', badgeColor: 'var(--ms)', desc: '逻辑/表达/完整度分维反馈。', why: '进步需可见。' },
+      { name: '录像复盘', badge: '进阶', badgeColor: 'var(--ink-60)', desc: '可回看非语言要素。', why: '补齐表达质感。' }
+    ],
+    principle: [{ name: '多维可见进步', badge: '核心原则', badgeColor: 'var(--ms)', desc: '分维反馈替代总分反馈。', why: '总分难驱动持续训练。' }],
+    sequence: [
+      { num: '01', form: '计时作答', feedback: '多维点评' },
+      { num: '02', form: '追问模拟', feedback: '应变反馈' },
+      { num: '03', form: '录像复盘', feedback: '表达优化' }
+    ],
+    triggers: [
+      { type: '点评联动', desc: '最低维度自动触发专项题。', signal: '信号：点评最低维' },
+      { type: '进面预警', desc: '训练不足时推强化提醒。', signal: '信号：距考试≤30日且训练不足' }
+    ],
+    compare_form: ['文字浏览', '开口体验', '录音练习', '全流程模拟', '高仿真模拟'],
+    compare_feedback: ['无', '回放冲击', '多维点评', '仿真报告', '横向排名']
+  },
+  '4_ms': {
+    present: [
+      { name: '全流程高仿真模拟', badge: '绝对核心', badgeColor: 'var(--ms)', desc: '追问+录像+多题连续。', why: '决战期需要真实考场感。' },
+      { name: '无领导小组实战', badge: '核心', badgeColor: 'var(--ms)', desc: '多人同场模拟。', why: '多人对抗不可替代。' }
+    ],
+    feedback: [
+      { name: '横向排名反馈', badge: '差异化核心', badgeColor: 'var(--ms)', desc: '给出同期学员相对位置。', why: '决战期核心驱动来自横向比较。' },
+      { name: '考前个人报告', badge: '考前工具', badgeColor: 'var(--gold)', desc: '优势/风险/建议三条。', why: '最后阶段只要高价值短反馈。' }
+    ],
+    principle: [{ name: '横向比较优先', badge: '核心原则', badgeColor: 'var(--ms)', desc: '所有反馈都引入相对位置。', why: '窗口短，横向反馈更有力。' }],
+    sequence: [
+      { num: '01', form: '高仿真模拟', feedback: '录像复盘' },
+      { num: '02', form: '无领导实战', feedback: '横向排名' },
+      { num: '03', form: '考前轻练', feedback: '个人报告' }
+    ],
+    triggers: [
+      { type: '进面触发', desc: '进面后立刻推决战方案与预约。', signal: '信号：进面状态' },
+      { type: '倒计时节点', desc: '7天/3天/1天分别推关键交付。', signal: '信号：面试倒计时' }
+    ],
+    compare_form: ['文字浏览', '开口体验', '录音练习', '全流程模拟', '高仿真模拟'],
+    compare_feedback: ['无', '回放冲击', '多维点评', '仿真报告', '横向排名']
+  }
+};
+
 // ══════════ RENDER PREVIEW ══════════
 function renderPreview() {
   const axis = document.getElementById('spAxis');
@@ -1391,11 +1817,12 @@ function renderContents() {
       <!-- Three-track view -->
       <div class="track-view">
         ${s.types.map((t, ti) => {
+          const typeId = ['xc','sl','ms'][ti];
           const vLevel = VALUE_LEVELS[t.value] || VALUE_LEVELS['低'];
           const segs = Math.round(vLevel.w * 5);
           const isRetire = t.value === '退场';
           return `
-          <div class="track-col">
+          <div class="track-col" data-type="${typeId}">
             <div class="tc-head" style="background:${t.color}">
               <div class="tc-head-left">
                 <div class="tc-type-name">${t.type}</div>
@@ -1473,6 +1900,57 @@ function renderContents() {
           <div class="aud-text">${getAudienceText(s, 'data')}</div>
         </div>
       </div>
+
+      <div class="delivery-panel" id="dp${si}">
+        <div class="dp-top">
+          <div>
+            <div class="dp-title">阶段 × 题型交付配置</div>
+            <div class="dp-sub">${s.name} · 点击题型即可同步切换下方完整交付</div>
+          </div>
+          <div class="dp-type-pills">
+            <button type="button" class="dp-type-pill" data-type="xc" data-stage="${si}">行测</button>
+            <button type="button" class="dp-type-pill" data-type="sl" data-stage="${si}">申论</button>
+            <button type="button" class="dp-type-pill" data-type="ms" data-stage="${si}">面试</button>
+          </div>
+        </div>
+
+        <div class="delivery-grid">
+          <div class="dg-col">
+            <div class="dg-head">
+              <div class="dg-head-label">题目呈现形式</div>
+              <div class="dg-head-name">给什么形态的题</div>
+            </div>
+            <div class="dg-body" id="dpPresent${si}"></div>
+          </div>
+          <div class="dg-col">
+            <div class="dg-head">
+              <div class="dg-head-label">反馈交付形式</div>
+              <div class="dg-head-name">做完给什么</div>
+            </div>
+            <div class="dg-body" id="dpFeedback${si}"></div>
+          </div>
+          <div class="dg-col">
+            <div class="dg-head">
+              <div class="dg-head-label">反馈设计原则</div>
+              <div class="dg-head-name">该阶段反馈的核心目标</div>
+            </div>
+            <div class="dg-body" id="dpPrinciple${si}"></div>
+          </div>
+        </div>
+
+        <div class="seq-box">
+          <div class="seq-label">推荐使用序列（用户典型路径）</div>
+          <div class="seq-steps" id="dpSeq${si}"></div>
+        </div>
+
+        <div class="trigger-box">
+          <div class="tb-label">智能推送触发逻辑</div>
+          <div id="dpTrigger${si}"></div>
+        </div>
+
+        <div class="compare-hint" data-stage="${si}">↕ 查看该题型跨所有阶段的交付形式对比</div>
+        <div class="compare-panel" id="dpCompare${si}"></div>
+      </div>
     </div>`;
   }).join('');
 }
@@ -1515,6 +1993,96 @@ function getAudienceText(s, role) {
 
 // ══════════ INTERACTION ══════════
 let currentStage = 0;
+let currentDeliveryType = 'xc';
+
+function getDelivery(stageId, typeId) {
+  const key = `${stageId}_${typeId}`;
+  if (DELIVERY_DATA[key]) return DELIVERY_DATA[key];
+  return {
+    present: [{ name: '暂无数据', badge: '', badgeColor: 'var(--ink-60)', desc: '该阶段 × 题型的交付配置正在补充。', why: '' }],
+    feedback: [{ name: '暂无数据', badge: '', badgeColor: 'var(--ink-60)', desc: '请先参考已完成组合。', why: '' }],
+    principle: [{ name: '占位提示', badge: '', badgeColor: 'var(--ink-60)', desc: '可先复用相邻阶段逻辑。', why: '' }],
+    sequence: [{ num: '01', form: '待补充', feedback: '待补充' }],
+    triggers: [{ type: '待补充', desc: '该组合触发逻辑待补充。', signal: '' }],
+    compare_form: ['—', '—', '—', '—', '—'],
+    compare_feedback: ['—', '—', '—', '—', '—']
+  };
+}
+
+function renderDelivery(stageId, typeId) {
+  const d = getDelivery(stageId, typeId);
+  const present = document.getElementById(`dpPresent${stageId}`);
+  const feedback = document.getElementById(`dpFeedback${stageId}`);
+  const principle = document.getElementById(`dpPrinciple${stageId}`);
+  const seq = document.getElementById(`dpSeq${stageId}`);
+  const trigger = document.getElementById(`dpTrigger${stageId}`);
+  const compare = document.getElementById(`dpCompare${stageId}`);
+  if (!present || !feedback || !principle || !seq || !trigger || !compare) return;
+
+  const renderList = (arr) => arr.map((item) => `
+    <div class="form-item">
+      <div class="fi-name">
+        ${item.name}
+        ${item.badge ? `<span class="fi-badge" style="background:${item.badgeColor}">${item.badge}</span>` : ''}
+      </div>
+      <div class="fi-desc">${item.desc}</div>
+      ${item.why ? `<div class="fi-why">${item.why}</div>` : ''}
+    </div>
+  `).join('');
+
+  present.innerHTML = renderList(d.present);
+  feedback.innerHTML = renderList(d.feedback);
+  principle.innerHTML = renderList(d.principle);
+
+  seq.innerHTML = d.sequence.map((s) => `
+    <div class="seq-step">
+      <div class="seq-step-num">STEP ${s.num}</div>
+      <div class="seq-step-form">${s.form}</div>
+      <div class="seq-step-feedback">${s.feedback}</div>
+    </div>
+  `).join('');
+
+  trigger.innerHTML = d.triggers.map((t) => `
+    <div class="tb-trigger">
+      <div class="tt-type">${t.type}</div>
+      <div>
+        <div class="tt-desc">${t.desc}</div>
+        ${t.signal ? `<div class="tt-signal">${t.signal}</div>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  compare.innerHTML = `
+    <div class="compare-grid">
+      <div class="cg-col">
+        <div class="cg-head" style="background:var(--ink-60)">维度</div>
+        <div class="cg-row-label">题目形态</div>
+        <div class="cg-row-label">反馈形式</div>
+      </div>
+      ${STAGES.map((s, i) => `
+        <div class="cg-col">
+          <div class="cg-head" style="background:${i===stageId ? DELIVERY_TYPES[typeId].color : 'var(--ink-60)'}">${s.name}</div>
+          <div class="cg-row ${i===stageId?'highlight':''}">${d.compare_form[i] || '—'}</div>
+          <div class="cg-row ${i===stageId?'highlight':''}">${d.compare_feedback[i] || '—'}</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function syncDeliveryUi() {
+  const visible = document.querySelector('.stage-content.vis');
+  if (!visible) return;
+  const stageId = Number(visible.id.replace('sc', ''));
+  renderDelivery(stageId, currentDeliveryType);
+
+  visible.querySelectorAll('.dp-type-pill').forEach((pill) => {
+    pill.classList.toggle('act', pill.dataset.type === currentDeliveryType);
+  });
+  visible.querySelectorAll('.track-col').forEach((col) => {
+    col.classList.toggle('delivery-focus', col.dataset.type === currentDeliveryType);
+  });
+}
 
 function activateStage(i, opt = {}) {
   if (i < 0 || i > STAGES.length - 1) return;
@@ -1527,6 +2095,7 @@ function activateStage(i, opt = {}) {
   document.querySelectorAll('.sp-bar').forEach((el) =>
     el.style.outline = Number(el.dataset.stage) === i ? '2px solid rgba(176,125,32,0.6)' : 'none');
   syncStageUi();
+  syncDeliveryUi();
   if (shouldScroll) {
     document.getElementById('sec-stages').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
@@ -1591,6 +2160,27 @@ document.getElementById('stageSelector').addEventListener('click', (e) => {
   const item = e.target.closest('.ss-item');
   if (!item) return;
   activateStage(Number(item.dataset.stage), { scroll: false });
+});
+
+document.getElementById('stageContents').addEventListener('click', (e) => {
+  const track = e.target.closest('.track-col');
+  if (track && track.closest('.stage-content.vis')) {
+    currentDeliveryType = track.dataset.type || currentDeliveryType;
+    syncDeliveryUi();
+    return;
+  }
+  const pill = e.target.closest('.dp-type-pill');
+  if (pill && pill.closest('.stage-content.vis')) {
+    currentDeliveryType = pill.dataset.type || currentDeliveryType;
+    syncDeliveryUi();
+    return;
+  }
+  const compareHint = e.target.closest('.compare-hint');
+  if (compareHint && compareHint.closest('.stage-content.vis')) {
+    const stageId = compareHint.dataset.stage;
+    const panel = document.getElementById(`dpCompare${stageId}`);
+    if (panel) panel.classList.toggle('vis');
+  }
 });
 
 document.getElementById('stagePrev').addEventListener('click', () => {
