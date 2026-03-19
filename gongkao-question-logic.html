@@ -378,15 +378,34 @@ body{
   margin-bottom:6px;
 }
 .sv-desc{font-size:13px;color:var(--ink-40);}
-.sv-tools{
-  margin:18px 0 12px;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
+.sv-shell{
+  display:grid;
+  gap:12px;
+}
+.sv-panel-label{
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-40);
+  margin-bottom:8px;
+}
+.sv-controls-panel{
   position:sticky;top:56px;z-index:220;
-  padding:10px 12px;
   border:1px solid var(--ink-15);
+  border-radius:12px;
   background:rgba(247,244,238,0.94);
   backdrop-filter:blur(8px);
+  padding:10px 12px 12px;
+}
+.sv-content-panel{
+  border:1px solid var(--ink-15);
   border-radius:12px;
+  background:rgba(255,255,255,0.4);
+  padding:10px 12px 14px;
+}
+.sv-tools{
+  margin:0 0 10px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
 }
 .sv-stage-indicator{
   font-size:12px;color:var(--ink-70);
@@ -427,7 +446,7 @@ body{
 /* Stage selector */
 .stage-selector{
   display:flex;align-items:stretch;
-  gap:0;margin-bottom:40px;
+  gap:0;margin-bottom:0;
   border:1px solid var(--ink-15);
   overflow:hidden;
   background:rgba(242,239,232,0.84);
@@ -776,6 +795,7 @@ body{
   .state-banner{grid-template-columns:1fr;gap:16px;padding:18px}
   .sv-tools{flex-direction:column;align-items:flex-start}
   .sv-stage-indicator{width:100%}
+  .sv-controls-panel{position:static}
   .ss-task{display:none}
 }
 @media (max-width:620px){
@@ -1005,20 +1025,25 @@ body{
     <div class="sv-desc">用户当前处于哪个阶段 → 三类题型的角色、驱动机制、产品动作、数据信号同时可见</div>
   </div>
 
-  <div class="sv-tools">
-    <div class="sv-stage-indicator" id="stageIndicator">01 / 05 · 启动期</div>
-    <div class="sv-actions">
-      <button type="button" class="sv-btn" id="stagePrev">← 上一阶段</button>
-      <button type="button" class="sv-btn" id="stageNext">下一阶段 →</button>
+  <div class="sv-shell">
+    <div class="sv-controls-panel">
+      <div class="sv-panel-label">操作区</div>
+      <div class="sv-tools">
+        <div class="sv-stage-indicator" id="stageIndicator">01 / 05 · 启动期</div>
+        <div class="sv-actions">
+          <button type="button" class="sv-btn" id="stagePrev">← 上一阶段</button>
+          <button type="button" class="sv-btn" id="stageNext">下一阶段 →</button>
+        </div>
+        <div class="sv-hint">可用键盘左右方向键快速切换阶段</div>
+      </div>
+      <div class="stage-selector" id="stageSelector"></div>
     </div>
-    <div class="sv-hint">可用键盘左右方向键快速切换阶段</div>
+
+    <div class="sv-content-panel">
+      <div class="sv-panel-label">内容区</div>
+      <div id="stageContents"></div>
+    </div>
   </div>
-
-  <!-- Stage selector -->
-  <div class="stage-selector" id="stageSelector"></div>
-
-  <!-- Stage contents -->
-  <div id="stageContents"></div>
 </section>
 
 <div class="sec-divider"><hr class="sec-divider-line"></div>
