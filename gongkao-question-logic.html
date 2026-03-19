@@ -158,6 +158,93 @@
       padding: 8px 13px;
       font-family: var(--mono);
     }
+    .overview-map {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(15, 20, 29, 0.68);
+      padding: 14px;
+    }
+    .overview-map-title {
+      color: var(--ink-dim);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: .08em;
+      margin-bottom: 12px;
+    }
+    .heatmap {
+      display: grid;
+      grid-template-columns: 64px repeat(5, 1fr);
+      gap: 4px;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+    }
+    .hm-head {
+      text-align: center;
+      font-size: 12px;
+      color: var(--ink-dim);
+      padding-bottom: 3px;
+    }
+    .hm-type {
+      font-size: 15px;
+      font-weight: 700;
+      padding-left: 3px;
+    }
+    .hm-type.xc { color: var(--xc); }
+    .hm-type.sl { color: var(--sl); }
+    .hm-type.ms { color: var(--ms); }
+    .hm-cell {
+      height: 30px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .hm-xc-1 { background: rgba(106,176,255,.62); }
+    .hm-xc-2 { background: rgba(106,176,255,.68); }
+    .hm-xc-3 { background: rgba(106,176,255,.72); }
+    .hm-xc-4 { background: rgba(106,176,255,.64); }
+    .hm-xc-5 { background: rgba(106,176,255,.22); }
+    .hm-sl-1 { background: rgba(88,196,139,.22); }
+    .hm-sl-2 { background: rgba(88,196,139,.4); }
+    .hm-sl-3 { background: rgba(88,196,139,.68); }
+    .hm-sl-4 { background: rgba(88,196,139,.52); }
+    .hm-sl-5 { background: rgba(88,196,139,.16); }
+    .hm-ms-1 { background: rgba(255,157,122,.14); }
+    .hm-ms-2 { background: rgba(255,157,122,.2); }
+    .hm-ms-3 { background: rgba(255,157,122,.34); }
+    .hm-ms-4 { background: rgba(255,157,122,.56); }
+    .hm-ms-5 {
+      background: rgba(255,157,122,.8);
+      border-color: rgba(230,179,95,.65);
+      box-shadow: inset 0 0 0 1px rgba(230,179,95,.32);
+    }
+    .overview-legend {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--ink-dim);
+    }
+    .overview-legend i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+      vertical-align: 1px;
+      margin-right: 6px;
+    }
+    .dot-xc { background: var(--xc); }
+    .dot-sl { background: var(--sl); }
+    .dot-ms { background: var(--ms); }
+    .overview-note {
+      margin-top: 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      font-size: 14px;
+      color: var(--ink);
+    }
 
     .problem-grid {
       margin-top: 12px;
@@ -615,6 +702,8 @@
       .stages-grid,
       .usage-grid { grid-template-columns: 1fr; }
       .matrix-table { display: block; overflow-x: auto; }
+      .overview-map { overflow-x: auto; }
+      .heatmap { min-width: 640px; }
       .viewer-controls { top: 56px; }
       .trigger-item { grid-template-columns: 1fr; }
       .compare-grid { grid-template-columns: 1fr; }
@@ -627,6 +716,7 @@
     <div class="top-nav-inner">
       <div class="brand">GONGKAO QUESTION FRAMEWORK</div>
       <nav class="nav-links">
+        <a href="#overview-map">总览视图</a>
         <a href="#logic-gap">旧逻辑缺口</a>
         <a href="#type-matrix">题型矩阵</a>
         <a href="#stage-defs">阶段定义</a>
@@ -645,7 +735,52 @@
         <div class="hero-core-label">Core Statement</div>
         <div class="hero-core-text">题的价值不由内容静态决定，而由<em>用户当下所处阶段</em>动态决定。</div>
       </div>
-      <a class="overview-entry" href="#stage-viewer">进入总览查看器 →</a>
+      <a class="overview-entry" href="#overview-map">进入总览视图 →</a>
+    </section>
+
+    <section class="section" id="overview-map">
+      <div class="section-kicker">总览入口</div>
+      <h2 class="section-title" style="font-size:30px;">三类题型 × 五个阶段 · 价值强度全局视图</h2>
+      <div class="overview-map">
+        <div class="overview-map-title">三类题型 × 五个阶段 · 价值强度全局视图</div>
+        <div class="heatmap">
+          <div></div>
+          <div class="hm-head">启动期</div>
+          <div class="hm-head">定向期</div>
+          <div class="hm-head">强化期</div>
+          <div class="hm-head">收敛期</div>
+          <div class="hm-head" style="color:var(--gold);">决战期</div>
+
+          <div class="hm-type xc">行测</div>
+          <div class="hm-cell hm-xc-1"></div>
+          <div class="hm-cell hm-xc-2"></div>
+          <div class="hm-cell hm-xc-3"></div>
+          <div class="hm-cell hm-xc-4"></div>
+          <div class="hm-cell hm-xc-5"></div>
+
+          <div class="hm-type sl">申论</div>
+          <div class="hm-cell hm-sl-1"></div>
+          <div class="hm-cell hm-sl-2"></div>
+          <div class="hm-cell hm-sl-3"></div>
+          <div class="hm-cell hm-sl-4"></div>
+          <div class="hm-cell hm-sl-5"></div>
+
+          <div class="hm-type ms">面试</div>
+          <div class="hm-cell hm-ms-1"></div>
+          <div class="hm-cell hm-ms-2"></div>
+          <div class="hm-cell hm-ms-3"></div>
+          <div class="hm-cell hm-ms-4"></div>
+          <div class="hm-cell hm-ms-5"></div>
+        </div>
+        <div class="overview-legend">
+          <span><i class="dot-xc"></i>行测</span>
+          <span><i class="dot-sl"></i>申论/综应</span>
+          <span><i class="dot-ms"></i>面试</span>
+        </div>
+        <div class="overview-note">
+          <strong>读图要点：</strong>行测全程可用但角色在迁移；申论强化期是唯一价值高点；面试在进面后价值集中释放。
+        </div>
+      </div>
     </section>
 
     <section class="section" id="logic-gap">
