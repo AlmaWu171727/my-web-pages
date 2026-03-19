@@ -1518,7 +1518,7 @@ function getAudienceText(s, role) {
 
 // ══════════ INTERACTION ══════════
 let currentStage = 0;
-const stageExpanded = STAGES.map(() => false);
+const stageExpanded = STAGES.map(() => true);
 
 function activateStage(i, opt = {}) {
   if (i < 0 || i > STAGES.length - 1) return;
