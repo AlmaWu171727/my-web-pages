@@ -105,6 +105,41 @@ body{
 .home-entry-title{
   font-size:12px;font-weight:600;color:var(--ink-70);
 }
+.mini-nav{
+  position:fixed;right:16px;top:94px;z-index:340;
+  width:172px;
+  border:1px solid var(--ink-15);
+  border-radius:12px;
+  background:rgba(255,255,255,.86);
+  backdrop-filter:blur(8px);
+  box-shadow:0 10px 22px rgba(24,22,18,0.08);
+  padding:10px;
+}
+.mini-title{
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-40);margin-bottom:8px;
+}
+.mini-links,.mini-stages{
+  display:grid;gap:6px;
+}
+.mini-link,.mini-stage-btn{
+  width:100%;
+  text-align:left;
+  border:1px solid var(--ink-15);
+  border-radius:8px;
+  background:#fff;
+  color:var(--ink-70);
+  padding:6px 8px;
+  font-size:11px;
+  text-decoration:none;
+  cursor:pointer;
+}
+.mini-link.act,.mini-stage-btn.act{
+  color:var(--gold);
+  border-color:var(--gold-dim);
+  background:var(--gold-lt);
+  font-weight:700;
+}
 
 /* ══ HERO ══ */
 .hero{
@@ -367,6 +402,40 @@ body{
 .sv-btn:hover{border-color:var(--ink-40);color:var(--ink)}
 .sv-btn:disabled{opacity:.45;cursor:not-allowed}
 .sv-hint{font-size:11px;color:var(--ink-40);}
+.stage-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:12px;
+}
+.sum-card{
+  border:1px solid var(--ink-15);
+  background:rgba(255,255,255,.86);
+  border-radius:10px;
+  padding:12px 12px 10px;
+}
+.sum-type{
+  font-size:12px;font-weight:700;color:var(--ink);
+  margin-bottom:6px;
+}
+.sum-row{
+  font-size:11px;color:var(--ink-70);
+  line-height:1.65;
+}
+.sum-row strong{color:var(--ink);}
+.detail-toggle{
+  margin-bottom:12px;
+  border:1px solid var(--ink-15);
+  background:#fff;
+  color:var(--ink-70);
+  border-radius:10px;
+  padding:8px 12px;
+  font-size:12px;
+  cursor:pointer;
+}
+.detail-toggle:hover{border-color:var(--ink-40);color:var(--ink);}
+.stage-detail{display:none;}
+.stage-detail.open{display:block;}
 
 /* Stage selector */
 .stage-selector{
@@ -710,11 +779,13 @@ body{
   .conclusion{padding:48px 20px}
   .conclusion-inner{grid-template-columns:1fr;gap:28px}
   .home-entry{right:14px;bottom:14px}
+  .mini-nav{display:none}
 }
 @media (max-width:860px){
   .nav-right{display:none}
   .nav-links{margin-left:auto}
   .type-overview,.track-view,.attention-row,.audience-row{grid-template-columns:1fr}
+  .stage-summary-grid{grid-template-columns:1fr}
   .state-banner{grid-template-columns:1fr;gap:16px;padding:18px}
   .sv-tools{flex-direction:column;align-items:flex-start}
   .sv-stage-indicator{width:100%}
@@ -744,6 +815,15 @@ body{
     <span class="home-entry-title">返回脑洞展厅</span>
   </span>
 </a>
+<aside class="mini-nav" id="miniNav">
+  <div class="mini-title">快速导航</div>
+  <div class="mini-links">
+    <a class="mini-link" href="#sec-types" data-sec="sec-types">题型特性</a>
+    <a class="mini-link" href="#sec-stages" data-sec="sec-stages">阶段截面</a>
+  </div>
+  <div class="mini-title" style="margin-top:10px;">阶段切换</div>
+  <div class="mini-stages" id="miniStages"></div>
+</aside>
 
 <nav class="nav">
   <span class="nav-brand">公考"题"逻辑全解</span>
@@ -1283,6 +1363,18 @@ function renderContents() {
     const typeColors = ['var(--xc)', 'var(--sl)', 'var(--ms)'];
     return `
     <div class="stage-content ${si === 0 ? 'vis' : ''}" id="sc${si}">
+      <div class="stage-summary-grid">
+        ${s.types.map((t, ti) => `
+          <article class="sum-card">
+            <div class="sum-type" style="color:${typeColors[ti]}">${t.type}</div>
+            <div class="sum-row"><strong>角色：</strong>${t.role}</div>
+            <div class="sum-row"><strong>价值：</strong>${t.value} · <strong>驱动：</strong>${t.keyword}</div>
+            <div class="sum-row"><strong>动作：</strong>${t.form}</div>
+          </article>
+        `).join('')}
+      </div>
+      <button class="detail-toggle" type="button" data-stage="${si}">展开详情</button>
+      <div class="stage-detail" id="sd${si}">
       <!-- State banner -->
       <div class="state-banner">
         <div class="sb-left">
@@ -1383,6 +1475,7 @@ function renderContents() {
           <div class="aud-text">${getAudienceText(s, 'data')}</div>
         </div>
       </div>
+      </div>
     </div>`;
   }).join('');
 }
@@ -1425,6 +1518,7 @@ function getAudienceText(s, role) {
 
 // ══════════ INTERACTION ══════════
 let currentStage = 0;
+const stageExpanded = STAGES.map(() => false);
 
 function activateStage(i, opt = {}) {
   if (i < 0 || i > STAGES.length - 1) return;
@@ -1448,6 +1542,26 @@ function syncStageUi() {
   indicator.textContent = `${stage.num} / ${String(STAGES.length).padStart(2, '0')} · ${stage.name}`;
   document.getElementById('stagePrev').disabled = currentStage === 0;
   document.getElementById('stageNext').disabled = currentStage === STAGES.length - 1;
+  document.querySelectorAll('.mini-stage-btn').forEach((btn) => {
+    btn.classList.toggle('act', Number(btn.dataset.stage) === currentStage);
+  });
+}
+
+function syncStageExpansion() {
+  STAGES.forEach((_, i) => {
+    const detail = document.getElementById(`sd${i}`);
+    const btn = document.querySelector(`.detail-toggle[data-stage="${i}"]`);
+    if (!detail || !btn) return;
+    detail.classList.toggle('open', stageExpanded[i]);
+    btn.textContent = stageExpanded[i] ? '收起详情' : '展开详情';
+  });
+}
+
+function renderMiniNav() {
+  const box = document.getElementById('miniStages');
+  box.innerHTML = STAGES.map((s, i) =>
+    `<button class="mini-stage-btn" type="button" data-stage="${i}">${s.num} · ${s.name}</button>`
+  ).join('');
 }
 
 // Scroll nav label
@@ -1471,6 +1585,9 @@ window.addEventListener('scroll', () => {
   document.querySelectorAll('.nav-link').forEach((a) => {
     a.classList.toggle('act', a.dataset.target === currentId);
   });
+  document.querySelectorAll('.mini-link').forEach((a) => {
+    a.classList.toggle('act', a.dataset.sec === currentId);
+  });
 
   const doc = document.documentElement;
   const max = doc.scrollHeight - window.innerHeight;
@@ -1488,6 +1605,14 @@ document.getElementById('stageSelector').addEventListener('click', (e) => {
   const item = e.target.closest('.ss-item');
   if (!item) return;
   activateStage(Number(item.dataset.stage), { scroll: false });
+});
+
+document.getElementById('stageContents').addEventListener('click', (e) => {
+  const btn = e.target.closest('.detail-toggle');
+  if (!btn) return;
+  const i = Number(btn.dataset.stage);
+  stageExpanded[i] = !stageExpanded[i];
+  syncStageExpansion();
 });
 
 document.getElementById('stagePrev').addEventListener('click', () => {
@@ -1508,6 +1633,21 @@ document.querySelectorAll('.nav-link').forEach((link) => {
   });
 });
 
+document.getElementById('miniNav').addEventListener('click', (e) => {
+  const stageBtn = e.target.closest('.mini-stage-btn');
+  if (stageBtn) {
+    activateStage(Number(stageBtn.dataset.stage), { scroll: false });
+    document.getElementById('sec-stages').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  const secLink = e.target.closest('.mini-link');
+  if (secLink) {
+    e.preventDefault();
+    const target = document.getElementById(secLink.dataset.sec);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+});
+
 window.addEventListener('keydown', (e) => {
   const tag = document.activeElement && document.activeElement.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA') return;
@@ -1519,6 +1659,8 @@ window.addEventListener('keydown', (e) => {
 renderPreview();
 renderSelector();
 renderContents();
+renderMiniNav();
+syncStageExpansion();
 syncStageUi();
 activateStage(0, { scroll: false });
 window.dispatchEvent(new Event('scroll'));
