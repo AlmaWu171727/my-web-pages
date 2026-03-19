@@ -1,2236 +1,1167 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>公考"题"逻辑全解</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --ink:      #181612;
-  --ink-70:   #4a4740;
-  --ink-40:   #9a9690;
-  --ink-15:   #dedad2;
-  --ink-06:   #f2efe8;
-  --ink-03:   #f8f6f2;
-  --paper:    rgba(255,255,255,0.82);
-  --gold:     #b07d20;
-  --gold-lt:  #f5e8cc;
-  --gold-dim: rgba(176,125,32,0.15);
-  --xc:       #1a4a78;
-  --xc-lt:    #e2ecf6;
-  --xc-mid:   rgba(26,74,120,0.12);
-  --sl:       #1e5c38;
-  --sl-lt:    #e2f0e8;
-  --sl-mid:   rgba(30,92,56,0.12);
-  --ms:       #7a2e14;
-  --ms-lt:    #f5e4de;
-  --ms-mid:   rgba(122,46,20,0.12);
-  --serif: 'Noto Serif SC', serif;
-  --sans:  'Noto Sans SC', sans-serif;
-  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-*{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:var(--sans);
-  background:
-    radial-gradient(circle at 8% 10%, rgba(176,125,32,0.07), transparent 24%),
-    radial-gradient(circle at 92% 18%, rgba(26,74,120,0.08), transparent 26%),
-    radial-gradient(circle at 76% 82%, rgba(30,92,56,0.07), transparent 24%),
-    #f7f4ee;
-  color:var(--ink);
-  font-size:14px;
-  line-height:1.7;
-  -webkit-font-smoothing:antialiased;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>公考"题"逻辑全解</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0f1218;
+      --bg-soft: #171c25;
+      --panel: #1b2230;
+      --panel-2: #202a39;
+      --ink: #edf2ff;
+      --ink-dim: #a4b2cb;
+      --line: rgba(173, 193, 225, 0.16);
+      --gold: #e6b35f;
+      --gold-soft: rgba(230, 179, 95, 0.16);
+      --xc: #6ab0ff;
+      --sl: #58c48b;
+      --ms: #ff9d7a;
+      --warn: #f0c07a;
+      --mono: "JetBrains Mono", monospace;
+      --serif: "Noto Serif SC", serif;
+      --sans: "Noto Sans SC", sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(106, 176, 255, 0.18), transparent 26%),
+        radial-gradient(circle at 82% 14%, rgba(230, 179, 95, 0.16), transparent 24%),
+        radial-gradient(circle at 70% 78%, rgba(88, 196, 139, 0.15), transparent 24%),
+        linear-gradient(160deg, #0d1016 0%, #121722 48%, #101621 100%);
+      min-height: 100vh;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+    .top-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: 56px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(13, 16, 24, 0.84);
+      backdrop-filter: blur(10px);
+    }
+    .top-nav-inner {
+      max-width: 1220px;
+      margin: 0 auto;
+      height: 56px;
+      padding: 0 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand {
+      font-size: 13px;
+      letter-spacing: .08em;
+      color: var(--gold);
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    .nav-links {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--ink-dim);
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    .nav-links a:hover {
+      color: var(--ink);
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.03);
+    }
 
-/* ══ NAV ══ */
-.nav{
-  position:fixed;top:0;left:0;right:0;height:48px;
-  background:rgba(247,244,238,0.9);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--ink-15);
-  z-index:300;
-  display:flex;align-items:center;
-  padding:0 40px;gap:32px;
-  box-shadow:0 8px 24px rgba(24,22,18,0.05);
-}
-.read-prog{
-  position:fixed;top:0;left:0;height:2px;width:0;
-  background:var(--gold);z-index:460;
-  transition:width .08s linear;
-}
-.nav-brand{
-  font-family:var(--serif);font-size:13px;font-weight:700;
-  color:var(--ink);letter-spacing:0.03em;white-space:nowrap;
-}
-.nav-divider{width:1px;height:16px;background:var(--ink-15);}
-.nav-hint{font-size:11px;color:var(--ink-40);letter-spacing:0.02em;}
-.nav-links{display:flex;align-items:center;gap:4px;flex-wrap:nowrap}
-.nav-link{
-  font-size:11px;color:var(--ink-40);text-decoration:none;
-  padding:4px 8px;border-radius:999px;border:1px solid transparent;
-  transition:all .2s var(--ease);
-}
-.nav-link:hover{color:var(--ink);border-color:var(--ink-15);background:rgba(255,255,255,.6)}
-.nav-link.act{color:var(--gold);border-color:var(--gold-dim);background:var(--gold-lt);font-weight:600}
-.nav-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
-.nav-section-label{
-  font-size:11px;color:var(--ink-40);
-  transition:color .2s;
-}
-.nav-section-label.vis{color:var(--gold);font-weight:500;}
-.home-entry{
-  position:fixed;right:22px;bottom:22px;z-index:420;
-  display:inline-flex;align-items:center;gap:10px;
-  padding:11px 14px;border-radius:999px;
-  background:rgba(255,255,255,0.9);
-  border:1px solid var(--ink-15);
-  box-shadow:0 14px 32px rgba(24,22,18,0.12);
-  color:var(--ink);text-decoration:none;
-  transition:transform .2s var(--ease), box-shadow .2s var(--ease);
-}
-.home-entry:hover{
-  transform:translateY(-2px);
-  box-shadow:0 20px 36px rgba(24,22,18,0.16);
-}
-.home-entry-label{
-  display:flex;flex-direction:column;line-height:1.25;
-}
-.home-entry-kicker{
-  font-size:9px;letter-spacing:0.12em;
-  text-transform:uppercase;color:var(--ink-40);
-}
-.home-entry-title{
-  font-size:12px;font-weight:600;color:var(--ink-70);
-}
-.mini-nav{
-  position:fixed;right:16px;top:94px;z-index:340;
-  width:172px;
-  border:1px solid var(--ink-15);
-  border-radius:12px;
-  background:rgba(255,255,255,.86);
-  backdrop-filter:blur(8px);
-  box-shadow:0 10px 22px rgba(24,22,18,0.08);
-  padding:10px;
-}
-.mini-title{
-  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--ink-40);margin-bottom:8px;
-}
-.mini-links,.mini-stages{
-  display:grid;gap:6px;
-}
-.mini-link,.mini-stage-btn{
-  width:100%;
-  text-align:left;
-  border:1px solid var(--ink-15);
-  border-radius:8px;
-  background:#fff;
-  color:var(--ink-70);
-  padding:6px 8px;
-  font-size:11px;
-  text-decoration:none;
-  cursor:pointer;
-}
-.mini-link.act,.mini-stage-btn.act{
-  color:var(--gold);
-  border-color:var(--gold-dim);
-  background:var(--gold-lt);
-  font-weight:700;
-}
+    .page {
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 28px 22px 84px;
+    }
+    .section {
+      border: 1px solid var(--line);
+      background: linear-gradient(160deg, rgba(32, 42, 57, 0.78), rgba(24, 31, 44, 0.76));
+      border-radius: 16px;
+      padding: 22px;
+      margin-top: 14px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.26);
+    }
+    .section-kicker {
+      font-family: var(--mono);
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 900;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .section-sub {
+      color: var(--ink-dim);
+      font-size: 14px;
+      max-width: 840px;
+    }
 
-/* ══ HERO ══ */
-.hero{
-  padding:96px 40px 80px;
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:80px;align-items:start;
-  background:linear-gradient(140deg, rgba(255,255,255,0.66), rgba(255,250,242,0.55));
-  border:1px solid rgba(222,218,210,0.65);
-  border-radius:26px;
-  box-shadow:0 24px 58px rgba(24,22,18,0.08);
-}
-.hero-left{}
-.hero-eyebrow{
-  font-size:10px;font-weight:500;letter-spacing:0.16em;
-  text-transform:uppercase;color:var(--gold);
-  margin-bottom:20px;
-}
-.hero-h{
-  font-family:var(--serif);
-  font-size:clamp(36px,4vw,56px);
-  font-weight:900;line-height:1.1;
-  color:var(--ink);margin-bottom:28px;
-}
-.hero-h em{
-  font-style:normal;
-  color:var(--gold);
-  border-bottom:3px solid var(--gold);
-}
-.hero-argument{
-  font-size:15px;color:var(--ink-70);
-  line-height:1.9;margin-bottom:24px;
-  max-width:520px;
-}
-.hero-argument strong{color:var(--ink);}
-.hero-pull{
-  font-family:var(--serif);
-  font-size:18px;font-weight:600;
-  color:var(--ink);line-height:1.5;
-  border-left:3px solid var(--gold);
-  background:rgba(176,125,32,0.06);
-  border-radius:0 10px 10px 0;
-  padding:14px 0 14px 20px;
-  margin:28px 0;
-  max-width:480px;
-}
-.hero-prop{
-  background:linear-gradient(145deg, #1f1c18, #12110f);color:#fff;
-  padding:24px 28px;
-  margin-top:32px;
-  max-width:520px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.08);
-}
-.hero-prop-label{
-  font-size:10px;letter-spacing:0.14em;
-  text-transform:uppercase;color:var(--gold);
-  margin-bottom:10px;font-weight:500;
-}
-.hero-prop-text{
-  font-family:var(--serif);
-  font-size:16px;font-weight:600;
-  color:#fff;line-height:1.6;
-}
+    .hero-core {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(15, 20, 29, 0.66);
+      padding: 14px 16px;
+    }
+    .hero-core-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-dim);
+      margin-bottom: 6px;
+    }
+    .hero-core-text {
+      font-size: clamp(20px, 2.8vw, 30px);
+      line-height: 1.35;
+      font-weight: 700;
+    }
+    .hero-core-text em {
+      color: var(--gold);
+      font-style: normal;
+      border-bottom: 2px solid rgba(230, 179, 95, 0.5);
+    }
+    .overview-entry {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(230, 179, 95, 0.35);
+      border-radius: 999px;
+      background: var(--gold-soft);
+      color: #f5d7a2;
+      font-size: 12px;
+      text-decoration: none;
+      padding: 8px 13px;
+      font-family: var(--mono);
+    }
 
-/* Hero right — system preview */
-.hero-right{
-  position:sticky;top:72px;
-}
-.system-preview{
-  background:var(--paper);
-  border:1px solid var(--ink-15);
-  padding:28px;
-  border-radius:14px;
-  box-shadow:0 14px 30px rgba(24,22,18,0.08);
-}
-.sp-title{
-  font-size:10px;letter-spacing:0.12em;
-  text-transform:uppercase;color:var(--ink-40);
-  margin-bottom:20px;font-weight:500;
-}
-.sp-axis{
-  display:flex;justify-content:space-between;
-  margin-bottom:8px;
-}
-.sp-stage-label{
-  font-size:10px;color:var(--ink-40);
-  text-align:center;flex:1;
-}
-.sp-stage-label.branch{color:var(--gold);}
-.sp-tracks{display:flex;flex-direction:column;gap:10px;margin-bottom:16px;}
-.sp-track{display:flex;align-items:center;gap:8px;}
-.sp-track-label{
-  font-size:10px;font-weight:700;
-  width:36px;flex-shrink:0;
-}
-.sp-track-bars{
-  flex:1;display:flex;gap:3px;
-}
-.sp-bar{
-  flex:1;height:24px;
-  border-radius:2px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:700;color:#fff;
-  transition:opacity .2s;
-  cursor:pointer;
-}
-.sp-bar:hover{opacity:0.8;}
-.sp-legend{
-  display:flex;gap:16px;
-  border-top:1px solid var(--ink-06);
-  padding-top:14px;
-}
-.sp-legend-item{
-  display:flex;align-items:center;gap:6px;
-  font-size:11px;color:var(--ink-40);
-}
-.sp-legend-dot{
-  width:8px;height:8px;border-radius:50%;
-}
-.sp-insight{
-  margin-top:16px;
-  font-size:12px;color:var(--ink-70);
-  line-height:1.7;
-  border-top:1px solid var(--ink-06);
-  padding-top:14px;
-}
-.sp-insight strong{color:var(--ink);}
+    .problem-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .problem-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px;
+    }
+    .problem-item h4 {
+      font-size: 12px;
+      color: var(--warn);
+      margin-bottom: 4px;
+      letter-spacing: .04em;
+    }
+    .problem-item p {
+      font-size: 12px;
+      color: var(--ink-dim);
+    }
 
-/* ══ SECTION DIVIDER ══ */
-.sec-divider{
-  max-width:1200px;margin:0 auto;
-  padding:0 40px;
-}
-.sec-divider-line{
-  border:none;border-top:1px solid var(--ink-15);
-  margin:0;
-}
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+    }
+    .matrix-table th,
+    .matrix-table td {
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      padding: 10px 10px;
+      font-size: 12px;
+      vertical-align: top;
+    }
+    .matrix-table tr:last-child td { border-bottom: none; }
+    .matrix-table th:last-child,
+    .matrix-table td:last-child { border-right: none; }
+    .matrix-table thead th {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--ink);
+      font-weight: 700;
+      text-align: left;
+    }
+    .matrix-table tbody td:first-child {
+      color: var(--ink);
+      width: 130px;
+      background: rgba(255, 255, 255, 0.03);
+      font-weight: 600;
+    }
+    .tag-xc { color: var(--xc); font-weight: 700; }
+    .tag-sl { color: var(--sl); font-weight: 700; }
+    .tag-ms { color: var(--ms); font-weight: 700; }
+    .matrix-note {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--ink-dim);
+    }
 
-/* ══ OVERVIEW SECTION ══ */
-.overview-section{
-  max-width:1200px;margin:0 auto;
-  padding:72px 40px;
-  scroll-margin-top:48px;
-}
-.ov-header{
-  display:flex;align-items:baseline;gap:16px;
-  margin-bottom:40px;
-}
-.ov-chapter{
-  font-size:10px;letter-spacing:0.14em;
-  text-transform:uppercase;color:var(--gold);
-  font-weight:700;
-}
-.ov-title{
-  font-family:var(--serif);
-  font-size:24px;font-weight:700;color:var(--ink);
-}
-.ov-desc{
-  font-size:13px;color:var(--ink-40);
-  margin-left:auto;max-width:300px;text-align:right;
-}
+    .stages-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+    .stage-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 11px;
+    }
+    .stage-num {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: .1em;
+      margin-bottom: 3px;
+    }
+    .stage-name {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .stage-line {
+      font-size: 12px;
+      color: var(--ink-dim);
+      margin-bottom: 5px;
+      line-height: 1.58;
+    }
+    .stage-line strong { color: var(--ink); font-weight: 600; }
 
-/* Overview: the three type cards */
-.type-overview{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:1px;background:var(--ink-15);
-  border:1px solid var(--ink-15);
-  margin-bottom:40px;
-  overflow:hidden;
-  border-radius:14px;
-  box-shadow:0 14px 28px rgba(24,22,18,0.06);
-}
-.to-col{background:#fff;display:flex;flex-direction:column;}
-.to-head{
-  padding:20px 22px;color:#fff;
-  display:flex;flex-direction:column;gap:4px;
-}
-.to-head-name{font-size:14px;font-weight:700;}
-.to-head-sub{font-size:11px;opacity:0.7;}
-.to-body{padding:22px;flex:1;}
-.to-var-row{
-  display:flex;justify-content:space-between;
-  align-items:center;padding:7px 0;
-  border-bottom:1px solid var(--ink-06);
-  font-size:12px;
-}
-.to-var-row:last-child{border-bottom:none;}
-.to-var-name{color:var(--ink-40);}
-.to-var-bar{
-  display:flex;align-items:center;gap:6px;
-}
-.to-bar-track{
-  width:60px;height:4px;
-  background:var(--ink-06);border-radius:2px;overflow:hidden;
-}
-.to-bar-fill{
-  height:100%;border-radius:2px;
-  transition:width .6s var(--ease);
-}
-.to-var-val{
-  font-size:11px;font-weight:600;
-  min-width:28px;text-align:right;
-}
-.to-foot{
-  padding:16px 22px;
-  background:var(--ink-06);
-  border-top:1px solid var(--ink-15);
-  font-size:12px;color:var(--ink-70);
-  line-height:1.7;
-}
-.to-foot strong{color:var(--ink);}
-.boundary-tag{
-  display:inline-block;
-  font-size:10px;font-weight:700;
-  padding:2px 8px;border-radius:20px;
-  margin-bottom:8px;color:#fff;
-  letter-spacing:0.04em;
-}
+    .viewer-shell {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(15, 20, 29, 0.52);
+      overflow: hidden;
+    }
+    .viewer-controls {
+      position: sticky;
+      top: 56px;
+      z-index: 30;
+      border-bottom: 1px solid var(--line);
+      background: rgba(18, 23, 33, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 10px;
+      display: grid;
+      gap: 8px;
+    }
+    .viewer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .stage-indicator {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+      padding: 6px 10px;
+    }
+    .control-actions { display: flex; gap: 7px; }
+    .control-btn {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      color: var(--ink-dim);
+      font-size: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    .control-btn:hover { color: var(--ink); border-color: rgba(173,193,225,0.28); }
+    .control-btn:disabled { opacity: .4; cursor: not-allowed; }
 
-/* ══ MAIN STAGE VIEWER ══ */
-.stage-viewer{
-  max-width:1200px;margin:0 auto;
-  padding:0 40px 96px;
-  scroll-margin-top:48px;
-}
-.sv-header{margin-bottom:40px;}
-.sv-chapter{
-  font-size:10px;letter-spacing:0.14em;
-  text-transform:uppercase;color:var(--gold);
-  font-weight:700;margin-bottom:8px;
-}
-.sv-title{
-  font-family:var(--serif);
-  font-size:24px;font-weight:700;color:var(--ink);
-  margin-bottom:6px;
-}
-.sv-desc{font-size:13px;color:var(--ink-40);}
-.sv-shell{
-  display:grid;
-  gap:12px;
-}
-.sv-panel-label{
-  font-size:10px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:var(--ink-40);
-  margin-bottom:8px;
-}
-.sv-controls-panel{
-  position:sticky;top:54px;z-index:220;
-  border:1px solid var(--ink-15);
-  border-radius:10px;
-  background:rgba(247,244,238,0.86);
-  backdrop-filter:blur(8px);
-  padding:8px 10px;
-}
-.sv-content-panel{
-  border:1px solid var(--ink-15);
-  border-radius:12px;
-  background:rgba(255,255,255,0.4);
-  padding:10px 12px 14px;
-}
-.sv-tools{
-  margin:0;
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
-}
-.sv-stage-indicator{
-  font-size:12px;color:var(--ink-70);
-  border:1px solid var(--ink-15);
-  background:#fff;padding:7px 10px;border-radius:9px;
-}
-.sv-actions{display:flex;align-items:center;gap:8px}
-.sv-btn{
-  border:1px solid var(--ink-15);background:#fff;color:var(--ink-70);
-  padding:7px 10px;border-radius:9px;font-size:12px;cursor:pointer;
-  transition:all .2s var(--ease);
-}
-.sv-btn:hover{border-color:var(--ink-40);color:var(--ink)}
-.sv-btn:disabled{opacity:.45;cursor:not-allowed}
-.sv-hint{display:none;}
-.stage-summary-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-bottom:12px;
-}
-.sum-card{
-  border:1px solid var(--ink-15);
-  background:rgba(255,255,255,.86);
-  border-radius:10px;
-  padding:12px 12px 10px;
-}
-.sum-type{
-  font-size:12px;font-weight:700;color:var(--ink);
-  margin-bottom:6px;
-}
-.sum-row{
-  font-size:11px;color:var(--ink-70);
-  line-height:1.65;
-}
-.sum-row strong{color:var(--ink);}
+    .stage-pills {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+    .stage-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      color: var(--ink-dim);
+      font-size: 12px;
+      padding: 6px 10px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .stage-pill.active {
+      background: var(--gold-soft);
+      border-color: rgba(230, 179, 95, 0.4);
+      color: #f5d7a2;
+      font-weight: 700;
+    }
 
-/* Stage selector */
-.stage-selector{
-  display:flex;align-items:center;
-  gap:6px;
-  margin:8px 0 0;
-  overflow-x:auto;
-  padding:2px 0;
-}
-.ss-item{
-  flex:0 0 auto;
-  min-width:104px;
-  padding:7px 10px;
-  cursor:pointer;
-  border:1px solid var(--ink-15);
-  border-radius:999px;
-  transition:all .2s var(--ease);
-  display:flex;align-items:center;gap:6px;
-  background:#fff;
-  position:relative;
-}
-.ss-item.act{
-  background:var(--gold-lt);
-  border-color:var(--gold-dim);
-}
-.ss-item:hover{
-  border-color:var(--ink-40);
-}
-.ss-item.branch-item{
-  background:#fff;
-}
-.ss-num{
-  font-size:10px;color:var(--gold);
-  font-weight:700;letter-spacing:0.1em;
-}
-.ss-name{
-  font-size:12px;font-weight:700;color:var(--ink);
-  line-height:1.2;
-}
-.ss-task{
-  display:none;
-}
-.ss-branch-tag{
-  display:none;
-}
+    .viewer-content { padding: 12px; }
+    .stage-view { display: none; }
+    .stage-view.active { display: block; }
 
-/* Stage content */
-.stage-content{
-  display:none;
-  animation:fadeIn .25s var(--ease);
-}
-.stage-content.vis{display:block;}
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .role-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      padding: 11px;
+      cursor: pointer;
+    }
+    .role-card.active { outline: 2px solid rgba(230,179,95,0.4); }
+    .role-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .role-row {
+      font-size: 12px;
+      color: var(--ink-dim);
+      margin-bottom: 4px;
+      line-height: 1.55;
+    }
+    .role-row strong { color: var(--ink); }
 
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(10px);}
-  to{opacity:1;transform:translateY(0);}
-}
+    .delivery-panel {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      overflow: hidden;
+    }
+    .delivery-head {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .delivery-head .title {
+      font-size: 12px;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .type-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .type-pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      color: var(--ink-dim);
+      font-size: 11px;
+      padding: 5px 9px;
+      cursor: pointer;
+    }
+    .type-pill.active {
+      background: var(--gold-soft);
+      color: #f5d7a2;
+      border-color: rgba(230,179,95,0.4);
+      font-weight: 700;
+    }
+    .delivery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+    }
+    .delivery-col {
+      background: #1a202d;
+      padding: 11px;
+    }
+    .delivery-col h4 {
+      font-size: 11px;
+      color: var(--ink-dim);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .fi {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+    .fi:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+    .fi-name {
+      font-size: 12px;
+      color: var(--ink);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .fi-badge {
+      font-size: 9px;
+      color: #101521;
+      border-radius: 999px;
+      padding: 1px 6px;
+      margin-left: 6px;
+      font-family: var(--mono);
+      font-weight: 700;
+    }
+    .fi-desc { font-size: 11px; color: var(--ink-dim); }
+    .fi-why {
+      font-size: 10px;
+      margin-top: 6px;
+      color: #d6dfef;
+      border-left: 2px solid rgba(230,179,95,.45);
+      padding-left: 8px;
+    }
+    .flow-box,
+    .trigger-box {
+      border-top: 1px solid var(--line);
+      padding: 10px 11px;
+    }
+    .flow-box h5,
+    .trigger-box h5 {
+      font-size: 11px;
+      color: var(--ink-dim);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 7px;
+    }
+    .flow-step {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      padding: 7px;
+    }
+    .flow-num {
+      font-size: 9px;
+      color: var(--ink-dim);
+      font-family: var(--mono);
+      margin-bottom: 3px;
+    }
+    .flow-form {
+      font-size: 11px;
+      color: var(--ink);
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+    .flow-feedback {
+      font-size: 10px;
+      color: var(--ink-dim);
+      line-height: 1.5;
+    }
+    .trigger-item {
+      border-top: 1px solid var(--line);
+      padding: 7px 0;
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 10px;
+    }
+    .trigger-item:first-child { border-top: none; padding-top: 0; }
+    .trigger-type {
+      font-size: 10px;
+      color: var(--gold);
+      font-family: var(--mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding-top: 1px;
+    }
+    .trigger-text { font-size: 11px; color: var(--ink-dim); }
+    .trigger-signal {
+      margin-top: 3px;
+      font-size: 10px;
+      color: rgba(164,178,203,.72);
+      font-style: italic;
+    }
+    .compare-toggle {
+      margin-top: 8px;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.03);
+      color: var(--ink-dim);
+      font-size: 11px;
+      text-align: center;
+      padding: 7px;
+      cursor: pointer;
+    }
+    .compare-panel { display: none; margin-top: 8px; }
+    .compare-panel.open { display: block; }
+    .compare-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--line);
+    }
+    .cg-col { background: #1a202d; }
+    .cg-head {
+      padding: 8px;
+      font-size: 10px;
+      text-align: center;
+      color: #111724;
+      font-weight: 700;
+    }
+    .cg-row,
+    .cg-row-label {
+      border-top: 1px solid var(--line);
+      padding: 8px;
+      text-align: center;
+      font-size: 10px;
+      color: var(--ink-dim);
+      line-height: 1.5;
+      min-height: 36px;
+      display: grid;
+      place-items: center;
+    }
+    .cg-row-label {
+      color: var(--ink);
+      font-weight: 700;
+      background: rgba(255,255,255,0.03);
+    }
+    .cg-row.highlight {
+      background: rgba(230,179,95,.12);
+      color: #f5d7a2;
+      font-weight: 700;
+    }
 
-/* State banner */
-.state-banner{
-  padding:24px 28px;
-  border:1px solid var(--ink-15);
-  background:var(--paper);
-  margin-bottom:20px;
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:40px;
-  align-items:center;
-  border-radius:14px;
-  box-shadow:0 10px 22px rgba(24,22,18,0.05);
-}
-.sb-left{}
-.sb-stage-name{
-  font-family:var(--serif);
-  font-size:20px;font-weight:700;color:var(--ink);
-  margin-bottom:4px;
-}
-.sb-task{
-  font-size:13px;color:var(--ink-40);
-  margin-bottom:10px;
-}
-.sb-char{
-  font-size:13px;color:var(--ink-70);
-  line-height:1.75;
-  max-width:580px;
-}
-.sb-right{}
-.sb-decision{
-  background:var(--ink);
-  padding:16px 20px;
-  font-size:12px;color:rgba(255,255,255,0.8);
-  line-height:1.7;
-  max-width:260px;
-}
-.sb-decision-label{
-  font-size:10px;letter-spacing:0.12em;
-  text-transform:uppercase;color:var(--gold);
-  font-weight:700;margin-bottom:8px;
-}
-.sb-decision strong{color:#fff;}
+    .framework-box {
+      margin-top: 10px;
+      border: 1px solid rgba(230,179,95,.34);
+      border-radius: 10px;
+      background: var(--gold-soft);
+      padding: 11px 12px;
+      color: #f8e0b5;
+      font-family: var(--serif);
+      font-size: clamp(18px, 2.2vw, 24px);
+      line-height: 1.5;
+      font-weight: 700;
+    }
 
-/* The three-track view — core of the tool */
-.track-view{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  background:var(--ink-15);
-  border:1px solid var(--ink-15);
-  margin-bottom:20px;
-  overflow:hidden;
-  border-radius:14px;
-  box-shadow:0 12px 24px rgba(24,22,18,0.05);
-}
-.track-col{
-  background:#fff;
-  display:flex;flex-direction:column;
-  transition:transform .22s var(--ease), box-shadow .22s var(--ease);
-}
-.track-col:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 22px rgba(24,22,18,0.08);
-}
-.tc-head{
-  padding:16px 20px;
-  display:flex;justify-content:space-between;
-  align-items:center;
-}
-.tc-head-left{}
-.tc-type-name{
-  font-size:13px;font-weight:700;color:#fff;
-  margin-bottom:2px;
-}
-.tc-type-sub{font-size:10px;opacity:0.65;color:#fff;}
-.tc-role-badge{
-  font-size:10px;font-weight:700;
-  padding:3px 10px;border-radius:20px;
-  background:rgba(255,255,255,0.18);
-  color:#fff;
-  white-space:nowrap;
-}
+    .usage-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .usage-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 11px;
+      background: rgba(255,255,255,0.03);
+    }
+    .usage-card h4 {
+      font-size: 12px;
+      color: var(--ink);
+      margin-bottom: 5px;
+    }
+    .usage-card p {
+      font-size: 12px;
+      color: var(--ink-dim);
+    }
+    .boundary-note {
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      padding: 11px;
+      font-size: 12px;
+      color: var(--ink-dim);
+    }
 
-/* Value indicator */
-.tc-value{
-  display:flex;align-items:center;gap:0;
-  border-bottom:1px solid var(--ink-06);
-}
-.tc-value-seg{
-  flex:1;height:6px;
-  transition:background .4s var(--ease);
-}
-
-/* Drive keyword — the most prominent element */
-.tc-drive{
-  padding:20px 20px 14px;
-  border-bottom:1px solid var(--ink-06);
-}
-.tc-drive-label{
-  font-size:10px;letter-spacing:0.1em;
-  text-transform:uppercase;color:var(--ink-40);
-  margin-bottom:8px;font-weight:500;
-}
-.tc-drive-keyword{
-  font-family:var(--serif);
-  font-size:28px;font-weight:900;
-  line-height:1;margin-bottom:8px;
-}
-.tc-drive-mechanism{
-  font-size:12px;color:var(--ink-70);
-  line-height:1.75;
-}
-
-/* What the type does this stage */
-.tc-what{
-  padding:16px 20px;
-  border-bottom:1px solid var(--ink-06);
-  flex:1;
-}
-.tc-what-label{
-  font-size:10px;letter-spacing:0.1em;
-  text-transform:uppercase;color:var(--ink-40);
-  margin-bottom:8px;font-weight:500;
-}
-.tc-what-text{
-  font-size:12px;color:var(--ink-70);
-  line-height:1.75;
-}
-
-/* Product action */
-.tc-product{
-  padding:14px 20px;
-  border-bottom:1px solid var(--ink-06);
-  background:var(--ink-03);
-}
-.tc-product-label{
-  font-size:10px;letter-spacing:0.1em;
-  text-transform:uppercase;color:var(--ink-40);
-  margin-bottom:6px;font-weight:500;
-}
-.tc-product-text{
-  font-size:12px;color:var(--ink);
-  line-height:1.7;font-weight:500;
-}
-.tc-product-form{
-  font-size:11px;color:var(--ink-40);
-  margin-top:4px;font-style:italic;
-}
-
-/* Data signal */
-.tc-data{
-  padding:12px 20px;
-  background:var(--ink-06);
-}
-.tc-data-label{
-  font-size:10px;letter-spacing:0.1em;
-  text-transform:uppercase;color:var(--ink-40);
-  margin-bottom:6px;font-weight:500;
-}
-.tc-data-signal{
-  font-size:11px;color:var(--ink-70);
-  line-height:1.6;
-}
-.data-tag{
-  display:inline-block;
-  font-size:10px;font-weight:600;
-  padding:2px 7px;border-radius:20px;
-  background:var(--ink-15);
-  color:var(--ink-70);
-  margin:2px 2px 2px 0;
-}
-
-/* Attention note */
-.attention-row{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  background:var(--ink-15);
-  border:1px solid var(--ink-15);
-  margin-bottom:20px;
-  overflow:hidden;
-  border-radius:12px;
-}
-.att-cell{
-  padding:14px 18px;
-  background:var(--ink-06);
-  font-size:12px;color:var(--ink-70);
-  line-height:1.7;
-}
-.att-cell strong{color:var(--ink);}
-.att-cell.warn{
-  background:var(--gold-dim);
-}
-.att-cell.warn strong{color:var(--gold);}
-.att-tag{
-  font-size:10px;font-weight:700;
-  letter-spacing:0.08em;text-transform:uppercase;
-  margin-bottom:6px;
-  display:block;
-}
-
-/* Audience row */
-.audience-row{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:1px;
-  background:var(--ink-15);
-  border:1px solid var(--ink-15);
-  overflow:hidden;
-  border-radius:12px;
-  box-shadow:0 8px 18px rgba(24,22,18,0.04);
-}
-.aud-cell{
-  background:#fff;
-  padding:16px 18px;
-}
-.aud-role{
-  font-size:10px;font-weight:700;
-  letter-spacing:0.08em;text-transform:uppercase;
-  color:var(--ink-40);margin-bottom:8px;
-}
-.aud-text{
-  font-size:12px;color:var(--ink-70);
-  line-height:1.75;
-}
-.aud-text strong{color:var(--ink);}
-
-/* ══ DELIVERY PANEL ══ */
-.track-col{
-  cursor:pointer;
-}
-.track-col.delivery-focus{
-  outline:2px solid var(--gold-dim);
-  outline-offset:-2px;
-}
-.delivery-panel{
-  margin-top:16px;
-  border:1px solid var(--ink-15);
-  border-radius:14px;
-  background:rgba(255,255,255,.84);
-  overflow:hidden;
-}
-.dp-top{
-  padding:12px 14px;
-  border-bottom:1px solid var(--ink-10);
-  background:var(--ink-05);
-  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-}
-.dp-title{
-  font-size:12px;font-weight:700;color:var(--ink);
-}
-.dp-sub{
-  font-size:11px;color:var(--ink-60);
-}
-.dp-type-pills{display:flex;gap:6px;flex-wrap:wrap;}
-.dp-type-pill{
-  border:1px solid var(--ink-15);
-  background:#fff;
-  color:var(--ink-60);
-  border-radius:999px;
-  padding:5px 10px;
-  font-size:11px;
-  cursor:pointer;
-}
-.dp-type-pill.act{
-  border-color:var(--gold-dim);
-  background:var(--gold-lt);
-  color:var(--gold);
-  font-weight:700;
-}
-.delivery-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:1px;
-  background:var(--ink-15);
-  border-top:1px solid var(--ink-15);
-}
-.dg-col{background:#fff;display:flex;flex-direction:column;}
-.dg-head{
-  padding:12px 14px;
-  border-bottom:1px solid var(--ink-10);
-  background:var(--ink-05);
-}
-.dg-head-label{
-  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ink-60);font-weight:700;margin-bottom:2px;
-}
-.dg-head-name{font-size:12px;font-weight:700;color:var(--ink);}
-.dg-body{padding:13px 14px;}
-.form-item{
-  margin-bottom:12px;
-  padding-bottom:12px;
-  border-bottom:1px solid var(--ink-10);
-}
-.form-item:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none;}
-.fi-name{
-  font-size:12px;font-weight:700;color:var(--ink);margin-bottom:4px;
-  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
-}
-.fi-badge{
-  font-size:9px;font-weight:700;letter-spacing:.06em;
-  padding:1px 6px;border-radius:20px;color:#fff;
-}
-.fi-desc{font-size:11px;color:var(--ink-60);line-height:1.65;}
-.fi-why{
-  margin-top:6px;
-  font-size:11px;color:var(--ink);
-  background:var(--ink-05);
-  border-left:2px solid var(--gold);
-  padding:6px 8px;
-  line-height:1.6;
-}
-.seq-box{
-  margin-top:10px;
-  background:#fff;border:1px solid var(--ink-10);
-  border-radius:10px;
-  padding:12px 14px;
-}
-.seq-label{
-  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--ink-60);font-weight:700;margin-bottom:10px;
-}
-.seq-steps{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-}
-.seq-step{
-  border:1px solid var(--ink-10);
-  border-radius:8px;
-  padding:8px 9px;
-  background:var(--ink-05);
-}
-.seq-step-num{
-  font-size:9px;letter-spacing:.08em;color:var(--ink-60);font-weight:700;margin-bottom:3px;
-}
-.seq-step-form{
-  font-size:11px;font-weight:700;color:var(--ink);margin-bottom:2px;
-}
-.seq-step-feedback{
-  font-size:10px;color:var(--ink-60);line-height:1.5;
-}
-.trigger-box{
-  margin-top:10px;
-  background:var(--ink);
-  border-radius:10px;
-  padding:13px 14px;
-}
-.tb-label{
-  font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px;
-}
-.tb-trigger{
-  padding:8px 0;
-  border-top:1px solid rgba(255,255,255,.08);
-  display:grid;grid-template-columns:95px 1fr;gap:10px;
-}
-.tb-trigger:first-child{border-top:none;padding-top:0;}
-.tt-type{
-  font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);font-weight:700;padding-top:1px;
-}
-.tt-desc{font-size:11px;color:rgba(255,255,255,.78);line-height:1.6;}
-.tt-signal{font-size:10px;color:rgba(255,255,255,.45);margin-top:3px;font-style:italic;}
-.compare-hint{
-  margin-top:10px;
-  border:1px dashed var(--ink-15);
-  background:var(--ink-05);
-  border-radius:10px;
-  text-align:center;
-  padding:8px 10px;
-  font-size:11px;color:var(--ink-60);
-  cursor:pointer;
-}
-.compare-panel{display:none;margin-top:8px;}
-.compare-panel.vis{display:block;}
-.compare-grid{
-  display:grid;grid-template-columns:repeat(6,1fr);
-  gap:1px;background:var(--ink-15);border:1px solid var(--ink-15);border-radius:10px;overflow:hidden;
-}
-.cg-col{background:#fff;}
-.cg-head{padding:8px 10px;text-align:center;font-size:10px;font-weight:700;color:#fff;}
-.cg-row,.cg-row-label{
-  padding:8px 10px;border-top:1px solid var(--ink-10);font-size:10px;line-height:1.5;text-align:center;color:var(--ink-60);
-}
-.cg-row-label{font-weight:700;background:var(--ink-05);text-transform:uppercase;letter-spacing:.05em;}
-.cg-row.highlight{background:var(--ink-05);color:var(--ink);font-weight:700;}
-
-/* ══ CONCLUSION ══ */
-.conclusion{
-  background:linear-gradient(145deg, #191713, #13120f);
-  padding:64px 40px;
-}
-.conclusion-inner{
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:280px 1fr;
-  gap:80px;align-items:start;
-}
-.conclusion-left{}
-.conclusion-label{
-  font-size:10px;letter-spacing:0.14em;
-  text-transform:uppercase;color:var(--gold);
-  font-weight:700;margin-bottom:16px;
-}
-.conclusion-h{
-  font-family:var(--serif);
-  font-size:28px;font-weight:700;
-  color:#fff;line-height:1.35;
-}
-.conclusion-right{}
-.cl-lines{display:flex;flex-direction:column;gap:0;}
-.cl-line{
-  display:grid;
-  grid-template-columns:130px 1fr;
-  gap:24px;align-items:start;
-  padding:18px 0;
-  border-top:1px solid rgba(255,255,255,0.08);
-}
-.cl-line:first-child{border-top:none;padding-top:0;}
-.cl-key{
-  font-size:13px;font-weight:700;color:var(--gold);
-  line-height:1.4;
-}
-.cl-val{
-  font-size:13px;color:rgba(255,255,255,0.7);
-  line-height:1.8;
-}
-
-@media (max-width:1100px){
-  .nav{padding:0 20px;gap:14px}
-  .nav-hint{display:none}
-  .hero{grid-template-columns:1fr;gap:34px;padding:84px 20px 64px}
-  .hero-right{position:static}
-  .sec-divider,.overview-section,.stage-viewer{padding-left:20px;padding-right:20px}
-  .conclusion{padding:48px 20px}
-  .conclusion-inner{grid-template-columns:1fr;gap:28px}
-  .home-entry{right:14px;bottom:14px}
-  .mini-nav{display:none}
-}
-@media (max-width:860px){
-  .nav-right{display:none}
-  .nav-links{margin-left:auto}
-  .type-overview,.track-view,.attention-row,.audience-row{grid-template-columns:1fr}
-  .stage-summary-grid{grid-template-columns:1fr}
-  .state-banner{grid-template-columns:1fr;gap:16px;padding:18px}
-  .sv-tools{flex-wrap:wrap;justify-content:flex-start}
-  .sv-stage-indicator{width:auto}
-  .sv-controls-panel{position:static}
-  .delivery-grid,.seq-steps,.compare-grid{grid-template-columns:1fr}
-  .tb-trigger{grid-template-columns:1fr}
-}
-@media (max-width:620px){
-  .hero-h{font-size:clamp(30px,9vw,42px)}
-  .hero-argument{font-size:14px}
-  .hero-pull{font-size:16px}
-  .hero-prop{padding:18px}
-  .home-entry-title{display:none}
-  .home-entry{padding:10px 12px}
-}
-
-/* Scrollbar */
-::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:transparent;}
-::-webkit-scrollbar-thumb{background:var(--ink-15);border-radius:2px;}
-</style>
+    @media (max-width: 1100px) {
+      .stages-grid { grid-template-columns: repeat(2, 1fr); }
+      .role-grid { grid-template-columns: 1fr; }
+      .delivery-grid { grid-template-columns: 1fr; }
+      .flow-steps { grid-template-columns: 1fr 1fr; }
+      .usage-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 760px) {
+      .page { padding: 18px 14px 58px; }
+      .section { padding: 16px; }
+      .problem-grid,
+      .stages-grid,
+      .usage-grid { grid-template-columns: 1fr; }
+      .matrix-table { display: block; overflow-x: auto; }
+      .viewer-controls { top: 56px; }
+      .trigger-item { grid-template-columns: 1fr; }
+      .compare-grid { grid-template-columns: 1fr; }
+      .flow-steps { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-<div class="read-prog" id="readProg"></div>
-<a class="home-entry" href="./index.html" aria-label="返回脑洞展厅">
-  <span>←</span>
-  <span class="home-entry-label">
-    <span class="home-entry-kicker">Back to Home</span>
-    <span class="home-entry-title">返回脑洞展厅</span>
-  </span>
-</a>
-<aside class="mini-nav" id="miniNav">
-  <div class="mini-title">快速导航</div>
-  <div class="mini-links">
-    <a class="mini-link" href="#sec-types" data-sec="sec-types">题型特性</a>
-    <a class="mini-link" href="#sec-stages" data-sec="sec-stages">阶段截面</a>
-  </div>
-  <div class="mini-title" style="margin-top:10px;">阶段切换</div>
-  <div class="mini-stages" id="miniStages"></div>
-</aside>
-
-<nav class="nav">
-  <span class="nav-brand">公考"题"逻辑全解</span>
-  <div class="nav-divider"></div>
-  <span class="nav-hint">阶段驱动型题目产品框架</span>
-  <div class="nav-links">
-    <a class="nav-link" href="#sec-types" data-target="sec-types">题型特性</a>
-    <a class="nav-link" href="#sec-stages" data-target="sec-stages">阶段截面</a>
-  </div>
-  <div class="nav-right">
-    <span class="nav-section-label" id="navLabel">内部研究文档</span>
-  </div>
-</nav>
-
-<!-- ══════════ HERO ══════════ -->
-<section style="padding-top:48px;">
-  <div class="hero">
-    <div class="hero-left">
-      <div class="hero-eyebrow">内部研究文档 · 教研 & 产品指导</div>
-      <h1 class="hero-h">题的价值<br>不由内容决定<br>由<em>用户状态</em>决定</h1>
-
-      <div class="hero-argument">
-        <p>公考备考市场的主流逻辑：课是主体，题是工具。课定义学习路径，题用来检验效果。在这个逻辑里，题的价值由它所附属的课来定义。</p>
-        <p style="margin-top:14px;">这个逻辑有一个盲区——它忽略了题本身对用户的作用机制。课告诉学生考试是什么，但只有做题才能让学生真实感受到自己和考试之间的距离、能力边界在哪里、压力下会发生什么。这三件事，课永远做不到。</p>
-      </div>
-
-      <div class="hero-pull">同一道申论题，启动期做是挫败感，强化期做是能力边界的认知，收敛期做是失分点的定向消除。题没有变，但它在三个阶段对用户做了三件完全不同的事。</div>
-
-      <div class="hero-prop">
-        <div class="hero-prop-label">核心命题</div>
-        <div class="hero-prop-text">用阶段定义状态，用题型匹配任务，用驱动设计反馈，用调度控制节奏</div>
-      </div>
+  <header class="top-nav">
+    <div class="top-nav-inner">
+      <div class="brand">GONGKAO QUESTION FRAMEWORK</div>
+      <nav class="nav-links">
+        <a href="#logic-gap">旧逻辑缺口</a>
+        <a href="#type-matrix">题型矩阵</a>
+        <a href="#stage-defs">阶段定义</a>
+        <a href="#stage-viewer">阶段查看器</a>
+        <a href="#framework">框架与使用</a>
+      </nav>
     </div>
+  </header>
 
-    <div class="hero-right">
-      <div class="system-preview">
-        <div class="sp-title">三类题型 × 五个阶段 · 价值强度全局视图</div>
-        <div class="sp-axis" id="spAxis"></div>
-        <div class="sp-tracks" id="spTracks"></div>
-        <div class="sp-legend">
-          <div class="sp-legend-item"><div class="sp-legend-dot" style="background:var(--xc)"></div>行测</div>
-          <div class="sp-legend-item"><div class="sp-legend-dot" style="background:var(--sl)"></div>申论/综应</div>
-          <div class="sp-legend-item"><div class="sp-legend-dot" style="background:var(--ms)"></div>面试</div>
-        </div>
-        <div class="sp-insight" id="spInsight"></div>
+  <main class="page">
+    <section class="section" id="hero">
+      <div class="section-kicker">核心命题</div>
+      <h1 class="section-title">公考"题"逻辑全解</h1>
+      <p class="section-sub">这页保留并展开同一条主线：题的价值不是静态由内容决定，而是动态由用户阶段决定。三类题型 × 五个阶段不是展示框架，而是分发、反馈、运营与转化的协同框架。</p>
+      <div class="hero-core">
+        <div class="hero-core-label">Core Statement</div>
+        <div class="hero-core-text">题的价值不由内容静态决定，而由<em>用户当下所处阶段</em>动态决定。</div>
       </div>
-    </div>
-  </div>
-</section>
+      <a class="overview-entry" href="#stage-viewer">进入总览查看器 →</a>
+    </section>
 
-<div class="sec-divider"><hr class="sec-divider-line"></div>
-
-<!-- ══════════ TYPE OVERVIEW ══════════ -->
-<section class="overview-section" id="sec-types">
-  <div class="ov-header">
-    <span class="ov-chapter">前置认知</span>
-    <h2 class="ov-title">三类题型的结构特性</h2>
-    <span class="ov-desc">自我校准力是决定独立价值边界的核心变量</span>
-  </div>
-
-  <div class="type-overview">
-    <div class="to-col">
-      <div class="to-head" style="background:var(--xc)">
-        <div class="to-head-name">行测（客观题）</div>
-        <div class="to-head-sub">做完即知对错 · 独立价值最强</div>
+    <section class="section" id="logic-gap">
+      <div class="section-kicker">为什么旧逻辑不够</div>
+      <h2 class="section-title" style="font-size:30px;">从“题是工具”到“题是阶段驱动器”</h2>
+      <p class="section-sub">传统逻辑默认题的价值只由题目内容与难度决定，这会导致同一题在不同阶段被“同价处理”。但对多数用户和多数场景而言，驱动价值主要来自阶段匹配，而非题目本体。</p>
+      <div class="problem-grid">
+        <article class="problem-item">
+          <h4>问题1：静态看题</h4>
+          <p>只看题目内容，不看用户状态，导致“题目好但时机错”。</p>
+        </article>
+        <article class="problem-item">
+          <h4>问题2：反馈同质化</h4>
+          <p>同一套反馈在各阶段复用，无法对应不同心理任务。</p>
+        </article>
+        <article class="problem-item">
+          <h4>问题3：动作不连贯</h4>
+          <p>分发、训练、转化之间断裂，难以形成阶段承接链路。</p>
+        </article>
       </div>
-      <div class="to-body">
-        <div class="to-var-row">
-          <span class="to-var-name">接受门槛</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:85%;background:var(--sl)"></div></div>
-            <span class="to-var-val" style="color:var(--sl)">低</span>
-          </div>
-        </div>
-        <div class="to-var-row">
-          <span class="to-var-name">即时反馈强度</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:90%;background:var(--xc)"></div></div>
-            <span class="to-var-val" style="color:var(--xc)">高</span>
-          </div>
-        </div>
-        <div class="to-var-row">
-          <span class="to-var-name">训练连续性</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:88%;background:var(--xc)"></div></div>
-            <span class="to-var-val" style="color:var(--xc)">高</span>
-          </div>
-        </div>
-        <div class="to-var-row">
-          <span class="to-var-name">自我校准力 ★</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:92%;background:var(--xc)"></div></div>
-            <span class="to-var-val" style="color:var(--xc)">高</span>
-          </div>
-        </div>
-      </div>
-      <div class="to-foot">
-        <div class="boundary-tag" style="background:var(--xc)">独立价值完整</div><br>
-        全程不依赖外部反馈独立成立。产品竞争力在于<strong>结果如何被呈现</strong>——不同阶段需要激活不同的驱动状态。
-      </div>
-    </div>
-    <div class="to-col">
-      <div class="to-head" style="background:var(--sl)">
-        <div class="to-head-name">申论 / 综应（主观题）</div>
-        <div class="to-head-sub">反馈延迟 · 必须依赖外部评判</div>
-      </div>
-      <div class="to-body">
-        <div class="to-var-row">
-          <span class="to-var-name">接受门槛</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:25%;background:var(--ms)"></div></div>
-            <span class="to-var-val" style="color:var(--ms)">高</span>
-          </div>
-        </div>
-        <div class="to-var-row">
-          <span class="to-var-name">即时反馈强度</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:15%;background:var(--ms)"></div></div>
-            <span class="to-var-val" style="color:var(--ms)">低</span>
-          </div>
-        </div>
-        <div class="to-var-row">
-          <span class="to-var-name">训练连续性</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:45%;background:var(--gold)"></div></div>
-            <span class="to-var-val" style="color:var(--gold)">中</span>
-          </div>
-        </div>
-        <div class="to-var-row">
-          <span class="to-var-name">自我校准力 ★</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:12%;background:var(--ms)"></div></div>
-            <span class="to-var-val" style="color:var(--ms)">低</span>
-          </div>
-        </div>
-      </div>
-      <div class="to-foot">
-        <div class="boundary-tag" style="background:var(--sl)">独立价值有天花板</div><br>
-        没有批改的申论题价值接近于零——不是低，是接近零。<strong>批改不是增值服务，是产品存在的前提。</strong>
-      </div>
-    </div>
-    <div class="to-col">
-      <div class="to-head" style="background:var(--ms)">
-        <div class="to-head-name">面试题</div>
-        <div class="to-head-sub">必须开口 · 价值依赖训练环境</div>
-      </div>
-      <div class="to-body">
-        <div class="to-var-row">
-          <span class="to-var-name">接受门槛</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:20%;background:var(--ms)"></div></div>
-            <span class="to-var-val" style="color:var(--ms)">高</span>
-          </div>
-        </div>
-        <div class="to-var-row">
-          <span class="to-var-name">即时反馈强度</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:10%;background:var(--ms)"></div></div>
-            <span class="to-var-val" style="color:var(--ms)">低</span>
-          </div>
-        </div>
-        <div class="to-var-row">
-          <span class="to-var-name">训练连续性</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:18%;background:var(--ms)"></div></div>
-            <span class="to-var-val" style="color:var(--ms)">低</span>
-          </div>
-        </div>
-        <div class="to-var-row">
-          <span class="to-var-name">自我校准力 ★</span>
-          <div class="to-var-bar">
-            <div class="to-bar-track"><div class="to-bar-fill" style="width:8%;background:var(--ms)"></div></div>
-            <span class="to-var-val" style="color:var(--ms)">极低</span>
-          </div>
-        </div>
-      </div>
-      <div class="to-foot">
-        <div class="boundary-tag" style="background:var(--ms)">价值完全依赖环境</div><br>
-        书面思考面试题，价值折损极大。进面前低频预埋，进面后<strong>价值断崖式跃升</strong>为绝对核心。
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<div class="sec-divider"><hr class="sec-divider-line"></div>
+    <section class="section" id="type-matrix">
+      <div class="section-kicker">统一比较矩阵</div>
+      <h2 class="section-title" style="font-size:30px;">三类题型结构差异（横向同维度对照）</h2>
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>比较维度</th>
+            <th><span class="tag-xc">行测</span>（客观题）</th>
+            <th><span class="tag-sl">申论/综应</span>（主观题）</th>
+            <th><span class="tag-ms">面试</span>（表达性场景）</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>接受门槛</td>
+            <td>低，易进入</td>
+            <td>中高，需持续投入</td>
+            <td>高，受心理与场景影响更大</td>
+          </tr>
+          <tr>
+            <td>反馈时延</td>
+            <td>即时反馈强</td>
+            <td>反馈存在时延，依赖批改质量</td>
+            <td>反馈依赖回放/点评与仿真场景</td>
+          </tr>
+          <tr>
+            <td>训练连续性</td>
+            <td>高，日常可连续</td>
+            <td>中，受时长与批改链路影响</td>
+            <td>中低，受组织与环境成本影响</td>
+          </tr>
+          <tr>
+            <td>自我校准力</td>
+            <td>高，多数情况下可自校准</td>
+            <td>中低，多数场景需要外部反馈支持</td>
+            <td>低，单独书面训练迁移有限</td>
+          </tr>
+          <tr>
+            <td>环境依赖度</td>
+            <td>低</td>
+            <td>中</td>
+            <td>高，仿真度显著影响训练价值</td>
+          </tr>
+          <tr>
+            <td>独立价值边界</td>
+            <td>边界较宽，可独立承担多阶段任务</td>
+            <td>边界受批改链路约束，强化期价值最集中</td>
+            <td>边界受场景约束，决战期价值集中释放</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="matrix-note">注：以上为多数用户与多数产品场景下的策略判断，用于资源分配和产品协同，不代表个体用户的唯一路径。</p>
+    </section>
 
-<!-- ══════════ STAGE VIEWER ══════════ -->
-<section class="stage-viewer" id="sec-stages">
-  <div class="sv-header">
-    <div class="sv-chapter">核心工具</div>
-    <div class="sv-title">选择阶段，查看完整截面</div>
-    <div class="sv-desc">用户当前处于哪个阶段 → 三类题型的角色、驱动机制、产品动作、数据信号同时可见</div>
-  </div>
+    <section class="section" id="stage-defs">
+      <div class="section-kicker">五阶段定义</div>
+      <h2 class="section-title" style="font-size:30px;">阶段定义外显：先定义状态，再定义动作</h2>
+      <div class="stages-grid" id="stageDefGrid"></div>
+    </section>
 
-  <div class="sv-shell">
-    <div class="sv-controls-panel">
-      <div class="sv-tools">
-        <div class="sv-stage-indicator" id="stageIndicator">01 / 05 · 启动期</div>
-        <div class="sv-actions">
-          <button type="button" class="sv-btn" id="stagePrev">← 上一阶段</button>
-          <button type="button" class="sv-btn" id="stageNext">下一阶段 →</button>
-        </div>
-        <div class="sv-hint">可用键盘左右方向键快速切换阶段</div>
-      </div>
-      <div class="stage-selector" id="stageSelector"></div>
-    </div>
+    <section class="section" id="stage-viewer">
+      <div class="section-kicker">阶段切换查看器</div>
+      <h2 class="section-title" style="font-size:30px;">从观点到动作：角色 / 驱动 / 动作 / 数据信号同步可见</h2>
+      <p class="section-sub">选择阶段后，下方会同步展示该阶段下三类题型的角色定位，并联动“阶段 × 题型”的完整交付配置。</p>
 
-    <div class="sv-content-panel">
-      <div id="stageContents"></div>
-    </div>
-  </div>
-</section>
-
-<div class="sec-divider"><hr class="sec-divider-line"></div>
-
-<!-- ══════════ CONCLUSION ══════════ -->
-<div class="conclusion">
-  <div class="conclusion-inner">
-    <div class="conclusion-left">
-      <div class="conclusion-label">一句话框架</div>
-      <div class="conclusion-h">按题型建资源<br>按阶段做分发<br>按驱动做留存<br>按结果做转化</div>
-    </div>
-    <div class="conclusion-right">
-      <div class="cl-lines">
-        <div class="cl-line">
-          <div class="cl-key">按题型建资源</div>
-          <div class="cl-val">行测、申论、面试三类资源的自我校准力根本不同，独立价值边界不同，不能用同一套逻辑设计。</div>
-        </div>
-        <div class="cl-line">
-          <div class="cl-key">按阶段做分发</div>
-          <div class="cl-val">同一类题在不同阶段承担不同角色。资源价值不是固定的，随用户心理状态动态迁移。阶段是调度逻辑，题型是资源。</div>
-        </div>
-        <div class="cl-line">
-          <div class="cl-key">按驱动做留存</div>
-          <div class="cl-val">识别当前阶段做题结果激活的心理状态——存在感、定位感、进步感、确定感、消除感、排名感知——用产品机制匹配和放大它。</div>
-        </div>
-        <div class="cl-line">
-          <div class="cl-key">按结果做转化</div>
-          <div class="cl-val">题的独立价值边界到达之后，批改/模拟/服务才是自然延伸，不是强行推销。转化是结果，不是设计目标。</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-// ══════════ DATA ══════════
-
-const VALUE_LEVELS = {
-  '极高': { w: 1.0, label: '极高' },
-  '高':   { w: 0.82, label: '高' },
-  '中':   { w: 0.55, label: '中' },
-  '低':   { w: 0.28, label: '低' },
-  '极低': { w: 0.08, label: '极低' },
-  '退场': { w: 0.06, label: '退场' }
-};
-
-const STAGES = [
-  {
-    id: 0, num: '01', name: '启动期', branch: false,
-    task: '核心心理任务：确认自己和考试之间的距离',
-    char: '目标感弱、习惯未建立、信心不稳定、容易拖延。学生最大的障碍不是"不会"，而是"不知道自己处于什么位置"。此阶段最需要的不是最强训练，而是先建立行动。',
-    decision: '启动期产品原则：<strong>低门槛进入，完成感优先于正确感</strong>。不要在这个阶段用错误率刺激用户。',
-    types: [
-      {
-        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
-        role: '主角 · 校准器', value: '高',
-        keyword: '存在感',
-        mechanism: '"我今天做了"比"我今天对了几道"更重要。做完这个动作本身才是驱动力来源，对错率在启动期的心理权重极低。',
-        what: '接受门槛最低、即时反馈最强。做完10道题学生就能感知自己和考试的真实距离——这件事不需要老师，题本身就能完成。行测是整个备考体系唯一适合做冷启动的入口。',
-        product: '完成感设计优先于正确率展示。闯关形式、打卡仪式感、"今日已完成"比分数报告更有留存价值。',
-        form: '每日一练 · 快速测评 · 闯关刷题',
-        data: ['次日留存率', '完成率 > 正确率', '连续打卡天数'],
-        attention: { type: 'warn', tag: '预埋窗口', text: '同步轻度投放申论认知——不推作答，只让学生感受到"主观题也需要准备"。错过这个预埋，定向期申论的接受度会更低。' }
-      },
-      {
-        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
-        role: '辅助 · 启蒙器', value: '低',
-        keyword: '距离感知',
-        mechanism: '结果的价值是让用户第一次感受到主观表达与标准答案之间的距离。没有对照就没有距离感，没有距离感就没有任何驱动。',
-        what: '接受门槛高、反馈延迟、挫败感强，用户容易回避。但不能完全不碰——越晚接触，后期积压越严重。核心任务是建立最小闭环，不是高强度作答。',
-        product: '最小闭环设计：写一点 → 看答案 → 感受距离。不要强制全文作答，轻任务形式让用户完成第一次接触。',
-        form: '读题拆解 · 得分点识别 · 范文对照',
-        data: ['阅读完成率', '范文查看率', '是否触发下一题'],
-        attention: { type: 'normal', tag: '注意', text: '申论在此阶段不以转化为目标，只做认知预埋。强推作答会适得其反。' }
-      },
-      {
-        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
-        role: '预埋 · 认知铺垫', value: '极低',
-        keyword: '近于零',
-        mechanism: '不开口则无感知，无感知则无驱动。书面思考面试题，训练价值折损极大。此阶段结果等于零信息。',
-        what: '距离结果还远，训练形式又容易让人尴尬，接受度极低。强推面试训练会引发回避。唯一有意义的是让用户建立"面试也需要准备"的认知。',
-        product: '低频认知展示，不做转化主推。内容形态应为信息性的，而非训练性的。',
-        form: '面试认知课 · 热点表达 · 小题快答',
-        data: ['内容点击率（仅监测）'],
-        attention: { type: 'normal', tag: '原则', text: '启动期面试内容只做心智预埋，不设转化目标，不考核转化率。' }
-      }
-    ]
-  },
-  {
-    id: 1, num: '02', name: '定向期', branch: false,
-    task: '核心心理任务：把模糊的弱项感知变成具体的能力缺口',
-    char: '开始了解考试结构，能持续投入，开始分辨强弱项。用户不再是"能不能开始"，而是"开始知道自己哪里有问题"——但这个"知道"还是模糊的，需要被具体化。',
-    decision: '定向期产品原则：<strong>让用户看见自己的短板，但不要一下推到最高强度</strong>。弱项画像是这个阶段最核心的产品能力。',
-    types: [
-      {
-        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
-        role: '主角 · 分层工具', value: '高',
-        keyword: '定位感',
-        mechanism: '学生开始用错题描绘能力轮廓。单次对错无意义，错误的分布才有意义——哪类题错得多、做得慢、靠蒙对。',
-        what: '从泛刷转向专项识别。需要把结果从"这次对了几道"升级为"你的弱项在哪里"。累积数据的价值远高于单次数据。',
-        product: '弱项标签体系是核心产品能力。模块错误分布图、能力画像报告，让学生第一次真实看到自己的能力轮廓。',
-        form: '专项训练 · 弱项标签 · 能力画像报告',
-        data: ['各模块错误率分布', '专项训练点击率', '弱项模块复练率'],
-        attention: { type: 'warn', tag: '预埋窗口', text: '开始投放申论方法启蒙内容。不推完整作答，推"为什么答案和我写的不一样"这类认知冲击。' }
-      },
-      {
-        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
-        role: '成长 · 方法启蒙', value: '中',
-        keyword: '方法需求',
-        mechanism: '驱动力不来自"你错了"，来自"你错在这里，因为缺少这个方法"。反馈颗粒度决定方法需求被激活的程度。',
-        what: '接受度开始上升。用户意识到"我不是不会写，我是不知道怎么写"。这个阶段要让方法缺口变得清晰可见，而不是推高强度作答。',
-        product: '诊断性反馈，而非字数差异提示。"你漏掉了材料里的第三个隐含信息"比"你少写了50字"更有方法驱动力。',
-        form: '分题型训练 · 结构模板 · 小题批注',
-        data: ['小题完成率', '答案对照查看率', '方法课点击率'],
-        attention: { type: 'normal', tag: '注意', text: '此阶段申论仍不以批改为主推，批改作为可选项存在，为强化期转化做铺垫。' }
-      },
-      {
-        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
-        role: '预埋 · 轻度介入', value: '低',
-        keyword: '开口冲击',
-        mechanism: '"说出来比想的难得多"——这个冲击本身是驱动力。录音回放比看答案价值更高，它让用户直接面对自己的真实表达。',
-        what: '开始有轻度预埋价值。核心任务是制造第一次真实的开口体验，让用户感受到说出来和想的完全不一样。',
-        product: '录音 → 回放 → 自我对比。冲击感比答案质量更重要。开口这个行为本身是这个阶段面试产品的全部目标。',
-        form: '基础表达训练 · 录音体验 · 框架认知',
-        data: ['开口率（是否使用录音功能）', '录音回放率'],
-        attention: { type: 'normal', tag: '原则', text: '定向期面试的成功指标只有一个：让用户完成第一次录音。' }
-      }
-    ]
-  },
-  {
-    id: 2, num: '03', name: '强化期', branch: false,
-    task: '核心心理任务：在已知弱点上建立可感知的进步',
-    char: '意识到短板，方法开始稳定，开始接受更高强度训练。这个阶段是产品转化价值最高的窗口，也是最容易被浪费的阶段——申论在这里有且只有一次成为核心产品的机会。',
-    decision: '强化期产品原则：<strong>从题目消费转向反馈消费</strong>。申论接棒成为主角，批改是这个阶段一切的前提。',
-    types: [
-      {
-        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
-        role: '补强 · 进步感载体', value: '高',
-        keyword: '进步感',
-        mechanism: '绝对值不重要，趋势重要。同样错5道，上周错8道和上周错3道，对用户的驱动力完全相反。没有历史数据的单次结果，在这个阶段是浪费的。',
-        what: '角色从主入口迁移为补短板工具。纵向对比功能成为关键——用户需要看到趋势，不只是当次分数。',
-        product: '纵向趋势对比是必须功能，不是可选项。"你这周数量关系正确率比上周提升了8%"比任何激励文案都有驱动力。',
-        form: '限时专项 · 趋势报告 · 错题回炉',
-        data: ['模块正确率周环比', '主动复练率', '弱项模块趋势'],
-        attention: { type: 'normal', tag: '角色变化', text: '行测在强化期从主角退为辅助，但不应该缺席。纵向进步数据是维持连续训练的关键锚点。' }
-      },
-      {
-        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
-        role: '主角 · 核心转化', value: '极高',
-        keyword: '能力可见性',
-        mechanism: '申论价值窗口期。用户最需要知道"我到底是什么水平"，但自我校准力极低，外部批改是唯一路径。批改质量直接决定这个阶段的产品价值。',
-        what: '结果关联感和接受度同时达到最高点。这是申论从"启蒙形态"转变为"核心训练产品"的唯一窗口。错过这个窗口，收敛期就只剩精准修正，价值密度大幅下降。',
-        product: '批改不是增值服务，是产品存在的前提。批改颗粒度要足够细——不只是给分，要让用户第一次真实看到自己能力的边界在哪里。',
-        form: '完整作答 · 逐题批改 · 得分点复盘 · 修改前后对照',
-        data: ['批改服务转化率', '完整作答提交率', '批改后二次作答率'],
-        attention: { type: 'warn', tag: '转化核心', text: '强化期是申论产品价值最高点，也是付费转化的核心窗口。批改服务的体验质量在这个阶段直接影响整体留存和口碑。' }
-      },
-      {
-        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
-        role: '成长 · 体验渗透', value: '中',
-        keyword: '表达可见性',
-        mechanism: '自我校准力极低，外部评判是唯一路径。面试评判比申论更复杂——涉及逻辑、表达方式、情绪状态多个维度，单一评分无法产生足够驱动。',
-        what: '开始有真实预埋价值。产品核心任务：让用户从"看题"变成"开口答题"。录音、计时、自评是面试题在这个阶段能否成立的前提机制。',
-        product: '多维度反馈让进步可见。强制开口机制是核心设计——不开口，面试题在这个阶段等于零。',
-        form: '开口练习 · 录音自评 · 模拟答题体验',
-        data: ['开口完成率', '录音时长分布', '体验课转化率'],
-        attention: { type: 'normal', tag: '预埋窗口', text: '强化期是面试服务预埋的最佳时机。高意愿用户在这个阶段开始接受"进面后需要系统训练"的认知。' }
-      }
-    ]
-  },
-  {
-    id: 3, num: '04', name: '收敛期', branch: false,
-    task: '核心心理任务：把训练成果转化为压力下可靠的发挥',
-    char: '时间压力上升，关注提分效率、命中性、实战稳定性。用户不再想要大而全，而是要快、准、贴近考试。每类题型都向最高强度形态迁移，产品密度上升。',
-    decision: '收敛期产品原则：<strong>减少认知负担，增加结果导向</strong>。三线同时收敛，面试开始为决战期接棒做准备。',
-    types: [
-      {
-        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
-        role: '稳定 · 压力容器', value: '高',
-        keyword: '确定感',
-        mechanism: '不再需要进步感，需要验证压力下不崩。结果的功能变为心理锚点——"我在模拟考试里稳住了，真实考试我也能稳住"。',
-        what: '不再是知识复习，而是验证高压下的稳定性。轻松状态下的高分没有驱动力，结果必须来自高仿真压力环境才有效。',
-        product: '全真模考是核心产品形态。稳定性指标（标准差、极值）比均值更有意义。产品形态如果还停留在专项刷题，就和这个阶段的心理任务错位了。',
-        form: '全真模考 · 节奏控制训练 · 稳定性分析',
-        data: ['模考完成率', '成绩稳定性（标准差）', '模考 vs 专项正确率差值'],
-        attention: { type: 'normal', tag: '形态转变', text: '收敛期行测的产品形态必须从专项训练转向全真模考，这是这个阶段用户心理任务的直接要求。' }
-      },
-      {
-        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
-        role: '修正 · 失分追踪', value: '中',
-        keyword: '消除感',
-        mechanism: '"这个问题我上次错，这次对了"——具体问题的消除感，比总分提升3分更有驱动力。结果必须和历史问题库关联才能产生这个驱动。',
-        what: '数量不重要，针对性强。一道针对自己薄弱点的题配合针对性反馈，比泛刷十道题价值高。用户需要看到具体问题被逐一消除。',
-        product: '失分点追踪可视化是核心产品能力。让用户看到历史失分点的消除进度，比任何激励机制都有效。热点押题降低的是焦虑，不是能力。',
-        form: '失分点定向训练 · 热点押题 · 限时冲刺批改',
-        data: ['同类失分点二次正确率', '历史错误消除率', '热点题完成率'],
-        attention: { type: 'normal', tag: '角色变化', text: '申论在收敛期从主角退为精准修正工具，重心从全面提升转向定点清除。' }
-      },
-      {
-        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
-        role: '主角 · 仿真训练', value: '高',
-        keyword: '确定感',
-        mechanism: '"我见过这种题，我有应对方案"。覆盖感比质量感更重要——做过的题型越多，未知威胁越少。消除空白，不是证明卓越。',
-        what: '单独做题价值已非常有限，必须和服务密度绑定。高仿真环境成为前提——追问、录像复盘、场景覆盖度构成产品核心竞争力。',
-        product: '题型覆盖率 > 单题打磨深度。高仿真训练环境的建设是这个阶段面试产品的核心投入方向。',
-        form: '模拟面试 · 追问训练 · 场景实战 · 录像复盘',
-        data: ['模拟面试完成次数', '题型覆盖率', '录像复盘率'],
-        attention: { type: 'warn', tag: '接棒准备', text: '收敛期面试开始承担高价值服务的转化任务，为决战期接棒做准备。进面通知一旦发出，这批用户的行为模式会立刻切换。' }
-      }
-    ]
-  },
-  {
-    id: 4, num: '05', name: '决战期', branch: true,
-    task: '进面通知触发 · 在极短窗口内建立考场确定感',
-    char: '由外部事件（进面通知）触发，不是主链路的自然延伸。目标极强，备考窗口极短（通常2—4周），对训练强度和反馈密度的接受度断崖式提升。这个阶段和前四个阶段有质的不同。',
-    decision: '决战期产品原则：<strong>高密度反馈、高仿真训练、高服务承诺感</strong>。面试成为唯一核心，行测申论退出主推。',
-    types: [
-      {
-        type: '行测', color: 'var(--xc)', lt: 'var(--xc-lt)', mid: 'var(--xc-mid)',
-        role: '退场', value: '退场',
-        keyword: '退场',
-        mechanism: '学生注意力完全转向面试，行测结果驱动力几乎消失。除非仍有笔试任务，行测在这个阶段退出主驱动位置。',
-        what: '进面后行测价值基本消失。行测结果只有在出现严重异常时才会重新激活焦虑。强推行测会分散用户的备考注意力。',
-        product: '轻量维持，不主推。不设行测专属转化目标。',
-        form: '轻量维持练习（可选）',
-        data: ['无需重点监测'],
-        attention: { type: 'normal', tag: '原则', text: '决战期不对行测设转化目标。资源和注意力集中到面试。' }
-      },
-      {
-        type: '申论', color: 'var(--sl)', lt: 'var(--sl-lt)', mid: 'var(--sl-mid)',
-        role: '退场', value: '退场',
-        keyword: '退场',
-        mechanism: '笔试结束后申论价值基本消失。除非是综合选拔类考试中申论仍在链路里，否则退出主驱动位置。',
-        what: '进面后申论退场。综合选拔类考试中申论仍在链路里的，承担补强角色，但不是主推方向。',
-        product: '退出主驱动位置。综合选拔类考试提供补强包，但不作为主线产品推进。',
-        form: '综合选拔类：补强训练包',
-        data: ['无需重点监测'],
-        attention: { type: 'normal', tag: '例外', text: '综合选拔类考试（部分选调生等）申论可能仍在链路里，需单独判断。' }
-      },
-      {
-        type: '面试', color: 'var(--ms)', lt: 'var(--ms-lt)', mid: 'var(--ms-mid)',
-        role: '绝对核心', value: '极高',
-        keyword: '排名感知',
-        mechanism: '进面后增加了行测和申论没有的驱动维度：排名感知。用户不只关心自己好不好，更关心比别人好不好。横向排名是这个阶段独有的驱动机制，也是产品最大的差异化机会。',
-        what: '面试成为唯一焦点。题的密度、追问设计、场景覆盖度、横向比较机制构成产品核心竞争力。高仿真是前提，横向排名是差异化。',
-        product: '"你的这道题在同期参训学员里处于什么水平"——这个横向反馈比任何纵向进步数据都有驱动力。一对一、群面、录像复盘全线启动。',
-        form: '一对一模拟 · 群面实战 · 录像复盘 · 横向排名反馈 · 考前冲刺营',
-        data: ['模拟面试频次', '横向排名感知满意度', '口碑推荐率', '上岸率'],
-        attention: { type: 'warn', tag: '差异化核心', text: '横向排名反馈是决战期面试产品的最大差异化机会。"你在同期学员中处于前30%"这个信号，是目前市场上几乎没有产品在做的驱动机制。' }
-      }
-    ]
-  }
-];
-
-// Preview bar heights (visual intensity)
-const PREVIEW = {
-  xc: [82, 82, 78, 75, 8],
-  sl: [20, 42, 95, 55, 8],
-  ms: [5,  18, 45, 72, 95]
-};
-
-const PREVIEW_INSIGHTS = [
-  '行测全程可用但角色在迁移；申论强化期是唯一价值高点；面试进面后断崖式跃升',
-  '点击阶段节点查看该阶段三类题型的完整截面',
-  '三条曲线的交叉点揭示了产品资源调度的优先级',
-  '申论的高点（强化期）和面试的高点（决战期）不重叠——这是产品节奏设计的基础',
-  '没有哪个阶段三类题型的价值是均等的——不均等才是调度的依据'
-];
-
-const DELIVERY_TYPES = {
-  xc: { name: '行测', color: 'var(--xc)' },
-  sl: { name: '申论', color: 'var(--sl)' },
-  ms: { name: '面试', color: 'var(--ms)' }
-};
-
-const DELIVERY_DATA = {
-  '0_xc': {
-    present: [
-      { name: '单题即练', badge: '主推', badgeColor: 'var(--xc)', desc: '一道题做完即出答案与简析。', why: '启动期先建立行动，不强调难度。' },
-      { name: '快速测评包', badge: '引导', badgeColor: 'var(--ink-60)', desc: '10题一组覆盖核心模块。', why: '给定向期分层建立样本。' }
-    ],
-    feedback: [
-      { name: '即时对错', badge: '必须', badgeColor: 'var(--xc)', desc: '做完立刻出结果，不延迟。', why: '即时反馈是启动期行测的核心价值。' },
-      { name: '简短解析', badge: '配套', badgeColor: 'var(--ink-60)', desc: '错题一句话解析，信息轻量。', why: '降低认知负担，保持继续做题。' },
-      { name: '完成感标记', badge: '关键', badgeColor: 'var(--gold)', desc: '优先展示完成数量和连续天数。', why: '完成感优先于正确感。' }
-    ],
-    principle: [
-      { name: '完成感 > 正确感', badge: '核心原则', badgeColor: 'var(--gold)', desc: '先强化“我做了”，再强化“我做对了”。', why: '过早强调错误率会触发回避。' },
-      { name: '不做弱项诊断', badge: '禁忌', badgeColor: 'var(--ms)', desc: '启动期不展示复杂能力雷达图。', why: '数据样本不足时诊断失真。' }
-    ],
-    sequence: [
-      { num: '01', form: '快速测评', feedback: '即时对错' },
-      { num: '02', form: '单题即练', feedback: '简短解析' },
-      { num: '03', form: '每日打卡', feedback: '完成感标记' }
-    ],
-    triggers: [
-      { type: '日常节奏', desc: '按用户活跃时段推5-10题轻练。', signal: '信号：注册后次日启动' },
-      { type: '冷启动', desc: '首次使用后推模块测评建立基线。', signal: '信号：首次打开' },
-      { type: '断签触发', desc: '2日未活跃推一题低门槛重启题。', signal: '信号：2日未活跃' }
-    ],
-    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
-    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
-  },
-  '1_xc': {
-    present: [
-      { name: '专项题组', badge: '主推', badgeColor: 'var(--xc)', desc: '同模块8-12题连续训练。', why: '让弱项可见。' },
-      { name: '错题复练', badge: '配套', badgeColor: 'var(--ink-60)', desc: '按历史错题集中回炉。', why: '识别重复错误模式。' }
-    ],
-    feedback: [
-      { name: '模块分布图', badge: '核心', badgeColor: 'var(--xc)', desc: '展示模块失分分布，而非总分。', why: '定位感来自分布。' },
-      { name: '弱项标签', badge: '主推', badgeColor: 'var(--xc)', desc: '输出具体弱项标签用于后续推送。', why: '把模糊问题变成具体缺口。' }
-    ],
-    principle: [
-      { name: '分布 > 总分', badge: '核心原则', badgeColor: 'var(--xc)', desc: '反馈围绕弱项结构展开。', why: '总分无法指导动作。' },
-      { name: '诊断语气', badge: '语气原则', badgeColor: 'var(--gold)', desc: '强调缺口与方法，不做评判。', why: '避免挫败感上升。' }
-    ],
-    sequence: [
-      { num: '01', form: '专项题组', feedback: '模块分布' },
-      { num: '02', form: '错题复练', feedback: '弱项标签' },
-      { num: '03', form: '跨模块测评', feedback: '弱项画像' }
-    ],
-    triggers: [
-      { type: '弱项触发', desc: '同类错误累计后推对应专项题。', signal: '信号：同类错误≥3次' },
-      { type: '完成触发', desc: '测评后推最弱模块专项。', signal: '信号：测评完成' }
-    ],
-    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
-    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
-  },
-  '2_xc': {
-    present: [
-      { name: '限时专项', badge: '主推', badgeColor: 'var(--xc)', desc: '限定时间完成模块题组。', why: '强化速度与正确率协同。' },
-      { name: '弱项强化包', badge: '核心', badgeColor: 'var(--xc)', desc: '按弱项标签定向分发。', why: '聚焦突破，避免泛刷。' }
-    ],
-    feedback: [
-      { name: '纵向趋势对比', badge: '必须', badgeColor: 'var(--xc)', desc: '周环比展示正确率与用时。', why: '强化期核心驱动是进步感。' },
-      { name: '弱项消灭进度', badge: '激励', badgeColor: 'var(--gold)', desc: '显示弱项项清单的消灭率。', why: '让提升可见。' }
-    ],
-    principle: [
-      { name: '趋势 > 绝对值', badge: '核心原则', badgeColor: 'var(--xc)', desc: '优先展示变化方向。', why: '强化期需要看到“在变好”。' }
-    ],
-    sequence: [
-      { num: '01', form: '弱项强化包', feedback: '消灭进度' },
-      { num: '02', form: '限时专项', feedback: '速度指标' },
-      { num: '03', form: '错题回炉', feedback: '趋势对比' }
-    ],
-    triggers: [
-      { type: '进步触发', desc: '周环比明显提升时推正反馈。', signal: '信号：提升≥8%' },
-      { type: '停滞触发', desc: '连续停滞时推方法课+题包。', signal: '信号：连续2周无提升' }
-    ],
-    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
-    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
-  },
-  '3_xc': {
-    present: [
-      { name: '全真模考', badge: '主推', badgeColor: 'var(--xc)', desc: '完整套卷+严格计时。', why: '验证压力场景稳定性。' },
-      { name: '节奏控制练习', badge: '配套', badgeColor: 'var(--ink-60)', desc: '模块时间分配专项练。', why: '防止考场节奏崩溃。' }
-    ],
-    feedback: [
-      { name: '稳定性分析', badge: '核心', badgeColor: 'var(--xc)', desc: '展示波动范围和底线分。', why: '收敛期目标是“稳”。' },
-      { name: '模考vs专项差值', badge: '诊断', badgeColor: 'var(--ink-60)', desc: '暴露压力环境下衰减。', why: '定位真实风险点。' }
-    ],
-    principle: [
-      { name: '稳定性 > 峰值', badge: '核心原则', badgeColor: 'var(--xc)', desc: '优先保证下限稳定。', why: '考场是一次性场景。' }
-    ],
-    sequence: [
-      { num: '01', form: '节奏练习', feedback: '时间分配分析' },
-      { num: '02', form: '全真模考', feedback: '稳定性分析' },
-      { num: '03', form: '易错点速览', feedback: '考前清单' }
-    ],
-    triggers: [
-      { type: '倒计时', desc: '21/14/7天节点触发模考。', signal: '信号：考试倒计时' },
-      { type: '异常预警', desc: '模考下滑明显时推补强。', signal: '信号：差值>15分' }
-    ],
-    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
-    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
-  },
-  '4_xc': {
-    present: [
-      { name: '轻量维持练习', badge: '可选', badgeColor: 'var(--ink-60)', desc: '每日5题维持手感。', why: '进面后行测退场。' }
-    ],
-    feedback: [
-      { name: '完成确认', badge: '唯一', badgeColor: 'var(--ink-60)', desc: '仅显示完成，不做分析。', why: '避免分散面试注意力。' }
-    ],
-    principle: [
-      { name: '不干扰', badge: '核心原则', badgeColor: 'var(--ink-60)', desc: '存在但不打扰。', why: '决战期注意力集中面试。' }
-    ],
-    sequence: [{ num: '01', form: '轻量维持', feedback: '完成确认' }],
-    triggers: [{ type: '进面事件', desc: '进面后自动切轻量模式。', signal: '信号：进面状态' }],
-    compare_form: ['单题即练', '专项题组', '限时专项', '全真模考', '轻量维持'],
-    compare_feedback: ['完成感', '弱项标签', '趋势对比', '稳定性分析', '—']
-  },
-  '0_sl': {
-    present: [
-      { name: '读题感知', badge: '唯一推荐', badgeColor: 'var(--sl)', desc: '材料+参考答案，不强制作答。', why: '启动期先建立距离感。' },
-      { name: '要点速写', badge: '可选', badgeColor: 'var(--ink-60)', desc: '写3个要点，低门槛参与。', why: '降低申论挫败感。' }
-    ],
-    feedback: [
-      { name: '得分点对照', badge: '核心', badgeColor: 'var(--sl)', desc: '逐条比对覆盖了哪些要点。', why: '距离感必须可见。' },
-      { name: '距离可视化', badge: '设计要点', badgeColor: 'var(--gold)', desc: '用覆盖率条显示差距。', why: '数字化才有驱动。' }
-    ],
-    principle: [
-      { name: '不评判只展示', badge: '核心原则', badgeColor: 'var(--sl)', desc: '展示差距，不给负面标签。', why: '避免启动期回避。' }
-    ],
-    sequence: [
-      { num: '01', form: '读题感知', feedback: '得分点展示' },
-      { num: '02', form: '要点速写', feedback: '覆盖率对比' }
-    ],
-    triggers: [
-      { type: '行测连带', desc: '行测连续打卡后穿插申论轻题。', signal: '信号：连续3日打卡' }
-    ],
-    compare_form: ['读题感知', '要点速写', '完整作答', '定向修正', '—'],
-    compare_feedback: ['距离可视化', '诊断性批改', '能力边界报告', '消除感追踪', '—']
-  },
-  '2_sl': {
-    present: [
-      { name: '单题完整作答', badge: '核心', badgeColor: 'var(--sl)', desc: '完整作答+提交批改。', why: '强化期申论价值窗口。' },
-      { name: '限时完整作答', badge: '进阶', badgeColor: 'var(--sl)', desc: '引入时间压力。', why: '为收敛期做准备。' }
-    ],
-    feedback: [
-      { name: '逐条批改报告', badge: '核心', badgeColor: 'var(--sl)', desc: '写了/漏了/偏了逐条标注。', why: '能力边界需要颗粒化反馈。' },
-      { name: '修改前后对照', badge: '进步可视化', badgeColor: 'var(--gold)', desc: '展示改前改后差异。', why: '让进步可见。' }
-    ],
-    principle: [
-      { name: '批改质量决定价值', badge: '核心原则', badgeColor: 'var(--sl)', desc: '批改不准等于价值归零。', why: '用户完全依赖外部反馈。' }
-    ],
-    sequence: [
-      { num: '01', form: '完整作答', feedback: '逐条批改' },
-      { num: '02', form: '修改重写', feedback: '前后对比' },
-      { num: '03', form: '同类再练', feedback: '进步确认' }
-    ],
-    triggers: [
-      { type: '批改完成', desc: '24小时内推同类再练。', signal: '信号：批改已读' },
-      { type: '诊断触发', desc: '3次同题型后生成边界报告。', signal: '信号：作答≥3次' }
-    ],
-    compare_form: ['读题感知', '要点速写', '完整作答', '定向修正', '—'],
-    compare_feedback: ['距离可视化', '诊断性批改', '能力边界报告', '消除感追踪', '—']
-  },
-  '3_sl': {
-    present: [
-      { name: '定向修正练习', badge: '主推', badgeColor: 'var(--sl)', desc: '围绕历史失分点定向出题。', why: '收敛期核心是消除问题。' },
-      { name: '热点押题作答', badge: '配套', badgeColor: 'var(--ink-60)', desc: '热点题完整作答+快批。', why: '降低考场陌生焦虑。' }
-    ],
-    feedback: [
-      { name: '失分点消除追踪', badge: '核心', badgeColor: 'var(--sl)', desc: '可视化已消除与待处理清单。', why: '消除感来自清单推进。' },
-      { name: '快速批改', badge: '时效要求', badgeColor: 'var(--ms)', desc: '12小时内回传反馈。', why: '收敛期节奏优先。' }
-    ],
-    principle: [
-      { name: '清单消灭思维', badge: '核心原则', badgeColor: 'var(--sl)', desc: '反馈从“提升”转为“消灭问题”。', why: '更匹配倒计时心理。' }
-    ],
-    sequence: [
-      { num: '01', form: '定向修正', feedback: '快速批改' },
-      { num: '02', form: '验证练习', feedback: '消除确认' },
-      { num: '03', form: '热点押题', feedback: '覆盖确认' }
-    ],
-    triggers: [
-      { type: '失分追踪', desc: '按高频失分点定向推题。', signal: '信号：失分累计≥2次' },
-      { type: '倒计时', desc: '考前7天每日推热点押题。', signal: '信号：距考试≤7日' }
-    ],
-    compare_form: ['读题感知', '要点速写', '完整作答', '定向修正', '—'],
-    compare_feedback: ['距离可视化', '诊断性批改', '能力边界报告', '消除感追踪', '—']
-  },
-  '0_ms': {
-    present: [{ name: '文字浏览', badge: '唯一形态', badgeColor: 'var(--ms)', desc: '仅示例与认知内容，不作答。', why: '启动期面试接受度极低。' }],
-    feedback: [{ name: '无反馈', badge: '原则', badgeColor: 'var(--ink-60)', desc: '不要求输出，不做评分。', why: '避免早期压力。' }],
-    principle: [{ name: '认知铺垫', badge: '核心原则', badgeColor: 'var(--ms)', desc: '只建立“面试也要准备”的心智。', why: '不抢主链路资源。' }],
-    sequence: [{ num: '01', form: '认知内容', feedback: '仅浏览' }],
-    triggers: [{ type: '低频穿插', desc: '每7天穿插一条面试认知卡。', signal: '信号：注册满7天' }],
-    compare_form: ['文字浏览', '开口体验', '录音练习', '全流程模拟', '高仿真模拟'],
-    compare_feedback: ['无', '回放冲击', '多维点评', '仿真报告', '横向排名']
-  },
-  '1_ms': {
-    present: [{ name: '自主开口录音', badge: '核心任务', badgeColor: 'var(--ms)', desc: '看题后录音作答，不限时。', why: '先开口，再谈质量。' }],
-    feedback: [
-      { name: '录音回放', badge: '唯一有效', badgeColor: 'var(--ms)', desc: '作答后立刻回放，不评分。', why: '冲击感来自“听见自己”。' },
-      { name: '流畅度自评', badge: '轻量引导', badgeColor: 'var(--ink-60)', desc: '1-5星自评流畅度。', why: '先建自我感知。' }
-    ],
-    principle: [{ name: '冲击感优先', badge: '核心原则', badgeColor: 'var(--ms)', desc: '禁止过早外部评判。', why: '防止防御心理。' }],
-    sequence: [
-      { num: '01', form: '首次录音', feedback: '回放冲击' },
-      { num: '02', form: '再次作答', feedback: '自评对比' }
-    ],
-    triggers: [
-      { type: '首次开口激励', desc: '首次录音后立即推下一题。', signal: '信号：首次录音完成' },
-      { type: '间隔触发', desc: '72小时内推第二道题。', signal: '信号：首次开口后72小时' }
-    ],
-    compare_form: ['文字浏览', '开口体验', '录音练习', '全流程模拟', '高仿真模拟'],
-    compare_feedback: ['无', '回放冲击', '多维点评', '仿真报告', '横向排名']
-  },
-  '2_ms': {
-    present: [
-      { name: '标准计时作答', badge: '主推', badgeColor: 'var(--ms)', desc: '按真实时长计时录音。', why: '开始训练效率与稳定性。' },
-      { name: '追问模拟', badge: '进阶', badgeColor: 'var(--ms)', desc: '主题后追加追问。', why: '贴近真实场景。' }
-    ],
-    feedback: [
-      { name: '多维点评', badge: '核心', badgeColor: 'var(--ms)', desc: '逻辑/表达/完整度分维反馈。', why: '进步需可见。' },
-      { name: '录像复盘', badge: '进阶', badgeColor: 'var(--ink-60)', desc: '可回看非语言要素。', why: '补齐表达质感。' }
-    ],
-    principle: [{ name: '多维可见进步', badge: '核心原则', badgeColor: 'var(--ms)', desc: '分维反馈替代总分反馈。', why: '总分难驱动持续训练。' }],
-    sequence: [
-      { num: '01', form: '计时作答', feedback: '多维点评' },
-      { num: '02', form: '追问模拟', feedback: '应变反馈' },
-      { num: '03', form: '录像复盘', feedback: '表达优化' }
-    ],
-    triggers: [
-      { type: '点评联动', desc: '最低维度自动触发专项题。', signal: '信号：点评最低维' },
-      { type: '进面预警', desc: '训练不足时推强化提醒。', signal: '信号：距考试≤30日且训练不足' }
-    ],
-    compare_form: ['文字浏览', '开口体验', '录音练习', '全流程模拟', '高仿真模拟'],
-    compare_feedback: ['无', '回放冲击', '多维点评', '仿真报告', '横向排名']
-  },
-  '4_ms': {
-    present: [
-      { name: '全流程高仿真模拟', badge: '绝对核心', badgeColor: 'var(--ms)', desc: '追问+录像+多题连续。', why: '决战期需要真实考场感。' },
-      { name: '无领导小组实战', badge: '核心', badgeColor: 'var(--ms)', desc: '多人同场模拟。', why: '多人对抗不可替代。' }
-    ],
-    feedback: [
-      { name: '横向排名反馈', badge: '差异化核心', badgeColor: 'var(--ms)', desc: '给出同期学员相对位置。', why: '决战期核心驱动来自横向比较。' },
-      { name: '考前个人报告', badge: '考前工具', badgeColor: 'var(--gold)', desc: '优势/风险/建议三条。', why: '最后阶段只要高价值短反馈。' }
-    ],
-    principle: [{ name: '横向比较优先', badge: '核心原则', badgeColor: 'var(--ms)', desc: '所有反馈都引入相对位置。', why: '窗口短，横向反馈更有力。' }],
-    sequence: [
-      { num: '01', form: '高仿真模拟', feedback: '录像复盘' },
-      { num: '02', form: '无领导实战', feedback: '横向排名' },
-      { num: '03', form: '考前轻练', feedback: '个人报告' }
-    ],
-    triggers: [
-      { type: '进面触发', desc: '进面后立刻推决战方案与预约。', signal: '信号：进面状态' },
-      { type: '倒计时节点', desc: '7天/3天/1天分别推关键交付。', signal: '信号：面试倒计时' }
-    ],
-    compare_form: ['文字浏览', '开口体验', '录音练习', '全流程模拟', '高仿真模拟'],
-    compare_feedback: ['无', '回放冲击', '多维点评', '仿真报告', '横向排名']
-  }
-};
-
-// ══════════ RENDER PREVIEW ══════════
-function renderPreview() {
-  const axis = document.getElementById('spAxis');
-  axis.innerHTML = STAGES.map(s =>
-    `<div class="sp-stage-label ${s.branch ? 'branch' : ''}">${s.name}</div>`
-  ).join('');
-
-  const tracks = document.getElementById('spTracks');
-  const types = [
-    { key: 'xc', label: '行测', color: 'var(--xc)' },
-    { key: 'sl', label: '申论', color: 'var(--sl)' },
-    { key: 'ms', label: '面试', color: 'var(--ms)' }
-  ];
-  tracks.innerHTML = types.map(t => `
-    <div class="sp-track">
-      <div class="sp-track-label" style="color:${t.color}">${t.label}</div>
-      <div class="sp-track-bars">
-        ${PREVIEW[t.key].map((h, i) => `
-          <div class="sp-bar" style="background:${t.color};opacity:${0.15 + h/100*0.85};height:${Math.max(h*0.32, 4)}px;cursor:pointer;"
-               data-stage="${i}" title="${STAGES[i].name}">
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
-
-  const insight = document.getElementById('spInsight');
-  let idx = 0;
-  insight.innerHTML = `<strong>读图要点：</strong>${PREVIEW_INSIGHTS[0]}`;
-  setInterval(() => {
-    idx = (idx + 1) % PREVIEW_INSIGHTS.length;
-    insight.style.opacity = 0;
-    setTimeout(() => {
-      insight.innerHTML = idx === 0
-        ? `<strong>读图要点：</strong>${PREVIEW_INSIGHTS[0]}`
-        : PREVIEW_INSIGHTS[idx];
-      insight.style.opacity = 1;
-    }, 300);
-  }, 3200);
-  insight.style.transition = 'opacity .3s';
-}
-
-// ══════════ RENDER STAGE SELECTOR ══════════
-function renderSelector() {
-  const sel = document.getElementById('stageSelector');
-  sel.innerHTML = STAGES.map((s, i) => `
-    <div class="ss-item ${i === 0 ? 'act' : ''} ${s.branch ? 'branch-item' : ''}" data-stage="${i}">
-      ${s.branch ? `<div class="ss-branch-tag">外部触发</div>` : ''}
-      <div class="ss-num">${s.num}</div>
-      <div class="ss-name">${s.name}</div>
-      <div class="ss-task">${s.task.replace('核心心理任务：','')}</div>
-    </div>
-  `).join('');
-}
-
-// ══════════ RENDER STAGE CONTENT ══════════
-function renderContents() {
-  const c = document.getElementById('stageContents');
-  c.innerHTML = STAGES.map((s, si) => {
-    const typeColors = ['var(--xc)', 'var(--sl)', 'var(--ms)'];
-    return `
-    <div class="stage-content ${si === 0 ? 'vis' : ''}" id="sc${si}">
-      <div class="stage-summary-grid">
-        ${s.types.map((t, ti) => `
-          <article class="sum-card">
-            <div class="sum-type" style="color:${typeColors[ti]}">${t.type}</div>
-            <div class="sum-row"><strong>角色：</strong>${t.role}</div>
-            <div class="sum-row"><strong>价值：</strong>${t.value} · <strong>驱动：</strong>${t.keyword}</div>
-            <div class="sum-row"><strong>动作：</strong>${t.form}</div>
-          </article>
-        `).join('')}
-      </div>
-      <!-- State banner -->
-      <div class="state-banner">
-        <div class="sb-left">
-          <div class="sb-stage-name">${s.name}</div>
-          <div class="sb-task">${s.task}</div>
-          <div class="sb-char">${s.char}</div>
-        </div>
-        <div class="sb-right">
-          <div class="sb-decision">
-            <div class="sb-decision-label">本阶段产品原则</div>
-            ${s.decision}
-          </div>
-        </div>
-      </div>
-
-      <!-- Three-track view -->
-      <div class="track-view">
-        ${s.types.map((t, ti) => {
-          const typeId = ['xc','sl','ms'][ti];
-          const vLevel = VALUE_LEVELS[t.value] || VALUE_LEVELS['低'];
-          const segs = Math.round(vLevel.w * 5);
-          const isRetire = t.value === '退场';
-          return `
-          <div class="track-col" data-type="${typeId}">
-            <div class="tc-head" style="background:${t.color}">
-              <div class="tc-head-left">
-                <div class="tc-type-name">${t.type}</div>
-                <div class="tc-type-sub">${ti===0?'客观题':ti===1?'主观题':'表达性题目'}</div>
-              </div>
-              <div class="tc-role-badge">${t.role}</div>
+      <div class="viewer-shell">
+        <div class="viewer-controls">
+          <div class="viewer-row">
+            <div class="stage-indicator" id="stageIndicator"></div>
+            <div class="control-actions">
+              <button type="button" class="control-btn" id="stagePrev">← 上一阶段</button>
+              <button type="button" class="control-btn" id="stageNext">下一阶段 →</button>
             </div>
+          </div>
+          <div class="stage-pills" id="stagePills"></div>
+        </div>
+        <div class="viewer-content" id="stageViews"></div>
+      </div>
+    </section>
 
-            <!-- Value indicator bar -->
-            <div class="tc-value">
-              ${[1,2,3,4,5].map(seg => `
-                <div class="tc-value-seg" style="background:${seg <= segs && !isRetire ? t.color : 'var(--ink-06)'}"></div>
-              `).join('')}
-            </div>
+    <section class="section" id="framework">
+      <div class="section-kicker">框架落地</div>
+      <h2 class="section-title" style="font-size:30px;">一句话框架</h2>
+      <div class="framework-box">按题型建资源，按阶段做分发，按驱动做留存，按结果做转化。</div>
 
-            <!-- Drive keyword -->
-            <div class="tc-drive">
-              <div class="tc-drive-label">结果激活的驱动状态</div>
-              <div class="tc-drive-keyword" style="color:${isRetire ? 'var(--ink-40)' : t.color}">${t.keyword}</div>
-              <div class="tc-drive-mechanism">${t.mechanism}</div>
-            </div>
+      <h3 style="margin-top:14px;font-size:20px;">如何使用本框架</h3>
+      <div class="usage-grid">
+        <article class="usage-card">
+          <h4>教研</h4>
+          <p>用框架定义题型边界：哪些阶段适合什么形态，哪些阶段不宜高强度介入。</p>
+        </article>
+        <article class="usage-card">
+          <h4>产品</h4>
+          <p>用框架设计分发与反馈：同一题型在不同阶段的交付形态、反馈节奏和信息颗粒度不同。</p>
+        </article>
+        <article class="usage-card">
+          <h4>运营</h4>
+          <p>用框架做阶段承接：从启动到决战，触发逻辑与内容节奏需跟随阶段任务迁移。</p>
+        </article>
+        <article class="usage-card">
+          <h4>销售/转化</h4>
+          <p>用框架识别当前重心：不同阶段用户关心点不同，沟通重点应从“内容价值”转向“阶段价值”。</p>
+        </article>
+      </div>
+      <div class="boundary-note">适用边界：该框架面向多数公考备考产品与多数用户行为路径；对特殊考试结构、超高基础用户或极端时间窗口，建议在此框架上做局部校准。</div>
+    </section>
+  </main>
 
-            <!-- What -->
-            <div class="tc-what">
-              <div class="tc-what-label">这个阶段这类题在做什么</div>
-              <div class="tc-what-text">${t.what}</div>
-            </div>
+  <script>
+    const STAGES = [
+      { id: 0, num: "01", name: "启动期", state: "目标感弱、习惯未稳定", conflict: "想开始但缺少行动惯性", goal: "先建立行动与完成感" },
+      { id: 1, num: "02", name: "定向期", state: "开始投入、弱项感知模糊", conflict: "知道有问题但不够具体", goal: "把弱项感知转成可执行缺口" },
+      { id: 2, num: "03", name: "焦虑提升期", state: "投入增强、对提升敏感", conflict: "练了很多但不确定是否变好", goal: "让进步可见并稳定强化" },
+      { id: 3, num: "04", name: "冲刺收敛期", state: "临近考试、关注稳定发挥", conflict: "担心波动和临场失常", goal: "聚焦稳定性与失分点收敛" },
+      { id: 4, num: "05", name: "结果决战期", state: "结果窗口短、注意力高度集中", conflict: "需要快速建立确定感", goal: "高仿真交付 + 关键反馈收口" }
+    ];
 
-            <!-- Product -->
-            <div class="tc-product">
-              <div class="tc-product-label">产品如何响应</div>
-              <div class="tc-product-text">${t.product}</div>
-              <div class="tc-product-form">${t.form}</div>
-            </div>
+    const TYPE_META = {
+      xc: { name: "行测", color: "var(--xc)" },
+      sl: { name: "申论", color: "var(--sl)" },
+      ms: { name: "面试", color: "var(--ms)" }
+    };
 
-            <!-- Data signal -->
-            <div class="tc-data">
-              <div class="tc-data-label">可观测数据信号</div>
-              <div class="tc-data-signal">
-                ${t.data.map(d => `<span class="data-tag">${d}</span>`).join('')}
+    const EXECUTION = {
+      0: {
+        xc: { role: "主驱动入口", drive: "存在感", action: "单题即练 + 快速测评 + 每日打卡", data: "次日留存、完成率、连续打卡" },
+        sl: { role: "认知预埋", drive: "距离感知", action: "读题感知 + 要点速写", data: "阅读完成率、答案对照率" },
+        ms: { role: "低频铺垫", drive: "近于零", action: "认知内容穿插，不强制作答", data: "内容触达率" }
+      },
+      1: {
+        xc: { role: "主分层工具", drive: "定位感", action: "专项题组 + 错题复练 + 弱项标签", data: "模块错误分布、复练率" },
+        sl: { role: "过渡补位（占位）", drive: "方法需求（占位）", action: "该组合待补充，建议先复用启动/强化中间态", data: "待补充" },
+        ms: { role: "开口训练入口", drive: "开口冲击", action: "自主录音 + 回放 + 自评", data: "首次开口率、回放率" }
+      },
+      2: {
+        xc: { role: "补强主线", drive: "进步感", action: "限时专项 + 弱项强化 + 趋势对比", data: "周环比、用时变化、弱项消灭率" },
+        sl: { role: "价值窗口主角", drive: "能力可见性", action: "完整作答 + 逐条批改 + 前后对照", data: "批改后复练率、边界诊断触发率" },
+        ms: { role: "能力成形线", drive: "表达可见性", action: "计时作答 + 追问模拟 + 多维点评", data: "维度得分变化、追问通过率" }
+      },
+      3: {
+        xc: { role: "稳定性验证", drive: "确定感", action: "全真模考 + 节奏控制练习", data: "成绩波动、模考专项差值" },
+        sl: { role: "收敛补强", drive: "消除感", action: "定向修正 + 热点押题 + 快速批改", data: "失分点消除率、批改时效" },
+        ms: { role: "承接预热（占位）", drive: "实战预热（占位）", action: "该组合待补充，建议提前导入高仿真演练", data: "待补充" }
+      },
+      4: {
+        xc: { role: "轻量维持", drive: "退场", action: "轻量维持练习，不做重反馈", data: "维持参与率" },
+        sl: { role: "低频辅助（占位）", drive: "考前安心（占位）", action: "该组合待补充，建议低频确认关键失分点", data: "待补充" },
+        ms: { role: "绝对核心", drive: "排名感知", action: "高仿真模拟 + 无领导实战 + 横向排名反馈", data: "模拟频次、横向排名、推荐率" }
+      }
+    };
+
+    const DELIVERY = {
+      "0_xc": {
+        present: [
+          { name: "单题即练", badge: "主推", badgeColor: "var(--xc)", desc: "一道题做完即出答案与简析。", why: "先建立行动，不强调难度。"},
+          { name: "快速测评包", badge: "引导", badgeColor: "var(--ink-dim)", desc: "10题一组覆盖核心模块。", why: "为后续分层建立样本。"}
+        ],
+        feedback: [
+          { name: "即时对错", badge: "必须", badgeColor: "var(--xc)", desc: "做完立刻反馈，不延迟。", why: "启动期驱动来自即时完成信号。"},
+          { name: "完成感标记", badge: "关键", badgeColor: "var(--gold)", desc: "优先展示完成数量与连续天数。", why: "完成感优先于正确感。"}
+        ],
+        principle: [
+          { name: "完成感优先", badge: "原则", badgeColor: "var(--gold)", desc: "先强化“我做了”，再强化“我做对了”。", why: "避免过早错误刺激导致回避。"}
+        ],
+        sequence: [
+          { num: "01", form: "快速测评", feedback: "即时对错" },
+          { num: "02", form: "单题即练", feedback: "简短解析" },
+          { num: "03", form: "每日打卡", feedback: "完成感标记" }
+        ],
+        triggers: [
+          { type: "日常节奏", desc: "按用户活跃时段推5-10题轻练。", signal: "信号：注册后次日启动" },
+          { type: "断签触发", desc: "2日未活跃推低门槛重启题。", signal: "信号：2日未活跃" }
+        ],
+        compare_form: ["单题即练", "专项题组", "限时专项", "全真模考", "轻量维持"],
+        compare_feedback: ["完成感", "弱项标签", "趋势对比", "稳定性分析", "—"]
+      },
+      "1_xc": {
+        present: [{ name: "专项题组", badge: "主推", badgeColor: "var(--xc)", desc: "同模块连续训练。", why: "让弱项可见。" }],
+        feedback: [{ name: "模块分布图", badge: "核心", badgeColor: "var(--xc)", desc: "展示模块失分结构。", why: "定位感来自分布。" }],
+        principle: [{ name: "分布 > 总分", badge: "原则", badgeColor: "var(--xc)", desc: "反馈围绕弱项结构组织。", why: "总分不能指导动作。" }],
+        sequence: [{ num: "01", form: "专项题组", feedback: "分布图" }, { num: "02", form: "错题复练", feedback: "弱项标签" }],
+        triggers: [{ type: "弱项触发", desc: "同类错误累计后推专项。", signal: "信号：错误≥3次" }],
+        compare_form: ["单题即练", "专项题组", "限时专项", "全真模考", "轻量维持"],
+        compare_feedback: ["完成感", "弱项标签", "趋势对比", "稳定性分析", "—"]
+      },
+      "2_xc": {
+        present: [{ name: "限时专项", badge: "主推", badgeColor: "var(--xc)", desc: "限定时间完成模块题组。", why: "强化速度与正确率协同。" }],
+        feedback: [{ name: "纵向趋势", badge: "必须", badgeColor: "var(--xc)", desc: "周环比展示正确率与用时。", why: "进步感来自趋势。" }],
+        principle: [{ name: "趋势优先", badge: "原则", badgeColor: "var(--xc)", desc: "先看变化方向，再看绝对值。", why: "强化期需要确认在变好。" }],
+        sequence: [{ num: "01", form: "弱项强化", feedback: "消灭进度" }, { num: "02", form: "限时专项", feedback: "速度指标" }],
+        triggers: [{ type: "停滞触发", desc: "连续停滞时推方法课+题包。", signal: "信号：2周无提升" }],
+        compare_form: ["单题即练", "专项题组", "限时专项", "全真模考", "轻量维持"],
+        compare_feedback: ["完成感", "弱项标签", "趋势对比", "稳定性分析", "—"]
+      },
+      "3_xc": {
+        present: [{ name: "全真模考", badge: "主推", badgeColor: "var(--xc)", desc: "完整套卷+严格计时。", why: "验证压力场景稳定性。" }],
+        feedback: [{ name: "稳定性分析", badge: "核心", badgeColor: "var(--xc)", desc: "关注波动范围与底线分。", why: "收敛期目标是稳。" }],
+        principle: [{ name: "稳定性优先", badge: "原则", badgeColor: "var(--xc)", desc: "峰值不是核心，稳定才是。", why: "考场是一次性场景。" }],
+        sequence: [{ num: "01", form: "节奏训练", feedback: "时间分析" }, { num: "02", form: "全真模考", feedback: "稳定性分析" }],
+        triggers: [{ type: "倒计时", desc: "21/14/7天触发模考。", signal: "信号：考试倒计时" }],
+        compare_form: ["单题即练", "专项题组", "限时专项", "全真模考", "轻量维持"],
+        compare_feedback: ["完成感", "弱项标签", "趋势对比", "稳定性分析", "—"]
+      },
+      "4_xc": {
+        present: [{ name: "轻量维持练习", badge: "可选", badgeColor: "var(--ink-dim)", desc: "每日少量题维持手感。", why: "该阶段主焦点不在行测。" }],
+        feedback: [{ name: "完成确认", badge: "唯一", badgeColor: "var(--ink-dim)", desc: "仅显示完成，不做重分析。", why: "避免分散决战注意力。" }],
+        principle: [{ name: "不干扰", badge: "原则", badgeColor: "var(--ink-dim)", desc: "存在但不打扰。", why: "保持注意力集中。" }],
+        sequence: [{ num: "01", form: "轻量维持", feedback: "完成确认" }],
+        triggers: [{ type: "进面事件", desc: "进面后自动切轻量模式。", signal: "信号：进面状态" }],
+        compare_form: ["单题即练", "专项题组", "限时专项", "全真模考", "轻量维持"],
+        compare_feedback: ["完成感", "弱项标签", "趋势对比", "稳定性分析", "—"]
+      },
+      "0_sl": {
+        present: [{ name: "读题感知", badge: "唯一推荐", badgeColor: "var(--sl)", desc: "材料+答案对照，不强制作答。", why: "先建立距离感。" }],
+        feedback: [{ name: "得分点对照", badge: "核心", badgeColor: "var(--sl)", desc: "逐条显示覆盖与遗漏。", why: "距离感需要可视化。" }],
+        principle: [{ name: "不评判只展示", badge: "原则", badgeColor: "var(--sl)", desc: "展示差距，不贴负面标签。", why: "降低回避风险。" }],
+        sequence: [{ num: "01", form: "读题感知", feedback: "要点对照" }, { num: "02", form: "要点速写", feedback: "覆盖率" }],
+        triggers: [{ type: "行测连带", desc: "连续打卡后穿插申论轻题。", signal: "信号：连续3日打卡" }],
+        compare_form: ["读题感知", "要点速写", "完整作答", "定向修正", "—"],
+        compare_feedback: ["距离可视化", "诊断性批改", "能力边界报告", "消除感追踪", "—"]
+      },
+      "2_sl": {
+        present: [{ name: "完整作答", badge: "核心", badgeColor: "var(--sl)", desc: "完整作答并进入批改链路。", why: "强化期价值窗口集中在高质量反馈。" }],
+        feedback: [{ name: "逐条批改", badge: "核心", badgeColor: "var(--sl)", desc: "写了/漏了/偏了逐条标注。", why: "让能力边界可见。" }],
+        principle: [{ name: "批改质量即价值", badge: "原则", badgeColor: "var(--sl)", desc: "批改颗粒度决定驱动强度。", why: "多数场景下外部反馈是关键前提。" }],
+        sequence: [{ num: "01", form: "完整作答", feedback: "逐条批改" }, { num: "02", form: "修改重写", feedback: "前后对照" }],
+        triggers: [{ type: "批改联动", desc: "批改后24小时推同类再练。", signal: "信号：批改已读" }],
+        compare_form: ["读题感知", "要点速写", "完整作答", "定向修正", "—"],
+        compare_feedback: ["距离可视化", "诊断性批改", "能力边界报告", "消除感追踪", "—"]
+      },
+      "3_sl": {
+        present: [{ name: "定向修正", badge: "主推", badgeColor: "var(--sl)", desc: "围绕失分点精准出题。", why: "收敛期以问题消除为核心。" }],
+        feedback: [{ name: "失分点追踪", badge: "核心", badgeColor: "var(--sl)", desc: "已消除/待处理清单可视化。", why: "消除感来自清单推进。" }],
+        principle: [{ name: "清单消灭思维", badge: "原则", badgeColor: "var(--sl)", desc: "反馈重心从提升转为收口。", why: "匹配冲刺心态。" }],
+        sequence: [{ num: "01", form: "定向修正", feedback: "快速批改" }, { num: "02", form: "验证练习", feedback: "消除确认" }],
+        triggers: [{ type: "倒计时", desc: "考前7天每日推热点押题。", signal: "信号：距考试≤7日" }],
+        compare_form: ["读题感知", "要点速写", "完整作答", "定向修正", "—"],
+        compare_feedback: ["距离可视化", "诊断性批改", "能力边界报告", "消除感追踪", "—"]
+      },
+      "0_ms": {
+        present: [{ name: "文字浏览", badge: "唯一形态", badgeColor: "var(--ms)", desc: "认知性内容，不强制作答。", why: "启动期面试接受度普遍较低。" }],
+        feedback: [{ name: "无反馈", badge: "原则", badgeColor: "var(--ink-dim)", desc: "不评分，不要求输出。", why: "减少心理负担。" }],
+        principle: [{ name: "认知铺垫", badge: "原则", badgeColor: "var(--ms)", desc: "先建立“面试需准备”的心智。", why: "不抢主链路资源。" }],
+        sequence: [{ num: "01", form: "认知内容", feedback: "仅浏览" }],
+        triggers: [{ type: "低频穿插", desc: "每7天穿插一条认知卡片。", signal: "信号：注册满7天" }],
+        compare_form: ["文字浏览", "开口体验", "录音练习", "全流程模拟", "高仿真模拟"],
+        compare_feedback: ["无", "回放冲击", "多维点评", "仿真报告", "横向排名"]
+      },
+      "1_ms": {
+        present: [{ name: "自主开口录音", badge: "核心任务", badgeColor: "var(--ms)", desc: "看题后录音作答。", why: "先开口，再谈质量。" }],
+        feedback: [{ name: "录音回放", badge: "唯一有效", badgeColor: "var(--ms)", desc: "回放自身表达，不急于评分。", why: "冲击感来自“听见自己”。" }],
+        principle: [{ name: "冲击感优先", badge: "原则", badgeColor: "var(--ms)", desc: "避免过早外部评判。", why: "降低防御心理。" }],
+        sequence: [{ num: "01", form: "首次录音", feedback: "回放冲击" }, { num: "02", form: "再次作答", feedback: "自评对比" }],
+        triggers: [{ type: "首次开口", desc: "首次录音后推下一题。", signal: "信号：首次录音完成" }],
+        compare_form: ["文字浏览", "开口体验", "录音练习", "全流程模拟", "高仿真模拟"],
+        compare_feedback: ["无", "回放冲击", "多维点评", "仿真报告", "横向排名"]
+      },
+      "2_ms": {
+        present: [{ name: "计时作答+追问", badge: "主推", badgeColor: "var(--ms)", desc: "引入真实时间压力与追问环节。", why: "提升迁移到真实场景的能力。" }],
+        feedback: [{ name: "多维点评", badge: "核心", badgeColor: "var(--ms)", desc: "逻辑/表达/完整度分维反馈。", why: "让进步可见并可执行。" }],
+        principle: [{ name: "多维可见进步", badge: "原则", badgeColor: "var(--ms)", desc: "分维反馈替代单总分。", why: "总分难驱动持续训练。" }],
+        sequence: [{ num: "01", form: "计时作答", feedback: "多维点评" }, { num: "02", form: "追问模拟", feedback: "应变反馈" }],
+        triggers: [{ type: "点评联动", desc: "最低维度触发专项训练。", signal: "信号：最低维度识别" }],
+        compare_form: ["文字浏览", "开口体验", "录音练习", "全流程模拟", "高仿真模拟"],
+        compare_feedback: ["无", "回放冲击", "多维点评", "仿真报告", "横向排名"]
+      },
+      "4_ms": {
+        present: [{ name: "高仿真模拟", badge: "绝对核心", badgeColor: "var(--ms)", desc: "多题连续+追问+录像。", why: "决战期需要真实考场感。" }],
+        feedback: [{ name: "横向排名反馈", badge: "差异化核心", badgeColor: "var(--ms)", desc: "给出同期相对位置。", why: "决战期驱动主要来自横向比较。" }],
+        principle: [{ name: "横向比较优先", badge: "原则", badgeColor: "var(--ms)", desc: "反馈重心从纵向提升转向相对位置。", why: "结果窗口短，横向信号更有力。" }],
+        sequence: [{ num: "01", form: "高仿真模拟", feedback: "录像复盘" }, { num: "02", form: "无领导实战", feedback: "横向排名" }],
+        triggers: [{ type: "进面触发", desc: "进面后立刻推决战方案。", signal: "信号：进面状态" }],
+        compare_form: ["文字浏览", "开口体验", "录音练习", "全流程模拟", "高仿真模拟"],
+        compare_feedback: ["无", "回放冲击", "多维点评", "仿真报告", "横向排名"]
+      }
+    };
+
+    function getDelivery(stageId, typeId) {
+      const key = `${stageId}_${typeId}`;
+      if (DELIVERY[key]) return DELIVERY[key];
+      return {
+        present: [{ name: "暂无配置", badge: "", badgeColor: "var(--ink-dim)", desc: "该阶段 × 题型组合待补充。", why: "" }],
+        feedback: [{ name: "占位提示", badge: "", badgeColor: "var(--ink-dim)", desc: "可先参考相邻阶段同题型逻辑。", why: "" }],
+        principle: [{ name: "策略建议", badge: "", badgeColor: "var(--ink-dim)", desc: "先对齐该阶段主目标，再补全交付细节。", why: "" }],
+        sequence: [{ num: "01", form: "待补充", feedback: "待补充" }],
+        triggers: [{ type: "待补充", desc: "触发逻辑待补充。", signal: "" }],
+        compare_form: ["—", "—", "—", "—", "—"],
+        compare_feedback: ["—", "—", "—", "—", "—"]
+      };
+    }
+
+    function renderStageDefinitions() {
+      const wrap = document.getElementById("stageDefGrid");
+      wrap.innerHTML = STAGES.map((s) => `
+        <article class="stage-card">
+          <div class="stage-num">${s.num}</div>
+          <div class="stage-name">${s.name}</div>
+          <div class="stage-line"><strong>典型用户状态：</strong>${s.state}</div>
+          <div class="stage-line"><strong>主要矛盾：</strong>${s.conflict}</div>
+          <div class="stage-line"><strong>产品目标：</strong>${s.goal}</div>
+        </article>
+      `).join("");
+    }
+
+    function buildStageView(stageId) {
+      const ex = EXECUTION[stageId];
+      return `
+        <section class="stage-view" id="sv-${stageId}">
+          <div class="role-grid">
+            ${["xc", "sl", "ms"].map((t) => `
+              <article class="role-card" data-type="${t}">
+                <div class="role-title" style="color:${TYPE_META[t].color}">${TYPE_META[t].name}</div>
+                <div class="role-row"><strong>角色：</strong>${ex[t].role}</div>
+                <div class="role-row"><strong>驱动机制：</strong>${ex[t].drive}</div>
+                <div class="role-row"><strong>推荐动作：</strong>${ex[t].action}</div>
+                <div class="role-row"><strong>数据信号：</strong>${ex[t].data}</div>
+              </article>
+            `).join("")}
+          </div>
+
+          <div class="delivery-panel" id="dp-${stageId}">
+            <div class="delivery-head">
+              <div class="title">选定阶段 × 题型组合：下方同步展示完整交付配置</div>
+              <div class="type-pills">
+                <button type="button" class="type-pill" data-stage="${stageId}" data-type="xc">行测</button>
+                <button type="button" class="type-pill" data-stage="${stageId}" data-type="sl">申论</button>
+                <button type="button" class="type-pill" data-stage="${stageId}" data-type="ms">面试</button>
               </div>
             </div>
-          </div>`;
-        }).join('')}
-      </div>
-
-      <!-- Attention row -->
-      <div class="attention-row">
-        ${s.types.map(t => `
-          <div class="att-cell ${t.attention.type === 'warn' ? 'warn' : ''}">
-            <span class="att-tag" style="color:${t.attention.type === 'warn' ? 'var(--gold)' : 'var(--ink-40)'}">
-              ${t.type} · ${t.attention.tag}
-            </span>
-            ${t.attention.text}
+            <div class="delivery-grid">
+              <div class="delivery-col">
+                <h4>题目呈现形式（给什么形态的题）</h4>
+                <div id="present-${stageId}"></div>
+              </div>
+              <div class="delivery-col">
+                <h4>反馈交付形式（做完给什么）</h4>
+                <div id="feedback-${stageId}"></div>
+              </div>
+              <div class="delivery-col">
+                <h4>反馈设计原则（该阶段核心目标）</h4>
+                <div id="principle-${stageId}"></div>
+              </div>
+            </div>
+            <div class="flow-box">
+              <h5>推荐使用序列（用户典型路径）</h5>
+              <div class="flow-steps" id="flow-${stageId}"></div>
+            </div>
+            <div class="trigger-box">
+              <h5>智能推送触发逻辑</h5>
+              <div id="trigger-${stageId}"></div>
+            </div>
+            <div class="compare-toggle" data-stage="${stageId}">↕ 展开该题型跨所有阶段的交付形式对比</div>
+            <div class="compare-panel" id="compare-${stageId}"></div>
           </div>
-        `).join('')}
-      </div>
+        </section>
+      `;
+    }
 
-      <!-- Audience row -->
-      <div class="audience-row">
-        <div class="aud-cell">
-          <div class="aud-role">战略</div>
-          <div class="aud-text">${getAudienceText(s, 'strategy')}</div>
-        </div>
-        <div class="aud-cell">
-          <div class="aud-role">产品</div>
-          <div class="aud-text">${getAudienceText(s, 'product')}</div>
-        </div>
-        <div class="aud-cell">
-          <div class="aud-role">教研</div>
-          <div class="aud-text">${getAudienceText(s, 'edu')}</div>
-        </div>
-        <div class="aud-cell">
-          <div class="aud-role">数据</div>
-          <div class="aud-text">${getAudienceText(s, 'data')}</div>
-        </div>
-      </div>
+    function renderStageViews() {
+      const wrap = document.getElementById("stageViews");
+      wrap.innerHTML = STAGES.map((s) => buildStageView(s.id)).join("");
+    }
 
-      <div class="delivery-panel" id="dp${si}">
-        <div class="dp-top">
+    function renderStagePills() {
+      const wrap = document.getElementById("stagePills");
+      wrap.innerHTML = STAGES.map((s) => `
+        <button type="button" class="stage-pill" data-stage="${s.id}">
+          ${s.num} · ${s.name}
+        </button>
+      `).join("");
+    }
+
+    let currentStage = 0;
+    let currentType = "xc";
+
+    function renderDeliveryFor(stageId, typeId) {
+      const d = getDelivery(stageId, typeId);
+      const renderItems = (items) => items.map((it) => `
+        <article class="fi">
+          <div class="fi-name">
+            ${it.name}
+            ${it.badge ? `<span class="fi-badge" style="background:${it.badgeColor};">${it.badge}</span>` : ""}
+          </div>
+          <div class="fi-desc">${it.desc}</div>
+          ${it.why ? `<div class="fi-why">${it.why}</div>` : ""}
+        </article>
+      `).join("");
+      document.getElementById(`present-${stageId}`).innerHTML = renderItems(d.present);
+      document.getElementById(`feedback-${stageId}`).innerHTML = renderItems(d.feedback);
+      document.getElementById(`principle-${stageId}`).innerHTML = renderItems(d.principle);
+
+      document.getElementById(`flow-${stageId}`).innerHTML = d.sequence.map((s) => `
+        <article class="flow-step">
+          <div class="flow-num">STEP ${s.num}</div>
+          <div class="flow-form">${s.form}</div>
+          <div class="flow-feedback">${s.feedback}</div>
+        </article>
+      `).join("");
+
+      document.getElementById(`trigger-${stageId}`).innerHTML = d.triggers.map((t) => `
+        <article class="trigger-item">
+          <div class="trigger-type">${t.type}</div>
           <div>
-            <div class="dp-title">阶段 × 题型交付配置</div>
-            <div class="dp-sub">${s.name} · 点击题型即可同步切换下方完整交付</div>
+            <div class="trigger-text">${t.desc}</div>
+            ${t.signal ? `<div class="trigger-signal">${t.signal}</div>` : ""}
           </div>
-          <div class="dp-type-pills">
-            <button type="button" class="dp-type-pill" data-type="xc" data-stage="${si}">行测</button>
-            <button type="button" class="dp-type-pill" data-type="sl" data-stage="${si}">申论</button>
-            <button type="button" class="dp-type-pill" data-type="ms" data-stage="${si}">面试</button>
-          </div>
-        </div>
+        </article>
+      `).join("");
 
-        <div class="delivery-grid">
-          <div class="dg-col">
-            <div class="dg-head">
-              <div class="dg-head-label">题目呈现形式</div>
-              <div class="dg-head-name">给什么形态的题</div>
+      const compare = document.getElementById(`compare-${stageId}`);
+      compare.innerHTML = `
+        <div class="compare-grid">
+          <div class="cg-col">
+            <div class="cg-head" style="background:#667085;">维度</div>
+            <div class="cg-row-label">题目形态</div>
+            <div class="cg-row-label">反馈形式</div>
+          </div>
+          ${STAGES.map((s, idx) => `
+            <div class="cg-col">
+              <div class="cg-head" style="background:${idx===stageId ? TYPE_META[typeId].color : '#667085'}">${s.name}</div>
+              <div class="cg-row ${idx===stageId ? 'highlight' : ''}">${d.compare_form[idx] || "—"}</div>
+              <div class="cg-row ${idx===stageId ? 'highlight' : ''}">${d.compare_feedback[idx] || "—"}</div>
             </div>
-            <div class="dg-body" id="dpPresent${si}"></div>
-          </div>
-          <div class="dg-col">
-            <div class="dg-head">
-              <div class="dg-head-label">反馈交付形式</div>
-              <div class="dg-head-name">做完给什么</div>
-            </div>
-            <div class="dg-body" id="dpFeedback${si}"></div>
-          </div>
-          <div class="dg-col">
-            <div class="dg-head">
-              <div class="dg-head-label">反馈设计原则</div>
-              <div class="dg-head-name">该阶段反馈的核心目标</div>
-            </div>
-            <div class="dg-body" id="dpPrinciple${si}"></div>
-          </div>
+          `).join("")}
         </div>
-
-        <div class="seq-box">
-          <div class="seq-label">推荐使用序列（用户典型路径）</div>
-          <div class="seq-steps" id="dpSeq${si}"></div>
-        </div>
-
-        <div class="trigger-box">
-          <div class="tb-label">智能推送触发逻辑</div>
-          <div id="dpTrigger${si}"></div>
-        </div>
-
-        <div class="compare-hint" data-stage="${si}">↕ 查看该题型跨所有阶段的交付形式对比</div>
-        <div class="compare-panel" id="dpCompare${si}"></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function getAudienceText(s, role) {
-  const texts = {
-    0: {
-      strategy: '启动期是<strong>用户获取和冷启动</strong>的核心窗口。行测是唯一能独立成立的入口，申论和面试在这个阶段的战略价值在于预埋，不在转化。',
-      product: '<strong>完成感设计优先于正确感</strong>。核心指标是次日留存率和连续打卡天数，不是正确率。申论最小闭环是这个阶段的产品创新点。',
-      edu: '启动期题目设计原则：<strong>低门槛、快反馈、单题短小</strong>。不要在启动期出现高难度题和复杂解析，会打断行动感建立。',
-      data: '重点采集：<strong>开始率、完成率、次日回访率</strong>。这三个指标共同判断用户是否完成了启动期的核心任务。阶段迁移信号：连续打卡7天且完成首次弱项测评。'
-    },
-    1: {
-      strategy: '定向期是<strong>用户分层和产品分叉</strong>的关键节点。弱项画像的质量决定了后续所有阶段产品个性化的基础。',
-      product: '<strong>弱项标签体系</strong>是这个阶段最重要的产品能力。没有弱项画像，强化期的产品推荐就是盲目的。申论诊断性反馈是这个阶段的产品差异化方向。',
-      edu: '定向期申论内容设计：<strong>诊断性优先于提升性</strong>。让用户看到方法缺口比让用户做更多题更重要。行测内容要开始按模块分发而非全题随机。',
-      data: '重点采集：<strong>各模块错误率分布、专项训练点击率</strong>。阶段迁移信号：弱项模块被明确标记且用户开始主动复练，申论小题完成率 > 60%。'
-    },
-    2: {
-      strategy: '强化期是<strong>申论产品的唯一战略窗口</strong>。批改服务在这个阶段的转化质量，直接决定整体产品的口碑和复购。这个窗口期错过不会再来。',
-      product: '<strong>批改是前提，不是增值服务</strong>。这个阶段的产品核心是：让用户第一次真实看到自己的能力边界。纵向趋势对比是行测这个阶段的必须功能。',
-      edu: '强化期是教研投入回报最高的阶段。申论批改的颗粒度和准确性直接决定用户的进步感知。<strong>批改标准的统一性</strong>是教研在这个阶段最重要的质量控制目标。',
-      data: '重点采集：<strong>批改服务转化率、批改后二次作答率、模块正确率周环比</strong>。阶段迁移信号：批改完成 > 3次，行测综合正确率稳定在65%以上，开始主动查询面试题。'
-    },
-    3: {
-      strategy: '收敛期是<strong>面试服务转化</strong>的关键预埋期。进面通知发出后用户行为会立刻切换，在这之前建立"进面需要系统训练"的认知是战略投入。',
-      product: '<strong>产品形态要从训练性切换到压力验证性</strong>。行测全真模考、申论失分点追踪、面试高仿真训练——三线同时向最高强度形态迁移。',
-      edu: '收敛期内容设计：<strong>减少新知识，增加实战验证</strong>。行测侧重稳定性，申论侧重失分点定点清除，面试侧重场景覆盖度。',
-      data: '重点采集：<strong>模考完成率、成绩稳定性、面试模拟频次</strong>。阶段迁移信号（进入决战期）：收到进面通知，面试相关行为频次突然上升。'
-    },
-    4: {
-      strategy: '决战期是<strong>高客单服务交付</strong>的核心窗口，也是口碑产生的关键时刻。上岸率和推荐率是这个阶段最重要的战略指标，直接影响下一轮获客成本。',
-      product: '<strong>横向排名反馈机制</strong>是这个阶段最大的产品差异化机会。"你在同期学员中处于什么位置"这个信号，目前市场上几乎没有产品在做。',
-      edu: '决战期教研核心任务：<strong>追问设计和场景覆盖</strong>。标准答案不是重点，追问应对和临场反应才是。教研需要建立真实考场的题型覆盖库。',
-      data: '重点采集：<strong>模拟面试频次、横向排名感知满意度、上岸率、推荐率</strong>。这个阶段的数据直接服务于下一轮产品迭代和获客素材。'
+      `;
     }
-  };
-  return texts[s.id][role];
-}
 
-// ══════════ INTERACTION ══════════
-let currentStage = 0;
-let currentDeliveryType = 'xc';
+    function syncUI() {
+      const stage = STAGES[currentStage];
+      document.getElementById("stageIndicator").textContent = `${stage.num} / ${String(STAGES.length).padStart(2, "0")} · ${stage.name}`;
+      document.getElementById("stagePrev").disabled = currentStage === 0;
+      document.getElementById("stageNext").disabled = currentStage === STAGES.length - 1;
 
-function getDelivery(stageId, typeId) {
-  const key = `${stageId}_${typeId}`;
-  if (DELIVERY_DATA[key]) return DELIVERY_DATA[key];
-  return {
-    present: [{ name: '暂无数据', badge: '', badgeColor: 'var(--ink-60)', desc: '该阶段 × 题型的交付配置正在补充。', why: '' }],
-    feedback: [{ name: '暂无数据', badge: '', badgeColor: 'var(--ink-60)', desc: '请先参考已完成组合。', why: '' }],
-    principle: [{ name: '占位提示', badge: '', badgeColor: 'var(--ink-60)', desc: '可先复用相邻阶段逻辑。', why: '' }],
-    sequence: [{ num: '01', form: '待补充', feedback: '待补充' }],
-    triggers: [{ type: '待补充', desc: '该组合触发逻辑待补充。', signal: '' }],
-    compare_form: ['—', '—', '—', '—', '—'],
-    compare_feedback: ['—', '—', '—', '—', '—']
-  };
-}
-
-function renderDelivery(stageId, typeId) {
-  const d = getDelivery(stageId, typeId);
-  const present = document.getElementById(`dpPresent${stageId}`);
-  const feedback = document.getElementById(`dpFeedback${stageId}`);
-  const principle = document.getElementById(`dpPrinciple${stageId}`);
-  const seq = document.getElementById(`dpSeq${stageId}`);
-  const trigger = document.getElementById(`dpTrigger${stageId}`);
-  const compare = document.getElementById(`dpCompare${stageId}`);
-  if (!present || !feedback || !principle || !seq || !trigger || !compare) return;
-
-  const renderList = (arr) => arr.map((item) => `
-    <div class="form-item">
-      <div class="fi-name">
-        ${item.name}
-        ${item.badge ? `<span class="fi-badge" style="background:${item.badgeColor}">${item.badge}</span>` : ''}
-      </div>
-      <div class="fi-desc">${item.desc}</div>
-      ${item.why ? `<div class="fi-why">${item.why}</div>` : ''}
-    </div>
-  `).join('');
-
-  present.innerHTML = renderList(d.present);
-  feedback.innerHTML = renderList(d.feedback);
-  principle.innerHTML = renderList(d.principle);
-
-  seq.innerHTML = d.sequence.map((s) => `
-    <div class="seq-step">
-      <div class="seq-step-num">STEP ${s.num}</div>
-      <div class="seq-step-form">${s.form}</div>
-      <div class="seq-step-feedback">${s.feedback}</div>
-    </div>
-  `).join('');
-
-  trigger.innerHTML = d.triggers.map((t) => `
-    <div class="tb-trigger">
-      <div class="tt-type">${t.type}</div>
-      <div>
-        <div class="tt-desc">${t.desc}</div>
-        ${t.signal ? `<div class="tt-signal">${t.signal}</div>` : ''}
-      </div>
-    </div>
-  `).join('');
-
-  compare.innerHTML = `
-    <div class="compare-grid">
-      <div class="cg-col">
-        <div class="cg-head" style="background:var(--ink-60)">维度</div>
-        <div class="cg-row-label">题目形态</div>
-        <div class="cg-row-label">反馈形式</div>
-      </div>
-      ${STAGES.map((s, i) => `
-        <div class="cg-col">
-          <div class="cg-head" style="background:${i===stageId ? DELIVERY_TYPES[typeId].color : 'var(--ink-60)'}">${s.name}</div>
-          <div class="cg-row ${i===stageId?'highlight':''}">${d.compare_form[i] || '—'}</div>
-          <div class="cg-row ${i===stageId?'highlight':''}">${d.compare_feedback[i] || '—'}</div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
-
-function syncDeliveryUi() {
-  const visible = document.querySelector('.stage-content.vis');
-  if (!visible) return;
-  const stageId = Number(visible.id.replace('sc', ''));
-  renderDelivery(stageId, currentDeliveryType);
-
-  visible.querySelectorAll('.dp-type-pill').forEach((pill) => {
-    pill.classList.toggle('act', pill.dataset.type === currentDeliveryType);
-  });
-  visible.querySelectorAll('.track-col').forEach((col) => {
-    col.classList.toggle('delivery-focus', col.dataset.type === currentDeliveryType);
-  });
-}
-
-function activateStage(i, opt = {}) {
-  if (i < 0 || i > STAGES.length - 1) return;
-  const shouldScroll = opt.scroll !== false;
-  currentStage = i;
-  document.querySelectorAll('.ss-item').forEach((el, idx) =>
-    el.classList.toggle('act', idx === i));
-  document.querySelectorAll('.stage-content').forEach((el, idx) =>
-    el.classList.toggle('vis', idx === i));
-  document.querySelectorAll('.sp-bar').forEach((el) =>
-    el.style.outline = Number(el.dataset.stage) === i ? '2px solid rgba(176,125,32,0.6)' : 'none');
-  syncStageUi();
-  syncDeliveryUi();
-  if (shouldScroll) {
-    document.getElementById('sec-stages').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
-
-function syncStageUi() {
-  const stage = STAGES[currentStage];
-  const indicator = document.getElementById('stageIndicator');
-  indicator.textContent = `${stage.num} / ${String(STAGES.length).padStart(2, '0')} · ${stage.name}`;
-  document.getElementById('stagePrev').disabled = currentStage === 0;
-  document.getElementById('stageNext').disabled = currentStage === STAGES.length - 1;
-  document.querySelectorAll('.mini-stage-btn').forEach((btn) => {
-    btn.classList.toggle('act', Number(btn.dataset.stage) === currentStage);
-  });
-}
-
-function renderMiniNav() {
-  const box = document.getElementById('miniStages');
-  box.innerHTML = STAGES.map((s, i) =>
-    `<button class="mini-stage-btn" type="button" data-stage="${i}">${s.num} · ${s.name}</button>`
-  ).join('');
-}
-
-// Scroll nav label
-const sections = [
-  { id: 'sec-types', label: '前置认知 · 三类题型特性' },
-  { id: 'sec-stages', label: '核心工具 · 阶段截面查询' }
-];
-window.addEventListener('scroll', () => {
-  const y = window.scrollY + 80;
-  let current = '内部研究文档';
-  let currentId = '';
-  sections.forEach(s => {
-    const el = document.getElementById(s.id);
-    if (el && el.offsetTop <= y) {
-      current = s.label;
-      currentId = s.id;
+      document.querySelectorAll(".stage-pill").forEach((p) => {
+        p.classList.toggle("active", Number(p.dataset.stage) === currentStage);
+      });
+      document.querySelectorAll(".stage-view").forEach((v, idx) => {
+        v.classList.toggle("active", idx === currentStage);
+      });
+      const active = document.getElementById(`sv-${currentStage}`);
+      if (!active) return;
+      active.querySelectorAll(".role-card").forEach((c) => c.classList.toggle("active", c.dataset.type === currentType));
+      active.querySelectorAll(".type-pill").forEach((p) => p.classList.toggle("active", p.dataset.type === currentType));
+      renderDeliveryFor(currentStage, currentType);
     }
-  });
-  document.getElementById('navLabel').textContent = current;
 
-  document.querySelectorAll('.nav-link').forEach((a) => {
-    a.classList.toggle('act', a.dataset.target === currentId);
-  });
-  document.querySelectorAll('.mini-link').forEach((a) => {
-    a.classList.toggle('act', a.dataset.sec === currentId);
-  });
+    function activateStage(i, scroll = false) {
+      if (i < 0 || i >= STAGES.length) return;
+      currentStage = i;
+      syncUI();
+      if (scroll) document.getElementById("stage-viewer").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 
-  const doc = document.documentElement;
-  const max = doc.scrollHeight - window.innerHeight;
-  const ratio = max > 0 ? (window.scrollY / max) * 100 : 0;
-  document.getElementById('readProg').style.width = `${ratio}%`;
-});
+    document.addEventListener("click", (e) => {
+      const stageBtn = e.target.closest(".stage-pill");
+      if (stageBtn) {
+        activateStage(Number(stageBtn.dataset.stage), false);
+        return;
+      }
+      const roleCard = e.target.closest(".role-card");
+      if (roleCard && roleCard.closest(".stage-view.active")) {
+        currentType = roleCard.dataset.type;
+        syncUI();
+        return;
+      }
+      const typeBtn = e.target.closest(".type-pill");
+      if (typeBtn && typeBtn.closest(".stage-view.active")) {
+        currentType = typeBtn.dataset.type;
+        syncUI();
+        return;
+      }
+      const toggle = e.target.closest(".compare-toggle");
+      if (toggle && toggle.closest(".stage-view.active")) {
+        const stageId = Number(toggle.dataset.stage);
+        const panel = document.getElementById(`compare-${stageId}`);
+        panel.classList.toggle("open");
+      }
+    });
 
-document.getElementById('spTracks').addEventListener('click', (e) => {
-  const bar = e.target.closest('.sp-bar');
-  if (!bar) return;
-  activateStage(Number(bar.dataset.stage), { scroll: true });
-});
+    document.getElementById("stagePrev").addEventListener("click", () => activateStage(currentStage - 1, false));
+    document.getElementById("stageNext").addEventListener("click", () => activateStage(currentStage + 1, false));
 
-document.getElementById('stageSelector').addEventListener('click', (e) => {
-  const item = e.target.closest('.ss-item');
-  if (!item) return;
-  activateStage(Number(item.dataset.stage), { scroll: false });
-});
+    window.addEventListener("keydown", (e) => {
+      const tag = document.activeElement && document.activeElement.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if (e.key === "ArrowLeft") activateStage(currentStage - 1, false);
+      if (e.key === "ArrowRight") activateStage(currentStage + 1, false);
+    });
 
-document.getElementById('stageContents').addEventListener('click', (e) => {
-  const track = e.target.closest('.track-col');
-  if (track && track.closest('.stage-content.vis')) {
-    currentDeliveryType = track.dataset.type || currentDeliveryType;
-    syncDeliveryUi();
-    return;
-  }
-  const pill = e.target.closest('.dp-type-pill');
-  if (pill && pill.closest('.stage-content.vis')) {
-    currentDeliveryType = pill.dataset.type || currentDeliveryType;
-    syncDeliveryUi();
-    return;
-  }
-  const compareHint = e.target.closest('.compare-hint');
-  if (compareHint && compareHint.closest('.stage-content.vis')) {
-    const stageId = compareHint.dataset.stage;
-    const panel = document.getElementById(`dpCompare${stageId}`);
-    if (panel) panel.classList.toggle('vis');
-  }
-});
-
-document.getElementById('stagePrev').addEventListener('click', () => {
-  activateStage(currentStage - 1, { scroll: false });
-});
-
-document.getElementById('stageNext').addEventListener('click', () => {
-  activateStage(currentStage + 1, { scroll: false });
-});
-
-document.querySelectorAll('.nav-link').forEach((link) => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const id = link.dataset.target;
-    const target = document.getElementById(id);
-    if (!target) return;
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-});
-
-document.getElementById('miniNav').addEventListener('click', (e) => {
-  const stageBtn = e.target.closest('.mini-stage-btn');
-  if (stageBtn) {
-    activateStage(Number(stageBtn.dataset.stage), { scroll: false });
-    document.getElementById('sec-stages').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    return;
-  }
-  const secLink = e.target.closest('.mini-link');
-  if (secLink) {
-    e.preventDefault();
-    const target = document.getElementById(secLink.dataset.sec);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-});
-
-window.addEventListener('keydown', (e) => {
-  const tag = document.activeElement && document.activeElement.tagName;
-  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-  if (e.key === 'ArrowLeft') activateStage(currentStage - 1, { scroll: false });
-  if (e.key === 'ArrowRight') activateStage(currentStage + 1, { scroll: false });
-});
-
-// ══════════ INIT ══════════
-renderPreview();
-renderSelector();
-renderContents();
-renderMiniNav();
-syncStageUi();
-activateStage(0, { scroll: false });
-window.dispatchEvent(new Event('scroll'));
-</script>
+    renderStageDefinitions();
+    renderStagePills();
+    renderStageViews();
+    syncUI();
+  </script>
 </body>
 </html>
