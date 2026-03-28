@@ -1,0 +1,2185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>上岸仓生课系统</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#2A5BF0;--blue-deep:#1A3FC2;--blue-light:#EEF2FF;--blue-mid:#C7D4FD;--blue-soft:#6B8EF5;--white:#fff;--g50:#F8F9FC;--g100:#F0F2F8;--g200:#E2E6F0;--g400:#9BA3B8;--g600:#5A6380;--g800:#1E2340;--r:12px;--rl:20px;--sh:0 1px 4px rgba(42,91,240,.08);--shm:0 4px 20px rgba(42,91,240,.12);--shl:0 12px 48px rgba(42,91,240,.18)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans SC',sans-serif;background:var(--g50);color:var(--g800);min-height:100vh;overflow-x:hidden}
+
+/* HEADER */
+.hdr{position:fixed;top:0;left:0;right:0;height:60px;background:var(--white);border-bottom:1px solid var(--g200);display:flex;align-items:center;padding:0 32px;z-index:100;gap:8px}
+.hdr-icon{width:28px;height:28px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.hdr-icon svg{width:16px;height:16px;fill:white}
+.hdr-title{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.hdr-sub{font-size:12px;color:var(--g400);margin-left:2px}
+
+/* PAGES */
+.page{display:none;min-height:100vh;padding-top:60px}
+.page.active{display:block}
+.page.slide-in{animation:slideIn .32s cubic-bezier(.4,0,.2,1) both}
+.page.slide-out{animation:slideOut .26s cubic-bezier(.4,0,.2,1) both}
+@keyframes slideIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-10px)}}
+
+/* INPUT PAGE */
+.in-wrap{max-width:720px;margin:0 auto;padding:44px 24px 80px;display:flex;flex-direction:column;gap:24px}
+.hero{text-align:center;padding:0 8px 4px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:5px;background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:100px;padding:4px 12px;font-size:11px;font-weight:600;color:var(--blue);margin-bottom:16px;letter-spacing:.02em}
+.hero h1{font-size:28px;font-weight:700;letter-spacing:-.03em;line-height:1.28;margin-bottom:10px}
+.hero h1 span{color:var(--blue)}
+.hero p{font-size:13px;color:var(--g400);line-height:1.7}
+.hero-steps{display:flex;align-items:center;justify-content:center;gap:0;margin-top:20px;flex-wrap:wrap}
+.hero-step{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g500,#7A84A0)}
+.hero-step-dot{width:20px;height:20px;border-radius:50%;background:var(--blue-light);border:1.5px solid var(--blue-mid);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--blue);flex-shrink:0;font-family:'DM Sans',sans-serif}
+.hero-step-arrow{margin:0 10px;color:var(--g200);font-size:12px;line-height:1}
+
+/* input card */
+.in-card{background:var(--white);border:1.5px solid var(--g200);border-radius:var(--rl);box-shadow:var(--sh);overflow:hidden;transition:border-color .18s,box-shadow .18s;position:relative}
+.in-card:focus-within{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,91,240,.08),var(--shm)}
+.in-card.drag{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,91,240,.12)}
+.drag-overlay{display:none;position:absolute;inset:0;background:rgba(42,91,240,.86);border-radius:calc(var(--rl) - 2px);z-index:10;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:white;font-size:14px;font-weight:600;pointer-events:none}
+.in-card.drag .drag-overlay{display:flex}
+
+textarea{width:100%;min-height:165px;border:none;outline:none;resize:none;font-family:'Noto Sans SC',sans-serif;font-size:14px;line-height:1.8;color:var(--g800);background:transparent;padding:18px 20px 10px;display:block}
+textarea::placeholder{color:var(--g400);font-weight:300}
+
+.toolbar{display:flex;align-items:center;justify-content:flex-end;padding:6px 14px 8px}
+.ccount{font-size:11px;color:var(--g400);font-family:'DM Sans',sans-serif}
+
+.img-strip{border-top:1px solid var(--g100);padding:10px 14px 12px}
+.img-strip-inner{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.img-add{width:72px;height:72px;border-radius:8px;border:1.5px dashed var(--blue-mid);background:var(--blue-light);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--blue-soft);flex-shrink:0;transition:all .15s}
+.img-add:hover{border-color:var(--blue);color:var(--blue);background:#E4ECFF}
+.img-thumb{position:relative;width:72px;height:72px;border-radius:8px;overflow:hidden;border:1.5px solid var(--g200);flex-shrink:0;background:var(--g100);animation:thumbIn .18s ease}
+@keyframes thumbIn{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
+.img-thumb img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .18s}
+.img-thumb img.loaded{opacity:1}
+.img-thumb.loading::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--g100) 25%,var(--g200) 50%,var(--g100) 75%);background-size:200% 100%;animation:shimmer .9s infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.img-rm{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.55);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;transition:background .15s}
+.img-rm:hover{background:rgba(220,38,38,.9)}
+
+/* options */
+.opts{display:flex;flex-direction:column;gap:20px}
+.opt-card{background:var(--white);border:1px solid var(--g200);border-radius:var(--rl);padding:18px 22px;box-shadow:var(--sh)}
+.opt-label{font-size:11px;font-weight:600;color:var(--g600);margin-bottom:12px;text-transform:uppercase;letter-spacing:.05em}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:7px 16px;border-radius:100px;border:1.5px solid var(--g200);background:var(--white);font-size:13px;font-weight:500;color:var(--g600);cursor:pointer;transition:all .15s;font-family:'Noto Sans SC',sans-serif;user-select:none}
+.chip:hover{border-color:var(--blue-soft);color:var(--blue);background:var(--blue-light)}
+.chip.on{border-color:var(--blue);background:var(--blue);color:white;box-shadow:0 2px 10px rgba(42,91,240,.28)}
+.tcs{display:flex;gap:10px;flex-wrap:wrap}
+.tc{display:flex;align-items:center;gap:8px;padding:7px 14px 7px 7px;border-radius:100px;border:1.5px solid var(--g200);background:var(--white);cursor:pointer;transition:all .15s;user-select:none}
+.tc:hover{border-color:var(--blue-soft);background:var(--blue-light)}
+.tc.on{border-color:var(--blue);background:var(--blue-light)}
+.tc-av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;flex-shrink:0}
+.tc-name{font-size:13px;font-weight:500;color:var(--g800)}
+.tc.on .tc-name{color:var(--blue);font-weight:600}
+
+.btn-gen{width:100%;height:54px;border-radius:var(--r);border:none;background:var(--blue);color:white;font-size:15px;font-weight:600;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 20px rgba(42,91,240,.32);position:relative;overflow:hidden}
+.btn-gen::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.15) 50%,transparent 65%);transform:translateX(-100%)}
+.btn-gen:hover:not(:disabled)::after{transform:translateX(100%);transition:transform .55s ease}
+.btn-gen:hover:not(:disabled){background:var(--blue-deep);box-shadow:0 6px 28px rgba(42,91,240,.42);transform:translateY(-1px)}
+.btn-gen:active:not(:disabled){transform:translateY(0)}
+.btn-gen:disabled{background:var(--g50);color:var(--g400);box-shadow:none;cursor:not-allowed;border:1.5px dashed var(--g200)}
+
+/* ── VOICE PARAM BUTTON ── */
+.opt-card-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.opt-card-row .opt-label{margin-bottom:0}
+
+/* ── VIDEO TYPE TWO-TIER ── */
+.vtype-mode{display:flex;gap:6px;margin-bottom:12px}
+.vmode{display:flex;align-items:center;gap:6px;padding:6px 16px;border-radius:8px;border:1.5px solid var(--g200);background:var(--white);font-size:13px;font-weight:500;color:var(--g600);cursor:pointer;transition:all .15s;user-select:none;font-family:'Noto Sans SC',sans-serif}
+.vmode:hover{border-color:var(--blue-soft);color:var(--blue);background:var(--blue-light)}
+.vmode.on{border-color:var(--blue);background:var(--blue);color:white;box-shadow:0 2px 10px rgba(42,91,240,.28)}
+.vmode.on svg{stroke:white !important}
+.vtype-chips{margin-top:0}
+.voice-param-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:7px;border:1.5px solid var(--g200);background:var(--white);font-size:11px;font-weight:600;color:var(--g600);cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all .15s}
+.voice-param-btn:hover{border-color:var(--blue-soft);color:var(--blue);background:var(--blue-light)}
+.voice-param-btn.active{border-color:var(--blue);color:var(--blue);background:var(--blue-light)}
+
+/* ── VOICE PANEL OVERLAY ── */
+.vp-overlay{display:none;position:fixed;inset:0;background:rgba(20,30,70,.22);backdrop-filter:blur(2px);z-index:500}
+.vp-overlay.show{display:block}
+
+/* ── VOICE PANEL ── */
+.vp-panel{position:fixed;top:0;right:0;bottom:0;width:340px;max-width:100vw;background:var(--white);box-shadow:-6px 0 40px rgba(20,30,70,.14);z-index:501;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.vp-panel.open{transform:translateX(0)}
+
+.vp-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--g100);flex-shrink:0;background:var(--blue)}
+.vp-hdr-left{display:flex;align-items:center;gap:8px}
+.vp-hdr-icon{width:26px;height:26px;background:rgba(255,255,255,.18);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.vp-hdr-title{font-size:14px;font-weight:700;color:white}
+.vp-close{width:28px;height:28px;border-radius:7px;border:none;background:rgba(255,255,255,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;color:white;transition:background .15s}
+.vp-close:hover{background:rgba(255,255,255,.28)}
+
+.vp-body{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:4px}
+
+.vp-section-label{font-size:11px;font-weight:700;color:var(--g600);text-transform:uppercase;letter-spacing:.05em;margin:8px 0 4px;display:flex;align-items:baseline;gap:8px}
+.vp-section-sub{font-size:10px;color:var(--g400);font-weight:400;text-transform:none;letter-spacing:0}
+
+.vp-item{padding:10px 0;border-bottom:1px solid var(--g100)}
+.vp-item:last-child{border-bottom:none}
+.vp-item-compact{padding:8px 0}
+
+.vp-item-row{display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.vp-item-name{font-size:12px;font-weight:600;color:var(--g800);flex:1}
+.vp-item-tag{font-size:10px;color:var(--g400);background:var(--g100);padding:2px 6px;border-radius:4px}
+.vp-num{width:58px;border:1px solid var(--g200);border-radius:6px;padding:3px 7px;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--g800);outline:none;text-align:right;transition:border-color .15s}
+.vp-num:focus{border-color:var(--blue)}
+.vp-num-sm{width:48px}
+.vp-reset{width:22px;height:22px;border-radius:5px;border:none;background:var(--g100);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--g400);flex-shrink:0;transition:all .15s}
+.vp-reset:hover{background:var(--blue-light);color:var(--blue)}
+
+.vp-slider{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--g200);border-radius:4px;outline:none;cursor:pointer;margin-bottom:5px}
+.vp-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--blue);border:2.5px solid white;box-shadow:0 1px 4px rgba(42,91,240,.3);cursor:pointer;transition:transform .15s}
+.vp-slider::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.vp-slider-blue{background:linear-gradient(to right,var(--blue) 0%,var(--blue) 21%,var(--g200) 21%)}
+.vp-hint{font-size:10px;color:var(--g400);line-height:1.5}
+
+.vp-footer{display:flex;gap:8px;padding:14px 20px;border-top:1px solid var(--g100);flex-shrink:0}
+.vp-btn-reset-all{flex:1;height:40px;border-radius:8px;border:1.5px solid var(--g200);background:var(--white);font-size:12px;font-weight:500;color:var(--g600);cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all .15s}
+.vp-btn-reset-all:hover{border-color:var(--g400);color:var(--g800)}
+.vp-btn-confirm{flex:2;height:40px;border-radius:8px;border:none;background:var(--blue);color:white;font-size:12px;font-weight:600;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .15s;box-shadow:0 2px 10px rgba(42,91,240,.25)}
+.vp-btn-confirm:hover{background:var(--blue-deep)}
+
+/* ── 试听区 ── */
+.vp-preview{margin:0 20px 0;border:1.5px solid var(--g200);border-radius:12px;overflow:hidden;transition:border-color .2s}
+.vp-preview.playing{border-color:var(--blue);box-shadow:0 0 0 3px rgba(42,91,240,.08)}
+.vp-preview.dirty{border-color:var(--blue-mid)}
+.vp-preview-top{display:flex;align-items:center;gap:10px;padding:11px 14px}
+.vp-preview-play{width:34px;height:34px;border-radius:50%;border:none;background:var(--blue);color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;box-shadow:0 2px 8px rgba(42,91,240,.3)}
+.vp-preview-play:hover{background:var(--blue-deep);transform:scale(1.06)}
+.vp-preview-play.loading{background:var(--blue-soft);cursor:wait;animation:pulse .8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.vp-preview-info{flex:1;min-width:0}
+.vp-preview-label{font-size:12px;font-weight:600;color:var(--g800);margin-bottom:2px}
+.vp-preview-status{font-size:10px;color:var(--g400)}
+.vp-preview.dirty .vp-preview-status{color:var(--blue)}
+.vp-preview.playing .vp-preview-status{color:#16a34a}
+.vp-preview-waveform{height:28px;padding:0 14px 10px;display:flex;align-items:center;gap:2px}
+.vp-wave-bar{width:3px;border-radius:2px;background:var(--g200);transition:height .1s,background .2s}
+.vp-preview.playing .vp-wave-bar{background:var(--blue)}
+
+/* ══ LOADING — THREE PHASES ══ */
+.loading{display:none;position:fixed;inset:0;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);z-index:200;flex-direction:column;align-items:center;justify-content:center}
+.loading.show{display:flex}
+
+.ld-phase{display:none;flex-direction:column;align-items:center;gap:24px;animation:phaseIn .38s cubic-bezier(.4,0,.2,1) both}
+.ld-phase.active{display:flex}
+@keyframes phaseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Phase 1: Recognition ring ── */
+.ld-ring{width:80px;height:80px;position:relative}
+.ld-ring svg{width:80px;height:80px;transform:rotate(-90deg)}
+.ld-ring circle{fill:none;stroke-width:5;stroke-linecap:round}
+.ring-bg{stroke:var(--g100)}
+.ring-fill{stroke:var(--blue);stroke-dasharray:182;stroke-dashoffset:182}
+.ld-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:var(--blue);font-family:'DM Sans',sans-serif}
+.ld-title{font-size:16px;font-weight:700;color:var(--g800);text-align:center}
+.ld-subtitle{font-size:12px;color:var(--g400);text-align:center;margin-top:4px}
+.ld-bar-wrap{width:240px;height:3px;background:var(--g100);border-radius:3px;overflow:hidden}
+.ld-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--blue-soft));width:0%;transition:width .35s ease}
+.ld-steps{display:flex;flex-direction:column;gap:8px;width:220px}
+.ld-step{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--g400);transition:color .2s}
+.st-dot{width:6px;height:6px;border-radius:50%;background:var(--g200);flex-shrink:0;transition:background .2s,transform .2s}
+.st-check{display:none;width:14px;height:14px;flex-shrink:0}
+.ld-step.active{color:var(--g800);font-weight:500}
+.ld-step.active .st-dot{background:var(--blue);transform:scale(1.4)}
+.ld-step.done{color:#22c55e}
+.ld-step.done .st-dot{display:none}
+.ld-step.done .st-check{display:block}
+
+/* ── Phase 2: Prep pipeline card ── */
+.prep-card{background:var(--white);border:1px solid var(--g200);border-radius:20px;box-shadow:0 12px 40px rgba(42,91,240,.12);width:310px;overflow:hidden}
+.prep-header{background:linear-gradient(135deg,var(--blue),var(--blue-soft));padding:18px 22px 14px;color:white}
+.prep-header-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.prep-header-sub{font-size:11px;opacity:.75}
+.prep-tasks{display:flex;flex-direction:column}
+.prep-task{display:flex;align-items:center;gap:13px;padding:12px 20px;border-bottom:1px solid var(--g100);transition:background .2s}
+.prep-task:last-child{border-bottom:none}
+.prep-task.pt-active{background:var(--blue-light)}
+.prep-task.pt-done{background:#f0fdf4}
+.prep-task-ico{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.prep-task-ico svg{width:15px;height:15px}
+.prep-task-txt{flex:1}
+.prep-task-name{font-size:13px;font-weight:600;color:var(--g800);margin-bottom:1px}
+.prep-task.pt-active .prep-task-name{color:var(--blue)}
+.prep-task.pt-done .prep-task-name{color:#16a34a}
+.prep-task-status{font-size:10px;color:var(--g400)}
+.prep-task.pt-active .prep-task-status{color:var(--blue);opacity:.8}
+.prep-task.pt-done .prep-task-status{color:#22c55e}
+.prep-task-state{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.pt-spinner{width:16px;height:16px;border:2px solid var(--blue-mid);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;display:none}
+.prep-task.pt-active .pt-spinner{display:block}
+.pt-check-ico{display:none}
+.prep-task.pt-done .pt-check-ico{display:block}
+.pt-idle{width:8px;height:8px;border-radius:50%;background:var(--g200)}
+.prep-task.pt-active .pt-idle,.prep-task.pt-done .pt-idle{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Phase 3: Director layer ── */
+.dir-card{background:var(--white);border:1px solid var(--g200);border-radius:20px;box-shadow:0 12px 40px rgba(42,91,240,.12);width:310px;overflow:hidden}
+.dir-header{background:linear-gradient(135deg,#6366F1,#818CF8);padding:18px 22px 14px;color:white}
+.dir-header-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.dir-header-sub{font-size:11px;opacity:.75}
+.dir-body{padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+.dir-track{display:flex;align-items:center;gap:12px}
+.dir-track-label{font-size:11px;font-weight:600;color:var(--g600);width:44px;flex-shrink:0}
+.dir-track-bar{flex:1;height:8px;background:var(--g100);border-radius:4px;overflow:hidden;position:relative}
+.dir-track-fill{height:100%;border-radius:4px;width:0%;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.dir-track-pct{font-size:10px;color:var(--g400);font-family:'DM Sans',sans-serif;width:28px;text-align:right;flex-shrink:0}
+.dir-status{text-align:center;font-size:12px;color:var(--g400);padding-top:2px}
+
+/* RESULT PAGE */
+.res-wrap{max-width:1060px;margin:0 auto;padding:20px 24px 60px;display:flex;flex-direction:column;gap:16px}
+.res-top{display:flex;align-items:center;justify-content:space-between;padding:4px 0}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--g600);cursor:pointer;border:none;background:none;font-family:'Noto Sans SC',sans-serif;transition:all .15s;padding:6px 10px;border-radius:8px;margin-left:-10px}
+.back-btn:hover{color:var(--blue);background:var(--blue-light)}
+.res-right{display:flex;align-items:center;gap:10px}
+.res-meta{display:flex;gap:6px}
+.mbadge{padding:4px 11px;border-radius:100px;font-size:11px;font-weight:600}
+.mbadge-type{background:var(--blue-light);color:var(--blue)}
+.mbadge-tc{background:var(--g100);color:var(--g600)}
+.btn-export-top{display:flex;align-items:center;gap:6px;padding:8px 18px;border-radius:9px;border:none;background:var(--blue);color:white;font-size:13px;font-weight:600;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .18s;box-shadow:0 2px 12px rgba(42,91,240,.28)}
+.btn-export-top:hover{background:var(--blue-deep);transform:translateY(-1px);box-shadow:0 4px 18px rgba(42,91,240,.36)}
+.btn-export-top svg{flex-shrink:0;width:13px;height:13px}
+
+/* video */
+.vp{background:#0d1117;border-radius:var(--rl);overflow:hidden;box-shadow:var(--shl);position:relative;aspect-ratio:16/9}
+.vp-content{position:absolute;inset:0;background:linear-gradient(135deg,#0d1529 0%,#1a2a5e 55%,#0d1529 100%);display:flex;align-items:center;justify-content:center}
+.vp-slide{width:74%;aspect-ratio:16/9;background:white;border-radius:6px;padding:24px 30px;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:10px}
+.slide-top{display:flex;align-items:center;gap:7px;padding-bottom:8px;border-bottom:2px solid var(--blue)}
+.slide-dot{width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.slide-ttl{font-size:12px;font-weight:700;color:var(--blue)}
+.slide-body{display:flex;flex-direction:column;gap:7px}
+.slide-ln{height:7px;border-radius:4px;background:var(--g100)}
+.slide-fml{margin-top:2px;background:var(--blue-light);border-radius:5px;height:24px}
+.vc{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.75));padding:20px 18px 13px;display:flex;flex-direction:column;gap:8px}
+.prog{width:100%;height:3px;background:rgba(255,255,255,.22);border-radius:3px;cursor:pointer;position:relative}
+.prog-fill{height:100%;border-radius:3px;background:var(--blue);position:relative}
+.prog-fill::after{content:'';position:absolute;right:-4px;top:-4px;width:10px;height:10px;border-radius:50%;background:white;box-shadow:0 0 0 2px var(--blue)}
+.vctrl{display:flex;align-items:center;gap:12px}
+.cbtn{width:28px;height:28px;border-radius:50%;border:none;background:rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s}
+.cbtn:hover{background:rgba(255,255,255,.22)}
+.cbtn svg{width:13px;height:13px;fill:white}
+.cbtn.play{width:34px;height:34px;background:var(--blue)}.cbtn.play:hover{background:var(--blue-deep)}
+.vtime{font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.7);margin-left:2px}
+.vright{margin-left:auto;display:flex;align-items:center;gap:8px}
+.vqlbl{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;color:rgba(255,255,255,.55)}
+.ex-btn{padding:4px 11px;border-radius:6px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);color:white;font-size:11px;font-weight:600;cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:background .15s}
+.ex-btn:hover{background:rgba(255,255,255,.2)}
+
+/* timeline */
+.tl{background:var(--white);border:1px solid var(--g200);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh)}
+.tl-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--g100)}
+.tl-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px}
+.tl-icon{width:20px;height:20px;background:var(--blue-light);border-radius:5px;display:flex;align-items:center;justify-content:center}
+.tl-icon svg{width:11px;height:11px}
+.tl-dur{font-size:12px;font-family:'DM Sans',sans-serif;color:var(--g400)}
+.tl-body{padding:14px 18px 18px;display:flex;flex-direction:column;gap:9px}
+.ruler{display:flex;margin-left:84px;margin-bottom:2px}
+.ruler-inner{flex:1;position:relative;height:18px}
+.rm{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%)}
+.rm-tick{width:1px;height:5px;background:var(--g200)}
+.rm-lbl{font-size:9px;font-family:'DM Sans',sans-serif;color:var(--g400);margin-top:2px}
+.tracks{display:flex;flex-direction:column;gap:9px;position:relative}
+.ph-line{position:absolute;top:0;bottom:0;width:1.5px;background:var(--blue);z-index:5;pointer-events:none;left:calc(84px + 10px)}
+.ph-line::before{content:'';position:absolute;top:-5px;left:-4.5px;width:10px;height:10px;background:var(--blue);border-radius:50%;box-shadow:0 0 0 3px rgba(42,91,240,.18)}
+.track{display:flex;align-items:center;gap:10px;height:38px}
+.tk-lbl{width:74px;flex-shrink:0;display:flex;align-items:center;gap:6px}
+.tk-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tk-icon svg{width:12px;height:12px;fill:white}
+.tk-name{font-size:11px;font-weight:600;color:var(--g600);white-space:nowrap}
+.tk-tl{flex:1;height:34px;background:var(--g50);border-radius:7px;border:1px solid var(--g100);position:relative;overflow:hidden}
+.seg{position:absolute;top:4px;bottom:4px;border-radius:4px;display:flex;align-items:center;padding:0 7px;font-size:9px;font-weight:600;color:white;white-space:nowrap;overflow:hidden}
+.wave{position:absolute;inset:4px;border-radius:4px;background:linear-gradient(90deg,#2A5BF0,#6B8EF5);display:flex;align-items:center;padding:0 8px;gap:2px;overflow:hidden}
+.wb{flex-shrink:0;width:2px;background:rgba(255,255,255,.45);border-radius:1px}
+
+/* EXPORT MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(20,30,70,.42);backdrop-filter:blur(4px);z-index:300;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal{background:var(--white);border-radius:20px;width:420px;max-width:calc(100vw - 32px);box-shadow:0 24px 80px rgba(20,30,70,.22);overflow:hidden;animation:mIn .22s cubic-bezier(.34,1.56,.64,1)}
+@keyframes mIn{from{transform:scale(.92) translateY(12px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.m-hdr{padding:20px 22px 0;display:flex;align-items:center;justify-content:space-between}
+.m-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.m-title-ico{width:26px;height:26px;background:var(--blue);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.m-title-ico svg{width:13px;height:13px}
+.m-close{width:26px;height:26px;border-radius:7px;border:none;background:var(--g100);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--g600);font-size:14px;transition:background .15s}
+.m-close:hover{background:var(--g200)}
+.m-body{padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+.m-info{display:flex;gap:8px}
+.m-ii{flex:1;background:var(--g50);border:1px solid var(--g100);border-radius:9px;padding:10px 12px}
+.m-il{font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.m-iv{font-size:12px;font-weight:600;color:var(--g800)}
+.m-sl{font-size:11px;font-weight:600;color:var(--g600);margin-bottom:6px}
+.fmt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.fmt-card{border:1.5px solid var(--g200);border-radius:9px;padding:10px 12px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:9px;background:var(--white)}
+.fmt-card:hover{border-color:var(--blue-soft);background:var(--blue-light)}
+.fmt-card.on{border-color:var(--blue);background:var(--blue-light)}
+.fmt-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;flex-shrink:0}
+.fmt-name{font-size:12px;font-weight:600;color:var(--g800)}.fmt-card.on .fmt-name{color:var(--blue)}
+.fmt-desc{font-size:10px;color:var(--g400)}
+.q-row{display:flex;gap:7px}
+.q-opt{flex:1;text-align:center;padding:7px;border-radius:7px;border:1.5px solid var(--g200);font-size:11px;font-weight:600;color:var(--g600);cursor:pointer;transition:all .15s;background:var(--white)}
+.q-opt:hover{border-color:var(--blue-soft);color:var(--blue);background:var(--blue-light)}
+.q-opt.on{border-color:var(--blue);background:var(--blue);color:white}
+.m-foot{padding:0 22px 20px;display:flex;gap:8px}
+.btn-cancel{flex:1;height:42px;border-radius:9px;border:1.5px solid var(--g200);background:var(--white);font-size:13px;font-weight:500;color:var(--g600);cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all .15s}
+.btn-cancel:hover{border-color:var(--g400);color:var(--g800)}
+.btn-export{flex:2;height:42px;border-radius:9px;border:none;background:var(--blue);color:white;font-size:13px;font-weight:600;font-family:'Noto Sans SC',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .18s;box-shadow:0 3px 12px rgba(42,91,240,.28)}
+.btn-export:hover{background:var(--blue-deep);transform:translateY(-1px)}
+.btn-export svg,.btn-dl svg{width:13px;height:13px}
+.ex-prog{display:none;flex-direction:column;align-items:center;padding:30px 22px;gap:14px}
+.ex-prog.show{display:flex}
+.ex-ring{width:62px;height:62px;position:relative}
+.ex-ring svg{width:62px;height:62px;transform:rotate(-90deg)}
+.ex-ring circle{fill:none;stroke-width:5;stroke-linecap:round}
+.er-bg{stroke:var(--g100)}.er-fill{stroke:var(--blue);stroke-dasharray:163;stroke-dashoffset:163;transition:stroke-dashoffset .3s}
+.ex-pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--blue);font-family:'DM Sans',sans-serif}
+.ex-status{font-size:14px;font-weight:600;color:var(--g800)}
+.ex-sub{font-size:11px;color:var(--g400);text-align:center}
+.ex-done{display:none;flex-direction:column;align-items:center;padding:30px 22px;gap:12px}
+.ex-done.show{display:flex}
+.done-ico{width:52px;height:52px;background:linear-gradient(135deg,#10B981,#34D399);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(16,185,129,.28);animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(0)}to{transform:scale(1)}}
+.done-ico svg{width:24px;height:24px;fill:white}
+.done-title{font-size:15px;font-weight:700;color:var(--g800)}
+.done-sub{font-size:11px;color:var(--g400)}
+.done-file{background:var(--g50);border:1px solid var(--g200);border-radius:8px;padding:9px 14px;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--g600);display:flex;align-items:center;gap:7px;width:100%}
+.done-file-ico{width:18px;height:18px;background:var(--blue);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.done-file-ico svg{width:10px;height:10px;fill:white}
+.btn-dl{width:100%;height:42px;border-radius:9px;border:none;background:var(--blue);color:white;font-size:13px;font-weight:600;font-family:'Noto Sans SC',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:background .18s;box-shadow:0 3px 12px rgba(42,91,240,.28)}
+.btn-dl:hover{background:var(--blue-deep)}
+
+/* ── EDITOR PANEL ── */
+.ed-panel{background:var(--white);border:1px solid var(--g200);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh)}
+.ed-panel-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--g100);background:var(--white)}
+.ed-panel-title{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--g800)}
+.ed-panel-hint{font-size:11px;color:var(--g400);background:var(--g50);padding:3px 10px;border-radius:6px;border:1px solid var(--g100)}
+
+.ed-layout{display:flex;min-height:420px}
+
+/* ── Left beat tree ── */
+.ed-tree{width:186px;flex-shrink:0;border-right:1px solid var(--g100);display:flex;flex-direction:column;background:var(--g50)}
+.tree-section-label{font-size:10px;font-weight:700;color:var(--g600);text-transform:uppercase;letter-spacing:.07em;padding:12px 14px 8px;border-bottom:1px solid var(--g100)}
+.tree-node{cursor:pointer;position:relative;transition:background .15s}
+.tree-node:hover .tree-node-inner{background:var(--white)}
+.tree-node.active .tree-node-inner{background:var(--white)}
+.tree-node-bar{position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:0 2px 2px 0;background:transparent;transition:background .15s}
+.tree-node.active .tree-node-bar{background:var(--blue)}
+.tree-node-inner{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 14px;margin:2px 8px 2px 0;border-radius:0 8px 8px 0;transition:background .15s}
+.tree-beat-no{font-size:11px;font-weight:800;color:var(--g400);font-family:'DM Sans',sans-serif;width:20px;flex-shrink:0;transition:color .15s}
+.tree-node.active .tree-beat-no{color:var(--blue)}
+.tree-node-info{flex:1;min-width:0}
+.tree-node-name{font-size:12px;font-weight:600;color:var(--g800);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.tree-node.active .tree-node-name{color:var(--blue)}
+.tree-node-meta{display:flex;align-items:center;gap:4px}
+.tree-dur{font-size:10px;color:var(--g400);font-family:'DM Sans',sans-serif;margin-right:2px}
+.tree-chip{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px}
+.tree-chip-script{background:#EEF2FF;color:#2A5BF0}
+.tree-chip-board{background:#FEF3C7;color:#92400E}
+.tree-chip-mark{background:#D1FAE5;color:#065F46}
+.tree-total{padding:10px 14px;border-top:1px solid var(--g100);margin-top:auto;font-size:11px;color:var(--g400);display:flex;align-items:center;gap:5px;font-family:'DM Sans',sans-serif}
+
+/* ── Right detail ── */
+.ed-detail{flex:1;display:flex;flex-direction:column;min-width:0}
+.beat-goal-bar{display:flex;align-items:baseline;gap:8px;padding:9px 16px;background:#F0F4FF;border-bottom:1px solid var(--blue-mid)}
+.beat-goal-label{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;flex-shrink:0}
+.beat-goal-text{font-size:11px;color:var(--g800);line-height:1.5}
+.ed-tabs{display:flex;border-bottom:1px solid var(--g100);background:var(--g50)}
+.ed-tab{display:flex;align-items:center;gap:5px;padding:10px 14px;font-size:11px;font-weight:500;color:var(--g400);border:none;background:none;cursor:pointer;font-family:'Noto Sans SC',sans-serif;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s,border-color .15s}
+.ed-tab:hover{color:var(--blue)}
+.ed-tab.active{color:var(--blue);font-weight:600;border-bottom-color:var(--blue)}
+.ed-body{display:none;flex-direction:column;flex:1;overflow:hidden}
+.ed-body.active{display:flex}
+
+/* ── 逐字稿 tab ── */
+.script-toolbar{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:1px solid var(--g100);background:var(--white);flex-shrink:0}
+.script-toolbar-tip{font-size:10px;color:var(--g400)}
+.script-wc{font-size:11px;color:var(--g400);font-family:'DM Sans',sans-serif}
+.narr-list{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.narr-sent{border:1px solid var(--g200);border-radius:9px;overflow:hidden;background:var(--white);transition:border-color .15s}
+.narr-sent:focus-within{border-color:var(--blue);box-shadow:0 0 0 2px rgba(42,91,240,.07)}
+.narr-sent-hdr{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--g50);border-bottom:1px solid var(--g100)}
+.narr-idx{font-size:10px;font-weight:700;color:var(--g400);font-family:'DM Sans',sans-serif}
+.narr-sec{font-size:10px;color:var(--g400);font-family:'DM Sans',sans-serif;margin-left:auto}
+.narr-del{width:20px;height:20px;border-radius:5px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--g400);transition:all .15s}
+.narr-del:hover{background:#fef2f2;color:#ef4444}
+.narr-text{width:100%;border:none;outline:none;padding:9px 12px;font-size:12px;line-height:1.7;color:var(--g800);font-family:'Noto Sans SC',sans-serif;resize:none;background:transparent}
+.narr-add-btn{margin:4px 14px 12px;display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;border:1.5px dashed var(--blue-mid);background:var(--blue-light);color:var(--blue);font-size:12px;font-weight:500;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .15s;flex-shrink:0}
+.narr-add-btn:hover{border-color:var(--blue);background:#dce8ff}
+
+/* ── 板书 tab ── */
+.board-empty-tip{padding:32px 0;text-align:center;font-size:12px;color:var(--g400);display:flex;flex-direction:column;align-items:center;gap:8px}
+.board-empty-ico{width:36px;height:36px;background:var(--g100);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.board-list{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.board-item{display:flex;align-items:flex-start;gap:10px;border:1px solid var(--g200);border-radius:9px;padding:10px 12px;background:var(--white);transition:border-color .15s}
+.board-item:focus-within{border-color:var(--blue-soft)}
+.board-item-left{flex:1;display:flex;flex-direction:column;gap:6px}
+.board-content{width:100%;border:none;outline:none;font-size:12px;color:var(--g800);font-family:'Noto Sans SC',sans-serif;resize:none;background:transparent;border-bottom:1.5px solid transparent;transition:border-color .15s;padding-bottom:1px}
+.board-content:focus{border-bottom-color:var(--blue)}
+.board-item-right{display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.board-field-label{font-size:10px;font-weight:600;color:var(--g400);letter-spacing:.02em;margin-bottom:2px}
+.board-trigger-row{display:flex;align-items:center;gap:5px}
+.board-trigger-prefix{font-size:11px;color:var(--g600);font-family:'Noto Sans SC',sans-serif}
+.board-trigger-input{width:44px;border:1px solid var(--g200);border-radius:6px;padding:4px 8px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--g800);outline:none;text-align:center;transition:border-color .15s}
+.board-trigger-input:focus{border-color:var(--blue)}
+
+/* ── 圈划 tab ── */
+.emph-list{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:10px}
+.emph-card{border:1px solid var(--g200);border-radius:10px;overflow:hidden;background:var(--white)}
+.emph-card-hdr{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--g50);border-bottom:1px solid var(--g100)}
+.emph-card-idx{font-size:10px;font-weight:800;color:var(--g400);font-family:'DM Sans',sans-serif;width:18px}
+.emph-word-input{flex:1;border:none;outline:none;font-size:12px;font-weight:600;color:var(--g800);font-family:'Noto Sans SC',sans-serif;background:transparent;border-bottom:1.5px solid transparent;transition:border-color .15s}
+.emph-word-input:focus{border-bottom-color:var(--blue)}
+.emph-card-body{display:flex;flex-direction:column}
+.emph-row{padding:10px 12px;border-bottom:1px solid var(--g100)}
+.emph-row:last-child{border-bottom:none}
+.emph-row-split{display:flex;border-bottom:1px solid var(--g100)}
+.emph-field{flex:1;padding:10px 12px;border-right:1px solid var(--g100)}
+.emph-field:last-child{border-right:none}
+.emph-field-label{font-size:10px;font-weight:600;color:var(--g400);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.emph-form-row{display:flex;gap:4px;flex-wrap:wrap}
+.ef-opt{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 6px;border-radius:6px;border:1.5px solid var(--g200);cursor:pointer;font-size:9px;font-weight:600;color:var(--g600);transition:all .15s;background:var(--white);min-width:36px}
+.ef-opt:hover{border-color:var(--blue-soft);color:var(--blue);background:var(--blue-light)}
+.ef-opt.active{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
+.emph-src-row{display:flex;gap:4px}
+.esrc{padding:4px 8px;border-radius:5px;border:1.5px solid var(--g200);font-size:10px;font-weight:600;color:var(--g600);cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all .15s}
+.esrc:hover{border-color:var(--blue-soft);color:var(--blue)}
+.esrc.active{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
+
+/* Trigger stack: sentence + keyword */
+.emph-trigger-stack{display:flex;flex-direction:column;gap:6px}
+.emph-trigger-row{display:flex;align-items:center;gap:4px}
+.emph-trigger-kw-row{display:flex;align-items:center;gap:4px}
+.emph-kw-prefix{font-size:11px;color:var(--g600);font-family:'Noto Sans SC',sans-serif;white-space:nowrap}
+.emph-kw-input{flex:1;min-width:0;border:1px solid var(--g200);border-radius:6px;padding:4px 8px;font-size:12px;font-family:'Noto Sans SC',sans-serif;color:var(--g800);outline:none;transition:border-color .15s;background:var(--white)}
+.emph-kw-input:focus{border-color:var(--blue)}
+
+/* ── regen footer ── */
+.ed-footer{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-top:1px solid var(--g100);background:var(--g50);flex-shrink:0}
+.ed-footer-hint{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--g400)}
+.btn-regen{display:flex;align-items:center;gap:7px;padding:9px 20px;border-radius:9px;border:none;background:var(--blue);color:white;font-size:13px;font-weight:600;font-family:'Noto Sans SC',sans-serif;cursor:pointer;transition:all .2s;box-shadow:0 3px 12px rgba(42,91,240,.28)}
+.btn-regen:hover{background:var(--blue-deep);transform:translateY(-1px);box-shadow:0 5px 18px rgba(42,91,240,.36)}
+.btn-regen:active{transform:translateY(0)}
+
+/* HISTORY BUTTON */
+.hist-btn{display:flex;align-items:center;gap:6px;padding:6px 13px;border-radius:8px;border:1.5px solid var(--g200);background:var(--white);font-size:12px;font-weight:500;color:var(--g600);cursor:pointer;font-family:'Noto Sans SC',sans-serif;transition:all .15s;position:relative}
+.hist-btn:hover{border-color:var(--blue-soft);color:var(--blue);background:var(--blue-light)}
+.hist-badge{min-width:17px;height:17px;border-radius:100px;background:var(--blue);color:white;font-size:10px;font-weight:700;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;justify-content:center;padding:0 4px;margin-left:1px}
+
+/* HISTORY DRAWER */
+.hist-overlay{display:none;position:fixed;inset:0;background:rgba(20,30,70,.3);backdrop-filter:blur(3px);z-index:400}
+.hist-overlay.show{display:block}
+.hist-drawer{position:fixed;top:0;right:0;bottom:0;width:360px;max-width:100vw;background:var(--white);box-shadow:-8px 0 48px rgba(20,30,70,.14);z-index:401;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.hist-drawer.open{transform:translateX(0)}
+.hist-drawer-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--g100);flex-shrink:0}
+.hist-drawer-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px}
+.hist-close{width:28px;height:28px;border-radius:8px;border:none;background:var(--g100);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--g600);font-size:14px;transition:background .15s}
+.hist-close:hover{background:var(--g200)}
+.hist-body{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.hist-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--g400);padding:40px 0}
+.hist-empty-ico{width:48px;height:48px;border-radius:14px;background:var(--g100);display:flex;align-items:center;justify-content:center}
+.hist-empty p{font-size:12px}
+.hist-item{border:1px solid var(--g200);border-radius:12px;padding:13px 15px;cursor:pointer;transition:all .18s;background:var(--white)}
+.hist-item:hover{border-color:var(--blue-soft);box-shadow:0 2px 12px rgba(42,91,240,.1);transform:translateY(-1px)}
+.hist-item-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.hist-item-text{font-size:12px;font-weight:600;color:var(--g800);line-height:1.5;flex:1;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.hist-item-time{font-size:10px;color:var(--g400);font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0;margin-top:1px}
+.hist-item-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.hi-badge{padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600}
+.hi-type{background:var(--blue-light);color:var(--blue)}
+.hi-tc{background:var(--g100);color:var(--g600)}
+.hi-dur{background:#f0fdf4;color:#16a34a;font-family:'DM Sans',sans-serif}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-icon"><svg viewBox="0 0 16 16"><path d="M3 2h4v4H3zM9 2h4v4H9zM3 9l2 3 2-3H3zM9 10l2-2 2 2-2 2-2-2z"/></svg></div>
+  <span class="hdr-title">上岸仓生课系统</span>
+  <span class="hdr-sub">AI 视频生成</span>
+  <div style="flex:1"></div>
+  <button class="hist-btn" id="histBtn" onclick="openHistory()">
+    <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    生成记录
+    <span class="hist-badge" id="histBadge" style="display:none">0</span>
+  </button>
+</header>
+<!-- HISTORY DRAWER -->
+<div class="hist-overlay" id="histOverlay" onclick="closeHistory()"></div>
+<div class="hist-drawer" id="histDrawer">
+  <div class="hist-drawer-hdr">
+    <div class="hist-drawer-title">
+      <svg viewBox="0 0 16 16" fill="none" width="16" height="16"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      生成记录
+    </div>
+    <button class="hist-close" onclick="closeHistory()">✕</button>
+  </div>
+  <div class="hist-body" id="histBody">
+    <div class="hist-empty" id="histEmpty">
+      <div class="hist-empty-ico">
+        <svg viewBox="0 0 24 24" fill="none" width="22" height="22"><rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 9h8M8 12h5M8 15h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <p>还没有生成记录</p>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING — THREE PHASES -->
+<div class="loading" id="loading">
+
+  <!-- ── Phase 1: 识别层 ── -->
+  <div class="ld-phase" id="ldPhase1">
+    <div class="ld-ring">
+      <svg viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="29"/><circle class="ring-fill" id="ldRing" cx="40" cy="40" r="29"/></svg>
+      <div class="ld-pct" id="ldPct">0%</div>
+    </div>
+    <div style="text-align:center">
+      <div class="ld-title" id="ldTitle">映射标签中…</div>
+      <div class="ld-subtitle" id="ldSubtitle">识别题型与知识点标签</div>
+    </div>
+    <div class="ld-bar-wrap"><div class="ld-bar-fill" id="ldBarFill"></div></div>
+    <div class="ld-steps">
+      <div class="ld-step" id="ls0">
+        <div class="st-dot"></div>
+        <svg class="st-check" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-7" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        映射标签中
+      </div>
+      <div class="ld-step" id="ls1">
+        <div class="st-dot"></div>
+        <svg class="st-check" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-7" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        定位母题中
+      </div>
+      <div class="ld-step" id="ls2">
+        <div class="st-dot"></div>
+        <svg class="st-check" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-7" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        提取解析逻辑中
+      </div>
+      <div class="ld-step" id="ls3">
+        <div class="st-dot"></div>
+        <svg class="st-check" viewBox="0 0 14 14" fill="none"><path d="M2 7l4 4 6-7" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        识别完成，进入备课
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Phase 2: 备课层 ── -->
+  <div class="ld-phase" id="ldPhase2">
+    <div style="text-align:center">
+      <div class="ld-title">备课中…</div>
+      <div class="ld-subtitle" style="margin-top:4px">正在为你生成完整课程资源</div>
+    </div>
+    <div class="prep-card">
+      <div class="prep-header">
+        <div class="prep-header-title">课程资源生成</div>
+        <div class="prep-header-sub">各轨道将依次完成</div>
+      </div>
+      <div class="prep-tasks">
+        <div class="prep-task" id="pt0">
+          <div class="prep-task-ico" style="background:linear-gradient(135deg,#6366F1,#818CF8)">
+            <svg viewBox="0 0 15 15" fill="none"><path d="M2 4h10M2 7h7M2 10h9M2 13h5" stroke="white" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="prep-task-txt">
+            <div class="prep-task-name">生成授课结构及逐字稿</div>
+            <div class="prep-task-status" id="pt0s">等待中</div>
+          </div>
+          <div class="prep-task-state"><div class="pt-idle"></div><div class="pt-spinner"></div>
+            <svg class="pt-check-ico" width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="#22c55e"/><path d="M5 9l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="prep-task" id="pt1">
+          <div class="prep-task-ico" style="background:linear-gradient(135deg,#2A5BF0,#6B8EF5)">
+            <svg viewBox="0 0 15 15" fill="none"><path d="M2 4h2v7H2zM5 2h2v11H5zM8 4h2v7H8zM11 5.5h2v4h-2z" fill="white"/></svg>
+          </div>
+          <div class="prep-task-txt">
+            <div class="prep-task-name">生成音频中</div>
+            <div class="prep-task-status" id="pt1s">等待中</div>
+          </div>
+          <div class="prep-task-state"><div class="pt-idle"></div><div class="pt-spinner"></div>
+            <svg class="pt-check-ico" width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="#22c55e"/><path d="M5 9l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="prep-task" id="pt2">
+          <div class="prep-task-ico" style="background:linear-gradient(135deg,#3B82F6,#60A5FA)">
+            <svg viewBox="0 0 15 15" fill="none"><rect x="1.5" y="2.5" width="12" height="8.5" rx="1.2" stroke="white" stroke-width="1.3"/><path d="M5 11v2M10 11v2M3.5 13h8" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="prep-task-txt">
+            <div class="prep-task-name">生成 PPT 中</div>
+            <div class="prep-task-status" id="pt2s">等待中</div>
+          </div>
+          <div class="prep-task-state"><div class="pt-idle"></div><div class="pt-spinner"></div>
+            <svg class="pt-check-ico" width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="#22c55e"/><path d="M5 9l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="prep-task" id="pt3">
+          <div class="prep-task-ico" style="background:linear-gradient(135deg,#F59E0B,#FBBF24)">
+            <svg viewBox="0 0 15 15" fill="none"><path d="M3 11l6-6 2 2-6 6H3v-2z" fill="white"/><path d="M9 3l1.5-1.5a1 1 0 011.5 1.5L10.5 4.5" stroke="white" stroke-width="1.2"/></svg>
+          </div>
+          <div class="prep-task-txt">
+            <div class="prep-task-name">生成手书中</div>
+            <div class="prep-task-status" id="pt3s">等待中</div>
+          </div>
+          <div class="prep-task-state"><div class="pt-idle"></div><div class="pt-spinner"></div>
+            <svg class="pt-check-ico" width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="#22c55e"/><path d="M5 9l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+        <div class="prep-task" id="pt4">
+          <div class="prep-task-ico" style="background:linear-gradient(135deg,#10B981,#34D399)">
+            <svg viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="5" stroke="white" stroke-width="1.3"/><circle cx="7.5" cy="7.5" r="2" fill="white"/></svg>
+          </div>
+          <div class="prep-task-txt">
+            <div class="prep-task-name">生成标记中</div>
+            <div class="prep-task-status" id="pt4s">等待中</div>
+          </div>
+          <div class="prep-task-state"><div class="pt-idle"></div><div class="pt-spinner"></div>
+            <svg class="pt-check-ico" width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="9" fill="#22c55e"/><path d="M5 9l3 3 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Phase 3: 导演层编排 ── -->
+  <div class="ld-phase" id="ldPhase3">
+    <div style="text-align:center">
+      <div class="ld-title">导演层编排中…</div>
+      <div class="ld-subtitle" style="margin-top:4px">对齐各轨道时间线，合成最终视频</div>
+    </div>
+    <div class="dir-card">
+      <div class="dir-header">
+        <div class="dir-header-title">时间线编排</div>
+        <div class="dir-header-sub">音频 · PPT · 手书 · 标记 四轨同步</div>
+      </div>
+      <div class="dir-body">
+        <div class="dir-track">
+          <div class="dir-track-label">音频轨</div>
+          <div class="dir-track-bar"><div class="dir-track-fill" id="df0" style="background:linear-gradient(90deg,#2A5BF0,#6B8EF5)"></div></div>
+          <div class="dir-track-pct" id="dp0">0%</div>
+        </div>
+        <div class="dir-track">
+          <div class="dir-track-label">PPT 轨</div>
+          <div class="dir-track-bar"><div class="dir-track-fill" id="df1" style="background:linear-gradient(90deg,#3B82F6,#60A5FA)"></div></div>
+          <div class="dir-track-pct" id="dp1">0%</div>
+        </div>
+        <div class="dir-track">
+          <div class="dir-track-label">手书轨</div>
+          <div class="dir-track-bar"><div class="dir-track-fill" id="df2" style="background:linear-gradient(90deg,#F59E0B,#FBBF24)"></div></div>
+          <div class="dir-track-pct" id="dp2">0%</div>
+        </div>
+        <div class="dir-track">
+          <div class="dir-track-label">标记轨</div>
+          <div class="dir-track-bar"><div class="dir-track-fill" id="df3" style="background:linear-gradient(90deg,#10B981,#34D399)"></div></div>
+          <div class="dir-track-pct" id="dp3">0%</div>
+        </div>
+        <div class="dir-status" id="dirStatus">正在校验轨道时间戳…</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- INPUT PAGE -->
+<div class="page active" id="inputPage">
+  <div class="in-wrap">
+    <div class="hero">
+      <div class="hero-eyebrow">
+        <svg viewBox="0 0 10 10" fill="none" width="10" height="10"><path d="M5 1l1.1 2.4L9 4l-2 1.9.5 2.7L5 7.4 2.5 8.6 3 5.9 1 4l2.9-.6L5 1z" fill="currentColor"/></svg>
+        AI 自动生成讲题视频
+      </div>
+      <h1>输入题目，<span>一键生成</span>讲题视频</h1>
+      <p>支持文字粘贴与图片上传，AI 自动规划讲解结构、逐字稿与板书</p>
+      <div class="hero-steps">
+        <div class="hero-step"><div class="hero-step-dot">1</div>输入题目</div>
+        <div class="hero-step-arrow">→</div>
+        <div class="hero-step"><div class="hero-step-dot">2</div>AI 识别分析</div>
+        <div class="hero-step-arrow">→</div>
+        <div class="hero-step"><div class="hero-step-dot">3</div>自动备课</div>
+        <div class="hero-step-arrow">→</div>
+        <div class="hero-step"><div class="hero-step-dot">4</div>生成视频</div>
+      </div>
+    </div>
+
+    <div class="in-card" id="inCard" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">
+      <input type="file" id="fileInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+      <div class="drag-overlay">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="none"><rect x="2" y="4" width="20" height="16" rx="3" stroke="white" stroke-width="1.8"/><circle cx="8" cy="10" r="2" fill="white" opacity=".7"/><path d="M2 17l5-5 4 4 3-3 6 6" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+        松开以添加图片
+      </div>
+      <textarea id="qi" placeholder="输入题目内容……&#10;&#10;· 文字题直接粘贴&#10;· 图推题 / 图表题 → 点击下方 + 上传图片" oninput="onInput()"></textarea>
+      <div class="toolbar">
+        <span class="ccount" id="cc">0 / 2000</span>
+      </div>
+      <div class="img-strip" id="imgStrip">
+        <div class="img-strip-inner" id="imgStripInner"></div>
+      </div>
+    </div>
+
+    <div class="opts">
+      <div class="opt-card">
+        <div class="opt-label">视频类型</div>
+        <!-- 第一层：录播 / 直播 -->
+        <div class="vtype-mode">
+          <div class="vmode on" onclick="selVmode(this)" data-mode="record">
+            <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.4"/><circle cx="7" cy="7" r="2.5" fill="currentColor"/></svg>
+            录播
+          </div>
+          <div class="vmode" onclick="selVmode(this)" data-mode="live">
+            <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><path d="M2 4.5h10M2 4.5C2 3.4 2.9 2.5 4 2.5h6c1.1 0 2 .9 2 2v5c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2v-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="10.5" cy="4" r="1.5" fill="#EF4444"/></svg>
+            直播
+          </div>
+        </div>
+        <!-- 第二层：内容标签 -->
+        <div class="chips vtype-chips">
+          <div class="chip on" onclick="selChip(this)">讲题</div>
+          <div class="chip" onclick="selChip(this)">讲知识点</div>
+          <div class="chip" onclick="selChip(this)">考情分析</div>
+          <div class="chip" onclick="selChip(this)">学习复盘</div>
+        </div>
+      </div>
+      <div class="opt-card">
+        <div class="opt-card-row">
+          <div class="opt-label">授课风格</div>
+          <button class="voice-param-btn" id="voiceParamBtn" onclick="openVoicePanel()">
+            <svg viewBox="0 0 14 14" fill="none" width="12" height="12"><path d="M7 1v3M7 10v3M1 7h3M10 7h3M3.22 3.22l2.12 2.12M8.66 8.66l2.12 2.12M3.22 10.78l2.12-2.12M8.66 5.34l2.12-2.12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            声音参数
+          </button>
+        </div>
+        <div class="tcs">
+          <div class="tc on" onclick="selTc(this)"><div class="tc-av" style="background:linear-gradient(135deg,#2A5BF0,#6B8EF5)">刘</div><span class="tc-name">刘文超</span></div>
+          <div class="tc" onclick="selTc(this)"><div class="tc-av" style="background:linear-gradient(135deg,#F59E0B,#FBBF24)">花</div><span class="tc-name">花生十三</span></div>
+          <div class="tc" onclick="selTc(this)"><div class="tc-av" style="background:linear-gradient(135deg,#10B981,#34D399)">小</div><span class="tc-name">小马哥</span></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-gen" id="genBtn" disabled onclick="generate()">
+      <svg viewBox="0 0 18 18" fill="none" width="17" height="17"><path d="M9 1L11.5 6.5L17 7.5L13 11.5L14 17L9 14.5L4 17L5 11.5L1 7.5L6.5 6.5L9 1Z" fill="currentColor"/></svg>
+      <span id="genBtnLabel">输入题目后生成</span>
+    </button>
+  </div>
+</div>
+
+<!-- VOICE PANEL -->
+<div class="vp-overlay" id="vpOverlay" onclick="closeVoicePanel()"></div>
+<div class="vp-panel" id="vpPanel">
+  <div class="vp-hdr">
+    <div class="vp-hdr-left">
+      <div class="vp-hdr-icon">
+        <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M8 1v4M8 11v4M1 8h4M11 8h4M3.05 3.05l2.83 2.83M10.12 10.12l2.83 2.83M3.05 12.95l2.83-2.83M10.12 5.88l2.83-2.83" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="vp-hdr-title">声音参数调节</span>
+    </div>
+    <button class="vp-close" onclick="closeVoicePanel()">
+      <svg viewBox="0 0 14 14" fill="none" width="12" height="12"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <div class="vp-body">
+
+    <!-- 音调与响度 -->
+    <div class="vp-section-label">音调与响度</div>
+
+    <div class="vp-item">
+      <div class="vp-item-row">
+        <span class="vp-item-name">音调偏移</span>
+        <span class="vp-item-tag">半音</span>
+        <input class="vp-num" type="number" id="vn-pitch" value="-8.5" step="0.5" onchange="syncSlider('pitch',this.value)">
+        <button class="vp-reset" onclick="resetParam('pitch',-8.5)" title="重置">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 6a4 4 0 104-4H4M4 2L2 4l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <input class="vp-slider" type="range" id="vs-pitch" min="-12" max="12" step="0.5" value="-8.5" oninput="syncNum('pitch',this.value)">
+      <div class="vp-hint">负值降调，9 为原始默认。数值越低声音音调越低，越高越尖亮。</div>
+    </div>
+
+    <div class="vp-item">
+      <div class="vp-item-row">
+        <span class="vp-item-name">响度（RMS）</span>
+        <input class="vp-num" type="number" id="vn-rms" value="0.080" step="0.005" min="0.01" max="0.3" onchange="syncSlider('rms',this.value)">
+        <button class="vp-reset" onclick="resetParam('rms',0.080)" title="重置">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 6a4 4 0 104-4H4M4 2L2 4l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <input class="vp-slider vp-slider-blue" type="range" id="vs-rms" min="0.01" max="0.3" step="0.005" value="0.080" oninput="syncNum('rms',this.value)">
+      <div class="vp-hint">音频响度目标值。值低声音发闷，值高音易刺耳，建议 0.08～0.10。</div>
+    </div>
+
+    <!-- 各情绪语速 -->
+    <div class="vp-section-label" style="margin-top:8px">各情绪语速
+      <span class="vp-section-sub">0.60 = 极慢 · 1.00 = 正常 · 1.20 = 极快</span>
+    </div>
+
+    <div class="vp-item vp-item-compact">
+      <div class="vp-item-row">
+        <span class="vp-item-name">活跃鼓励</span>
+        <input class="vp-num vp-num-sm" type="number" id="vn-cheer" value="0.92" step="0.01" min="0.5" max="1.3" onchange="syncSlider('cheer',this.value)">
+        <button class="vp-reset" onclick="resetParam('cheer',0.92)" title="重置">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 6a4 4 0 104-4H4M4 2L2 4l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <input class="vp-slider" type="range" id="vs-cheer" min="0.5" max="1.3" step="0.01" value="0.92" oninput="syncNum('cheer',this.value)">
+      <div class="vp-hint">鼓励学生时，轻松热情</div>
+    </div>
+
+    <div class="vp-item vp-item-compact">
+      <div class="vp-item-row">
+        <span class="vp-item-name">温和聊天</span>
+        <input class="vp-num vp-num-sm" type="number" id="vn-chat" value="0.85" step="0.01" min="0.5" max="1.3" onchange="syncSlider('chat',this.value)">
+        <button class="vp-reset" onclick="resetParam('chat',0.85)" title="重置">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 6a4 4 0 104-4H4M4 2L2 4l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <input class="vp-slider" type="range" id="vs-chat" min="0.5" max="1.3" step="0.01" value="0.85" oninput="syncNum('chat',this.value)">
+      <div class="vp-hint">像朋友聊天，平静温和</div>
+    </div>
+
+    <div class="vp-item vp-item-compact">
+      <div class="vp-item-row">
+        <span class="vp-item-name">平静讲课</span>
+        <input class="vp-num vp-num-sm" type="number" id="vn-teach" value="0.82" step="0.01" min="0.5" max="1.3" onchange="syncSlider('teach',this.value)">
+        <button class="vp-reset" onclick="resetParam('teach',0.82)" title="重置">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 6a4 4 0 104-4H4M4 2L2 4l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <input class="vp-slider" type="range" id="vs-teach" min="0.5" max="1.3" step="0.01" value="0.82" oninput="syncNum('teach',this.value)">
+      <div class="vp-hint">平稳讲课，口语化</div>
+    </div>
+
+    <div class="vp-item vp-item-compact">
+      <div class="vp-item-row">
+        <span class="vp-item-name">讲重点</span>
+        <input class="vp-num vp-num-sm" type="number" id="vn-key" value="0.85" step="0.01" min="0.5" max="1.3" onchange="syncSlider('key',this.value)">
+        <button class="vp-reset" onclick="resetParam('key',0.85)" title="重置">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 6a4 4 0 104-4H4M4 2L2 4l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <input class="vp-slider" type="range" id="vs-key" min="0.5" max="1.3" step="0.01" value="0.85" oninput="syncNum('key',this.value)">
+      <div class="vp-hint">认真沉着，不疾不徐</div>
+    </div>
+
+    <div class="vp-item vp-item-compact">
+      <div class="vp-item-row">
+        <span class="vp-item-name">耐心辅导</span>
+        <input class="vp-num vp-num-sm" type="number" id="vn-guide" value="0.80" step="0.01" min="0.5" max="1.3" onchange="syncSlider('guide',this.value)">
+        <button class="vp-reset" onclick="resetParam('guide',0.80)" title="重置">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 6a4 4 0 104-4H4M4 2L2 4l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <input class="vp-slider" type="range" id="vs-guide" min="0.5" max="1.3" step="0.01" value="0.80" oninput="syncNum('guide',this.value)">
+      <div class="vp-hint">轻声细语，温柔不催</div>
+    </div>
+
+    <div class="vp-item vp-item-compact">
+      <div class="vp-item-row">
+        <span class="vp-item-name">课后总结</span>
+        <input class="vp-num vp-num-sm" type="number" id="vn-sum" value="0.85" step="0.01" min="0.5" max="1.3" onchange="syncSlider('sum',this.value)">
+        <button class="vp-reset" onclick="resetParam('sum',0.85)" title="重置">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 6a4 4 0 104-4H4M4 2L2 4l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <input class="vp-slider" type="range" id="vs-sum" min="0.5" max="1.3" step="0.01" value="0.85" oninput="syncNum('sum',this.value)">
+      <div class="vp-hint">舒缓自然，口语化总结</div>
+    </div>
+
+    <div class="vp-item vp-item-compact">
+      <div class="vp-item-row">
+        <span class="vp-item-name">抛出问题</span>
+        <input class="vp-num vp-num-sm" type="number" id="vn-ask" value="0.87" step="0.01" min="0.5" max="1.3" onchange="syncSlider('ask',this.value)">
+        <button class="vp-reset" onclick="resetParam('ask',0.87)" title="重置">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 6a4 4 0 104-4H4M4 2L2 4l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <input class="vp-slider" type="range" id="vs-ask" min="0.5" max="1.3" step="0.01" value="0.87" oninput="syncNum('ask',this.value)">
+      <div class="vp-hint">平和好奇，轻松提问</div>
+    </div>
+
+  </div><!-- /vp-body -->
+
+  <!-- 试听区 -->
+  <div class="vp-preview" id="vpPreview">
+    <div class="vp-preview-top">
+      <button class="vp-preview-play" id="vpPlayBtn" onclick="togglePreview()">
+        <svg id="vpPlayIco" viewBox="0 0 14 14" fill="none" width="12" height="12"><path d="M3 2L11 7L3 12V2Z" fill="white"/></svg>
+      </button>
+      <div class="vp-preview-info">
+        <div class="vp-preview-label">试听当前参数效果</div>
+        <div class="vp-preview-status" id="vpPreviewStatus">点击播放示例语音</div>
+      </div>
+    </div>
+    <div class="vp-preview-waveform" id="vpWaveform"></div>
+  </div>
+
+  <div class="vp-footer">
+    <button class="vp-btn-reset-all" onclick="resetAllParams()">恢复默认</button>
+    <button class="vp-btn-confirm" onclick="closeVoicePanel()">确认并关闭</button>
+  </div>
+</div>
+
+<!-- RESULT PAGE -->
+<div class="page" id="resultPage">
+  <div class="res-wrap">
+    <div class="res-top">
+      <button class="back-btn" onclick="goBack()">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        返回重新生成
+      </button>
+      <div class="res-right">
+        <div class="res-meta">
+          <span class="mbadge mbadge-type" id="rType">讲题</span>
+          <span class="mbadge mbadge-tc" id="rTc">刘文超</span>
+        </div>
+        <button class="btn-export-top" onclick="openExport()">
+          <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><path d="M7 1v8M4 6l3 4 3-4M2 12h10" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          导出视频
+        </button>
+      </div>
+    </div>
+
+    <div class="vp">
+      <div class="vp-content">
+        <div class="vp-slide">
+          <div class="slide-top"><div class="slide-dot"></div><div class="slide-ttl">二次函数最小值求解</div></div>
+          <div class="slide-body">
+            <div class="slide-ln" style="width:90%"></div>
+            <div class="slide-ln" style="width:75%"></div>
+            <div class="slide-fml"></div>
+            <div class="slide-ln" style="width:60%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="vc">
+        <div class="prog" id="prog" onclick="seekVideo(event)">
+          <div class="prog-fill" id="progFill" style="width:0%"></div>
+        </div>
+        <div class="vctrl">
+          <button class="cbtn"><svg viewBox="0 0 14 14"><path d="M2 2h2v10H2zM5 7L12 2v10z"/></svg></button>
+          <button class="cbtn play" id="playBtn" onclick="togglePlay()"><svg viewBox="0 0 14 14"><path d="M3 2L11 7L3 12V2Z"/></svg></button>
+          <button class="cbtn"><svg viewBox="0 0 14 14"><path d="M10 2h2v10h-2zM9 7L2 2v10z"/></svg></button>
+          <span class="vtime" id="vtime">00:00 / 07:52</span>
+          <div class="vright">
+            <span class="vqlbl">1080P</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl">
+      <div class="tl-hdr">
+        <div class="tl-title">
+          <div class="tl-icon"><svg viewBox="0 0 12 12" fill="none"><path d="M1 6h10M6 1v10" stroke="#2A5BF0" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          时间轴
+        </div>
+        <span class="tl-dur">总时长 07:52</span>
+      </div>
+      <div class="tl-body">
+        <div class="ruler"><div class="ruler-inner">
+          <div class="rm" style="left:0%"><div class="rm-tick"></div><div class="rm-lbl">0:00</div></div>
+          <div class="rm" style="left:16.7%"><div class="rm-tick"></div><div class="rm-lbl">1:18</div></div>
+          <div class="rm" style="left:33.3%"><div class="rm-tick"></div><div class="rm-lbl">2:37</div></div>
+          <div class="rm" style="left:50%"><div class="rm-tick"></div><div class="rm-lbl">3:56</div></div>
+          <div class="rm" style="left:66.7%"><div class="rm-tick"></div><div class="rm-lbl">5:14</div></div>
+          <div class="rm" style="left:83.3%"><div class="rm-tick"></div><div class="rm-lbl">6:33</div></div>
+          <div class="rm" style="left:100%"><div class="rm-tick"></div><div class="rm-lbl">7:52</div></div>
+        </div></div>
+        <div class="tracks" id="tracksEl">
+          <div class="ph-line" id="phLine"></div>
+          <div class="track">
+            <div class="tk-lbl"><div class="tk-icon" style="background:linear-gradient(135deg,#2A5BF0,#6B8EF5)"><svg viewBox="0 0 12 12"><path d="M2 4h2v4H2zM5 2h2v8H5zM8 3h2v6H8z"/></svg></div><span class="tk-name">音轨</span></div>
+            <div class="tk-tl"><div class="wave" id="waveEl"></div></div>
+          </div>
+          <div class="track">
+            <div class="tk-lbl"><div class="tk-icon" style="background:linear-gradient(135deg,#3B82F6,#60A5FA)"><svg viewBox="0 0 12 12"><rect x="1" y="2" width="10" height="7" rx="1" fill="none" stroke="white" stroke-width="1.2"/><path d="M4 9v2M8 9v2M3 11h6" stroke="white" stroke-width="1.2"/></svg></div><span class="tk-name">PPT</span></div>
+            <div class="tk-tl">
+              <div class="seg" style="left:1%;width:30%;background:linear-gradient(90deg,#3B82F6,#60A5FA)">封面 / 题目</div>
+              <div class="seg" style="left:36%;width:38%;background:linear-gradient(90deg,#6366F1,#818CF8)">解题过程</div>
+              <div class="seg" style="left:79%;width:20%;background:linear-gradient(90deg,#3B82F6,#60A5FA)">总结</div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="tk-lbl"><div class="tk-icon" style="background:linear-gradient(135deg,#F59E0B,#FBBF24)"><svg viewBox="0 0 12 12"><path d="M2 9l6-6 2 2-6 6H2V9z" fill="white"/></svg></div><span class="tk-name">手书</span></div>
+            <div class="tk-tl">
+              <div class="seg" style="left:20%;width:18%;background:linear-gradient(90deg,#F59E0B,#FBBF24);color:#1E2340">板书公式</div>
+              <div class="seg" style="left:45%;width:22%;background:linear-gradient(90deg,#F97316,#FB923C)">推导过程</div>
+              <div class="seg" style="left:74%;width:12%;background:linear-gradient(90deg,#F59E0B,#FBBF24);color:#1E2340">结果</div>
+            </div>
+          </div>
+          <div class="track">
+            <div class="tk-lbl"><div class="tk-icon" style="background:linear-gradient(135deg,#10B981,#34D399)"><svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="4" fill="none" stroke="white" stroke-width="1.5"/><circle cx="6" cy="6" r="1.5" fill="white"/></svg></div><span class="tk-name">标记</span></div>
+            <div class="tk-tl">
+              <div class="seg" style="left:13%;width:8%;background:linear-gradient(90deg,#10B981,#34D399)">重点</div>
+              <div class="seg" style="left:38%;width:6%;background:linear-gradient(90deg,#10B981,#34D399)">公式</div>
+              <div class="seg" style="left:55%;width:10%;background:linear-gradient(90deg,#10B981,#34D399)">关键步骤</div>
+              <div class="seg" style="left:80%;width:8%;background:linear-gradient(90deg,#10B981,#34D399)">结论</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EDITOR PANEL ── -->
+    <div class="ed-panel">
+
+      <!-- Panel header -->
+      <div class="ed-panel-hdr">
+        <div class="ed-panel-title">
+          <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><rect x="1" y="2" width="5" height="10" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M8 4h5M8 7h5M8 10h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          讲课结构 · 二次编辑
+        </div>
+        <div class="ed-panel-hint">选择节拍后编辑逐字稿、板书、圈划</div>
+      </div>
+
+      <div class="ed-layout">
+
+        <!-- Left: Beat structure tree -->
+        <div class="ed-tree">
+          <div class="tree-section-label">节拍结构</div>
+
+          <div class="tree-node active" onclick="selectBeat(this,0)">
+            <div class="tree-node-bar"></div>
+            <div class="tree-node-inner">
+              <div class="tree-beat-no">01</div>
+              <div class="tree-node-info">
+                <div class="tree-node-name">通读材料</div>
+                <div class="tree-node-meta">
+                  <span class="tree-dur">~18s</span>
+                  <span class="tree-chip tree-chip-script">稿</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node" onclick="selectBeat(this,1)">
+            <div class="tree-node-bar"></div>
+            <div class="tree-node-inner">
+              <div class="tree-beat-no">02</div>
+              <div class="tree-node-info">
+                <div class="tree-node-name">审题定向</div>
+                <div class="tree-node-meta">
+                  <span class="tree-dur">~22s</span>
+                  <span class="tree-chip tree-chip-script">稿</span>
+                  <span class="tree-chip tree-chip-board">板</span>
+                  <span class="tree-chip tree-chip-mark">划</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node" onclick="selectBeat(this,2)">
+            <div class="tree-node-bar"></div>
+            <div class="tree-node-inner">
+              <div class="tree-beat-no">03</div>
+              <div class="tree-node-info">
+                <div class="tree-node-name">找数据</div>
+                <div class="tree-node-meta">
+                  <span class="tree-dur">~20s</span>
+                  <span class="tree-chip tree-chip-script">稿</span>
+                  <span class="tree-chip tree-chip-mark">划</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node" onclick="selectBeat(this,3)">
+            <div class="tree-node-bar"></div>
+            <div class="tree-node-inner">
+              <div class="tree-beat-no">04</div>
+              <div class="tree-node-info">
+                <div class="tree-node-name">选项分析</div>
+                <div class="tree-node-meta">
+                  <span class="tree-dur">~16s</span>
+                  <span class="tree-chip tree-chip-script">稿</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node" onclick="selectBeat(this,4)">
+            <div class="tree-node-bar"></div>
+            <div class="tree-node-inner">
+              <div class="tree-beat-no">05</div>
+              <div class="tree-node-info">
+                <div class="tree-node-name">逐步演算</div>
+                <div class="tree-node-meta">
+                  <span class="tree-dur">~48s</span>
+                  <span class="tree-chip tree-chip-script">稿</span>
+                  <span class="tree-chip tree-chip-board">板</span>
+                  <span class="tree-chip tree-chip-mark">划</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-node" onclick="selectBeat(this,5)">
+            <div class="tree-node-bar"></div>
+            <div class="tree-node-inner">
+              <div class="tree-beat-no">06</div>
+              <div class="tree-node-info">
+                <div class="tree-node-name">点难收尾</div>
+                <div class="tree-node-meta">
+                  <span class="tree-dur">~22s</span>
+                  <span class="tree-chip tree-chip-script">稿</span>
+                  <span class="tree-chip tree-chip-mark">划</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tree-total">
+            <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.2"/><path d="M6 4v2.5l1.5 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            总时长约 2:26
+          </div>
+        </div>
+
+        <!-- Right: Beat detail editor -->
+        <div class="ed-detail">
+
+          <!-- Beat goal banner -->
+          <div class="beat-goal-bar" id="beatGoalBar">
+            <span class="beat-goal-label">本拍目标</span>
+            <span class="beat-goal-text" id="beatGoalText">建立整体印象，知道有什么材料，先不找数</span>
+          </div>
+
+          <!-- Tabs -->
+          <div class="ed-tabs">
+            <button class="ed-tab active" onclick="switchTab(this,'script')">
+              <svg viewBox="0 0 12 12" fill="none" width="11" height="11"><path d="M1 2h10M1 5h7M1 8h8M1 11h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              逐字稿
+            </button>
+            <button class="ed-tab" onclick="switchTab(this,'board')">
+              <svg viewBox="0 0 12 12" fill="none" width="11" height="11"><path d="M1.5 8.5l5-5 2 2-5 5h-2v-2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M6.5 3.5L8 2a1.2 1.2 0 011.8 1.8L8.5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              板书
+            </button>
+            <button class="ed-tab" onclick="switchTab(this,'emph')">
+              <svg viewBox="0 0 12 12" fill="none" width="11" height="11"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.3"/><circle cx="6" cy="6" r="1.8" fill="currentColor"/></svg>
+              圈划
+            </button>
+          </div>
+
+          <!-- ── Tab: 逐字稿 (narration_sentences) ── -->
+          <div class="ed-body active" id="tabScript">
+            <div class="script-toolbar">
+              <span class="script-toolbar-tip">按自然停顿分句，AI 会依次朗读</span>
+              <div style="flex:1"></div>
+              <span class="script-wc" id="scriptWc">共 0 字</span>
+            </div>
+            <div class="narr-list" id="narrList">
+            </div><!-- narrList populated by JS -->
+            <button class="narr-add-btn" onclick="addNarrSent()">
+              <svg viewBox="0 0 14 14" fill="none" width="12" height="12"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              添加句子
+            </button>
+          </div>
+
+          <!-- ── Tab: 板书 (board_text) ── -->
+          <div class="ed-body" id="tabBoard">
+            <div class="board-empty-tip" id="boardEmptyTip">
+              <div class="board-empty-ico"><svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M3 4h10M3 7h7M3 10h8M3 13h5" stroke="var(--g400)" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+              本拍无板书内容
+            </div>
+            <div class="board-list" id="boardList" style="display:none">
+            </div>
+            <button class="hand-add" onclick="addBoardItem()">
+              <svg viewBox="0 0 14 14" fill="none" width="12" height="12"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              添加板书条
+            </button>
+          </div>
+
+          <!-- ── Tab: 圈划 (emphasis_words) ── -->
+          <div class="ed-body" id="tabEmph">
+            <div class="emph-list" id="emphList">
+              <!-- populated by JS -->
+            </div>
+            <div class="board-empty-tip" id="emphEmptyTip" style="display:none">
+              <div class="board-empty-ico"><svg viewBox="0 0 16 16" fill="none" width="14" height="14"><circle cx="8" cy="8" r="5.5" stroke="var(--g400)" stroke-width="1.4"/><circle cx="8" cy="8" r="2" fill="var(--g400)"/></svg></div>
+              本拍无圈划标记
+            </div>
+            <button class="hand-add" onclick="addEmphCard()">
+              <svg viewBox="0 0 14 14" fill="none" width="12" height="12"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+              添加圈划项
+            </button>
+          </div>
+
+        </div><!-- /ed-detail -->
+      </div><!-- /ed-layout -->
+
+      <!-- Regen footer -->
+      <div class="ed-footer">
+        <div class="ed-footer-hint">
+          <svg viewBox="0 0 14 14" fill="none" width="12" height="12"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M7 4.5v3l1.5 1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          编辑后重新生成，仅更新备课层
+        </div>
+        <button class="btn-regen" onclick="regenVideo()">
+          <svg viewBox="0 0 16 16" fill="none" width="14" height="14"><path d="M2 8a6 6 0 016-6 6 6 0 014.24 1.76L14 2v4h-4l1.59-1.59A4 4 0 004 8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 8a6 6 0 01-6 6 6 6 0 01-4.24-1.76L2 14v-4h4L4.41 11.59A4 4 0 0012 8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          重新生成视频
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="modal-bg" id="exportModal">
+  <div class="modal">
+    <div id="exDefault">
+      <div class="m-hdr">
+        <div class="m-title"><div class="m-title-ico"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 4 3-4M2 11h10" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>导出视频</div>
+        <button class="m-close" onclick="closeExport()">✕</button>
+      </div>
+      <div class="m-body">
+        <div class="m-info">
+          <div class="m-ii"><div class="m-il">时长</div><div class="m-iv">07:52</div></div>
+          <div class="m-ii"><div class="m-il">类型</div><div class="m-iv" id="exType">讲题</div></div>
+          <div class="m-ii"><div class="m-il">风格</div><div class="m-iv" id="exTc">刘文超</div></div>
+        </div>
+        <div><div class="m-sl">导出格式</div>
+          <div class="fmt-grid">
+            <div class="fmt-card on" onclick="selFmt(this)"><div class="fmt-ico" style="background:#2A5BF0">MP4</div><div><div class="fmt-name">MP4</div><div class="fmt-desc">通用，体积小</div></div></div>
+            <div class="fmt-card" onclick="selFmt(this)"><div class="fmt-ico" style="background:#7C3AED">MOV</div><div><div class="fmt-name">MOV</div><div class="fmt-desc">高质量剪辑</div></div></div>
+            <div class="fmt-card" onclick="selFmt(this)"><div class="fmt-ico" style="background:#0891B2">WEBM</div><div><div class="fmt-name">WEBM</div><div class="fmt-desc">网页优化</div></div></div>
+            <div class="fmt-card" onclick="selFmt(this)"><div class="fmt-ico" style="background:#DC2626">AVI</div><div><div class="fmt-name">AVI</div><div class="fmt-desc">无损，体积大</div></div></div>
+          </div>
+        </div>
+        <div><div class="m-sl">导出质量</div>
+          <div class="q-row">
+            <div class="q-opt" onclick="selQ(this)">720P</div>
+            <div class="q-opt on" onclick="selQ(this)">1080P</div>
+            <div class="q-opt" onclick="selQ(this)">2K</div>
+            <div class="q-opt" onclick="selQ(this)">4K</div>
+          </div>
+        </div>
+      </div>
+      <div class="m-foot">
+        <button class="btn-cancel" onclick="closeExport()">取消</button>
+        <button class="btn-export" onclick="startExport()"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 4 3-4M2 11h10" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>开始导出</button>
+      </div>
+    </div>
+    <div class="ex-prog" id="exProg">
+      <div class="ex-ring"><svg viewBox="0 0 64 64"><circle class="er-bg" cx="32" cy="32" r="26"/><circle class="er-fill" id="erFill" cx="32" cy="32" r="26"/></svg><div class="ex-pct" id="exPct">0%</div></div>
+      <div class="ex-status">正在导出视频</div>
+      <div class="ex-sub" id="exSub">合成音视频轨道…</div>
+    </div>
+    <div class="ex-done" id="exDone">
+      <div class="done-ico"><svg viewBox="0 0 26 26"><path d="M5 13l5 5L21 7" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+      <div class="done-title">导出成功！</div>
+      <div class="done-sub">视频已准备好，可以下载</div>
+      <div class="done-file"><div class="done-file-ico"><svg viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8" rx="1" fill="none" stroke="white" stroke-width="1.2"/></svg></div><span id="exFilename">上岸仓_讲题_刘文超_1080P.mp4</span></div>
+      <button class="btn-dl" onclick="doDownload()"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 4 3-4M2 11h10" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>下载视频</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// wave bars
+const waveEl=document.getElementById('waveEl');
+const wst=document.createElement('style');
+wst.textContent='@keyframes wp{0%,100%{transform:scaleY(1)}50%{transform:scaleY(2)}}';
+document.head.appendChild(wst);
+for(let i=0;i<100;i++){const b=document.createElement('div');b.className='wb';b.style.cssText=`height:${4+Math.random()*18}px;animation:wp ${.7+Math.random()*.8}s ${Math.random()*1}s ease-in-out infinite`;waveEl.appendChild(b)}
+
+// image state — must be declared before renderStrip()
+let imgs=[];
+
+// init strip with + button
+renderStrip();
+function onInput(){
+  const v=document.getElementById('qi').value;
+  document.getElementById('cc').textContent=v.length+' / 2000';
+  checkReady();
+}
+function checkReady(){
+  const hasContent=document.getElementById('qi').value.trim().length>0||imgs.length>0;
+  const btn=document.getElementById('genBtn');
+  const lbl=document.getElementById('genBtnLabel');
+  btn.disabled=!hasContent;
+  lbl.textContent=hasContent?'生成视频':'输入题目后生成';
+}
+function handleFiles(files){
+  const toAdd=Array.from(files).filter(f=>f.type.startsWith('image/')).slice(0,6-imgs.length);
+  let loaded=0;
+  if(toAdd.length===0)return;
+  toAdd.forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      imgs.push({file:f,dataUrl:e.target.result});
+      loaded++;
+      if(loaded===toAdd.length){renderStrip();checkReady();}
+    };
+    reader.readAsDataURL(f);
+  });
+  document.getElementById('fileInput').value='';
+}
+function renderStrip(){
+  const inner=document.getElementById('imgStripInner');
+  inner.innerHTML='';
+  imgs.forEach((entry,i)=>{
+    const t=document.createElement('div');t.className='img-thumb';
+    const img=document.createElement('img');img.className='loaded';
+    img.src=entry.dataUrl;
+    const rm=document.createElement('button');rm.className='img-rm';rm.textContent='✕';rm.onclick=()=>removeImg(i);
+    t.append(img,rm);inner.appendChild(t);
+  });
+  // + button always last, hidden when 6 imgs reached
+  if(imgs.length<6){
+    const add=document.createElement('div');add.id='imgAddBtn';add.className='img-add';
+    add.onclick=()=>document.getElementById('fileInput').click();
+    add.innerHTML='<svg viewBox="0 0 14 14" width="20" height="20" fill="none"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+    inner.appendChild(add);
+  }
+}
+function removeImg(i){imgs.splice(i,1);renderStrip();checkReady()}
+function onDragOver(e){e.preventDefault();document.getElementById('inCard').classList.add('drag')}
+function onDragLeave(e){if(!document.getElementById('inCard').contains(e.relatedTarget))document.getElementById('inCard').classList.remove('drag')}
+function onDrop(e){e.preventDefault();document.getElementById('inCard').classList.remove('drag');handleFiles(e.dataTransfer.files)}
+
+function selChip(el){el.closest('.chips').querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
+function selTc(el){el.closest('.tcs').querySelectorAll('.tc').forEach(c=>c.classList.remove('on'));el.classList.add('on')}
+function selVmode(el){el.closest('.vtype-mode').querySelectorAll('.vmode').forEach(v=>v.classList.remove('on'));el.classList.add('on')}
+
+// ── Voice Panel ──────────────────────────────────────────────────────
+const VP_DEFAULTS = {
+  pitch:-8.5, rms:0.080,
+  cheer:0.92, chat:0.85, teach:0.82, key:0.85, guide:0.80, sum:0.85, ask:0.87
+};
+
+function openVoicePanel(){
+  document.getElementById('vpOverlay').classList.add('show');
+  document.getElementById('vpPanel').classList.add('open');
+  document.getElementById('voiceParamBtn').classList.add('active');
+  updateAllSliderFills();
+}
+function closeVoicePanel(){
+  stopPreview();
+  document.getElementById('vpOverlay').classList.remove('show');
+  document.getElementById('vpPanel').classList.remove('open');
+  document.getElementById('voiceParamBtn').classList.remove('active');
+}
+function syncNum(key, val){
+  const n = document.getElementById('vn-'+key);
+  if(n) n.value = parseFloat(val).toFixed(key==='rms'?3:2);
+  updateSliderFill('vs-'+key);
+  markPreviewDirty();
+}
+function syncSlider(key, val){
+  const s = document.getElementById('vs-'+key);
+  if(s){ s.value = val; updateSliderFill('vs-'+key); }
+  markPreviewDirty();
+}
+function resetParam(key, def){
+  document.getElementById('vn-'+key).value = key==='rms' ? def.toFixed(3) : def.toFixed(2);
+  document.getElementById('vs-'+key).value = def;
+  updateSliderFill('vs-'+key);
+  markPreviewDirty();
+}
+function resetAllParams(){
+  Object.entries(VP_DEFAULTS).forEach(([k,v])=>resetParam(k,v));
+}
+function updateSliderFill(sliderId){
+  const s = document.getElementById(sliderId);
+  if(!s) return;
+  const min=parseFloat(s.min), max=parseFloat(s.max), val=parseFloat(s.value);
+  const pct = ((val-min)/(max-min)*100).toFixed(1);
+  s.style.background = `linear-gradient(to right, var(--blue) 0%, var(--blue) ${pct}%, var(--g200) ${pct}%)`;
+}
+function updateAllSliderFills(){
+  Object.keys(VP_DEFAULTS).forEach(k=>updateSliderFill('vs-'+k));
+}
+
+// ── 试听 Preview ─────────────────────────────────────────────────────
+let previewAudio = null;
+let previewPlaying = false;
+let waveAnimTimer = null;
+
+// Build waveform bars on load
+function initPreviewWaveform(){
+  const wf = document.getElementById('vpWaveform');
+  if(!wf) return;
+  wf.innerHTML = '';
+  for(let i=0;i<32;i++){
+    const bar = document.createElement('div');
+    bar.className = 'vp-wave-bar';
+    bar.style.height = '4px';
+    wf.appendChild(bar);
+  }
+}
+
+function markPreviewDirty(){
+  stopPreview();
+  const box = document.getElementById('vpPreview');
+  const status = document.getElementById('vpPreviewStatus');
+  if(!box) return;
+  box.classList.add('dirty');
+  box.classList.remove('playing');
+  if(status) status.textContent = '参数已更新，点击试听新效果';
+}
+
+function togglePreview(){
+  if(previewPlaying){ stopPreview(); return; }
+  startPreview();
+}
+
+function startPreview(){
+  const btn = document.getElementById('vpPlayBtn');
+  const ico = document.getElementById('vpPlayIco');
+  const box = document.getElementById('vpPreview');
+  const status = document.getElementById('vpPreviewStatus');
+
+  // Show loading state
+  btn.classList.add('loading');
+  if(status) status.textContent = '合成中…';
+
+  // Simulate TTS synthesis delay (300-800ms), then play
+  setTimeout(()=>{
+    btn.classList.remove('loading');
+    box.classList.remove('dirty');
+    box.classList.add('playing');
+    previewPlaying = true;
+    if(status) status.textContent = '正在播放…';
+
+    // Switch to stop icon
+    ico.innerHTML = '<rect x="2" y="2" width="4" height="10" rx="1" fill="white"/><rect x="8" y="2" width="4" height="10" rx="1" fill="white"/>';
+
+    // Animate waveform bars
+    animateWaveform(true);
+
+    // Simulate ~4s audio clip
+    previewAudio = setTimeout(()=>stopPreview(), 4200);
+  }, 400 + Math.random()*400);
+}
+
+function stopPreview(){
+  if(previewAudio){ clearTimeout(previewAudio); previewAudio=null; }
+  animateWaveform(false);
+  previewPlaying = false;
+  const btn = document.getElementById('vpPlayBtn');
+  const ico = document.getElementById('vpPlayIco');
+  const box = document.getElementById('vpPreview');
+  const status = document.getElementById('vpPreviewStatus');
+  if(btn) btn.classList.remove('loading');
+  if(box){ box.classList.remove('playing'); }
+  if(ico) ico.innerHTML = '<path d="M3 2L11 7L3 12V2Z" fill="white"/>';
+  if(status) status.textContent = '点击播放示例语音';
+}
+
+function animateWaveform(on){
+  if(waveAnimTimer){ clearInterval(waveAnimTimer); waveAnimTimer=null; }
+  const bars = document.querySelectorAll('.vp-wave-bar');
+  if(!on){
+    bars.forEach(b=>b.style.height='4px');
+    return;
+  }
+  // Heights follow a rough voice amplitude pattern
+  const baseHeights=[4,6,10,14,18,22,20,16,12,8,6,10,18,24,20,14,8,6,12,20,24,18,14,10,8,14,20,16,10,6,4,4];
+  waveAnimTimer = setInterval(()=>{
+    bars.forEach((b,i)=>{
+      const jitter = (Math.random()-.5)*8;
+      const h = Math.max(3, Math.min(26, baseHeights[i]+jitter));
+      b.style.height = h+'px';
+    });
+  }, 80);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  updateAllSliderFills();
+  initPreviewWaveform();
+});
+
+// ── Two-phase generate ──────────────────────────────────────────────
+function generate(){
+  const mode=document.querySelector('.vmode.on')?.dataset.mode==='live'?'直播':'录播';
+  const type=document.querySelector('.chip.on').textContent;
+  const tc=document.querySelector('.tc.on .tc-name').textContent;
+  document.getElementById('rType').textContent=mode+' · '+type;
+  document.getElementById('rTc').textContent=tc;
+
+  saveRecord(); // capture snapshot before loading starts
+
+  const ld=document.getElementById('loading');
+  ld.classList.add('show');
+
+  runPhase1(()=>runPhase2(()=>runPhase3(()=>finishLoading())));
+}
+
+/* ── Phase 1: 识别层 (3 steps + finale) ── */
+function runPhase1(onDone){
+  const phase1=document.getElementById('ldPhase1');
+  ['ldPhase2','ldPhase3'].forEach(id=>{document.getElementById(id).classList.remove('active')});
+  phase1.classList.remove('active'); void phase1.offsetWidth; phase1.classList.add('active');
+
+  const steps=['ls0','ls1','ls2','ls3'];
+  const titles=['映射标签中…','定位母题中…','提取解析逻辑中…','识别完成！'];
+  const subs=['识别题型与知识点标签','匹配题库母题结构','拆解解题逻辑链路','即将进入备课阶段'];
+  const dur=3800;
+  const circ=182; // 2π×29
+  const ring=document.getElementById('ldRing');
+  const pctEl=document.getElementById('ldPct');
+  const barFill=document.getElementById('ldBarFill');
+
+  // Steps 0-2 evenly spaced, step 3 fires at dur-400 so it briefly shows active then done
+  const stepTimes=[0, dur*0.28, dur*0.58, dur*0.82];
+  steps.forEach((id,i)=>{
+    setTimeout(()=>{
+      if(i>0) document.getElementById(steps[i-1]).classList.replace('active','done');
+      document.getElementById(id).classList.add('active');
+      document.getElementById('ldTitle').textContent=titles[i];
+      document.getElementById('ldSubtitle').textContent=subs[i];
+    }, stepTimes[i]);
+  });
+
+  let startTs=null;
+  function raf1(ts){
+    if(!startTs)startTs=ts;
+    const p=Math.min((ts-startTs)/dur,1);
+    ring.style.strokeDashoffset=circ*(1-p);
+    pctEl.textContent=Math.round(p*100)+'%';
+    barFill.style.width=(p*100)+'%';
+    if(p<1)requestAnimationFrame(raf1);
+  }
+  requestAnimationFrame(raf1);
+
+  setTimeout(()=>{
+    document.getElementById(steps[3]).classList.replace('active','done');
+    setTimeout(()=>{
+      ring.style.strokeDashoffset=circ; pctEl.textContent='0%'; barFill.style.width='0%';
+      steps.forEach(id=>{const e=document.getElementById(id);e.classList.remove('active','done')});
+      phase1.classList.remove('active');
+      onDone();
+    },350);
+  }, dur+100);
+}
+
+/* ── Phase 2: 备课层 (5 tasks) ── */
+function runPhase2(onDone){
+  const phase2=document.getElementById('ldPhase2');
+  phase2.classList.remove('active'); void phase2.offsetWidth; phase2.classList.add('active');
+
+  const tasks=[
+    {id:'pt0',sid:'pt0s',active:'规划讲解框架，生成逐字稿…',done:'授课结构及逐字稿完成', dur:3200},
+    {id:'pt1',sid:'pt1s',active:'正在合成语音…',             done:'音频已生成',            dur:2800},
+    {id:'pt2',sid:'pt2s',active:'正在排版幻灯片…',           done:'PPT 已就绪',             dur:2400},
+    {id:'pt3',sid:'pt3s',active:'正在绘制板书笔迹…',         done:'手书轨道完成',           dur:1800},
+    {id:'pt4',sid:'pt4s',active:'正在标注圈划重点…',         done:'标记已添加',             dur:1400},
+  ];
+
+  let t=0;
+  tasks.forEach((task,i)=>{
+    const activateAt=t, doneAt=t+task.dur;
+    t=doneAt+80;
+    setTimeout(()=>{
+      document.getElementById(task.id).classList.add('pt-active');
+      document.getElementById(task.sid).textContent=task.active;
+    }, activateAt);
+    setTimeout(()=>{
+      const el=document.getElementById(task.id);
+      el.classList.remove('pt-active'); el.classList.add('pt-done');
+      document.getElementById(task.sid).textContent=task.done;
+      if(i===tasks.length-1){
+        setTimeout(()=>{
+          document.getElementById('ldPhase2').classList.remove('active');
+          setTimeout(onDone, 120);
+        }, 500);
+      }
+    }, doneAt);
+  });
+}
+
+/* ── Phase 3: 导演层编排 ── */
+function runPhase3(onDone){
+  const phase3=document.getElementById('ldPhase3');
+  phase3.classList.remove('active'); void phase3.offsetWidth; phase3.classList.add('active');
+
+  const statusMsgs=['正在校验轨道时间戳…','对齐圈划触发帧…','合成四轨时间线…','渲染最终视频…','编排完成！'];
+  const tracks=[
+    {fillId:'df0',pctId:'dp0',dur:2600,delay:0},
+    {fillId:'df1',pctId:'dp1',dur:2200,delay:150},
+    {fillId:'df2',pctId:'dp2',dur:1800,delay:300},
+    {fillId:'df3',pctId:'dp3',dur:1400,delay:450},
+  ];
+  const totalDur=3200;
+
+  const origin=performance.now();
+
+  function rafAll(now){
+    let allDone=true;
+    tracks.forEach(tr=>{
+      const elapsed=now-origin-tr.delay;
+      if(elapsed<0){ allDone=false; return; }
+      const p=Math.min(elapsed/tr.dur,1);
+      document.getElementById(tr.fillId).style.width=(p*100)+'%';
+      document.getElementById(tr.pctId).textContent=Math.round(p*100)+'%';
+      if(p<1)allDone=false;
+    });
+    if(!allDone)requestAnimationFrame(rafAll);
+  }
+  requestAnimationFrame(rafAll);
+
+  statusMsgs.forEach((msg,i)=>{
+    setTimeout(()=>{ document.getElementById('dirStatus').textContent=msg; }, i*(totalDur/statusMsgs.length));
+  });
+
+  setTimeout(()=>setTimeout(onDone,400), totalDur+100);
+}
+
+/* ── Finish: hide loading, show result ── */
+function finishLoading(){
+  const ld=document.getElementById('loading');
+  ld.classList.remove('show');
+
+  // reset phase2 (5 tasks now)
+  [0,1,2,3,4].forEach(i=>{
+    const el=document.getElementById('pt'+i);
+    if(el){ el.classList.remove('pt-active','pt-done'); document.getElementById('pt'+i+'s').textContent='等待中'; }
+  });
+  // reset phase3 tracks
+  [0,1,2,3].forEach(i=>{
+    const f=document.getElementById('df'+i); if(f)f.style.width='0%';
+    const p=document.getElementById('dp'+i); if(p)p.textContent='0%';
+  });
+  ['ldPhase1','ldPhase2','ldPhase3'].forEach(id=>document.getElementById(id).classList.remove('active'));
+
+  const ip=document.getElementById('inputPage'),rp=document.getElementById('resultPage');
+  ip.classList.add('slide-out');
+  setTimeout(()=>{
+    ip.classList.remove('active','slide-out');
+    rp.classList.add('active','slide-in');
+    setTimeout(()=>rp.classList.remove('slide-in'),380);
+    startPlayback();
+  },260);
+}
+
+function goBack(){
+  if(!confirm('返回后当前编辑内容不会保存，确认返回？'))return;
+  const ip=document.getElementById('inputPage'),rp=document.getElementById('resultPage');
+  rp.classList.add('slide-out');
+  setTimeout(()=>{rp.classList.remove('active','slide-out');ip.classList.add('active','slide-in');setTimeout(()=>ip.classList.remove('slide-in'),380);stopVideo()},260);
+}
+
+// video playback
+let playing=false,pct=0,vtimer=null;
+const totalSec=472;
+function startPlayback(){pct=0;updateVUI();setTimeout(()=>{playing=true;tick2()},500)}
+function stopVideo(){playing=false;clearTimeout(vtimer);pct=0;updateVUI()}
+function tick2(){if(!playing)return;pct+=100/(totalSec*4);if(pct>=100){pct=100;playing=false}updateVUI();if(playing)vtimer=setTimeout(tick2,250)}
+function updateVUI(){
+  document.getElementById('progFill').style.width=pct+'%';
+  // update playhead
+  const ph=document.getElementById('phLine'),tr=document.getElementById('tracksEl');
+  const tw=tr.offsetWidth-84-10;
+  ph.style.left=(84+10+tw*(pct/100))+'px';
+  const s=Math.round(totalSec*pct/100);
+  document.getElementById('vtime').textContent=fmt(s)+' / 07:52';
+  document.getElementById('playBtn').innerHTML=playing
+    ?'<svg viewBox="0 0 14 14"><rect x="2" y="2" width="4" height="10" fill="white"/><rect x="8" y="2" width="4" height="10" fill="white"/></svg>'
+    :'<svg viewBox="0 0 14 14"><path d="M3 2L11 7L3 12V2Z" fill="white"/></svg>';
+}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function togglePlay(){playing=!playing;updateVUI();if(playing)tick2()}
+function seekVideo(e){const r=e.currentTarget.getBoundingClientRect();pct=Math.max(0,Math.min(100,(e.clientX-r.left)/r.width*100));updateVUI()}
+
+// export
+function openExport(){
+  document.getElementById('exType').textContent=document.getElementById('rType').textContent;
+  document.getElementById('exTc').textContent=document.getElementById('rTc').textContent;
+  document.getElementById('exDefault').style.display='';
+  document.getElementById('exProg').classList.remove('show');
+  document.getElementById('exDone').classList.remove('show');
+  document.getElementById('exportModal').classList.add('show');
+}
+function closeExport(){document.getElementById('exportModal').classList.remove('show')}
+document.getElementById('exportModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExport()});
+function selFmt(el){el.closest('.fmt-grid').querySelectorAll('.fmt-card').forEach(c=>c.classList.remove('on'));el.classList.add('on');updateFN()}
+function selQ(el){el.closest('.q-row').querySelectorAll('.q-opt').forEach(c=>c.classList.remove('on'));el.classList.add('on');updateFN()}
+function updateFN(){
+  const f=(document.querySelector('.fmt-card.on .fmt-name')||{}).textContent||'MP4';
+  const q=(document.querySelector('.q-opt.on')||{}).textContent||'1080P';
+  document.getElementById('exFilename').textContent=`上岸仓_${document.getElementById('exType').textContent}_${document.getElementById('exTc').textContent}_${q}.${f.toLowerCase()}`;
+}
+function startExport(){
+  document.getElementById('exDefault').style.display='none';
+  document.getElementById('exProg').classList.add('show');
+  const fill=document.getElementById('erFill'),pctEl=document.getElementById('exPct'),subEl=document.getElementById('exSub');
+  const subs=['合成音视频轨道…','渲染 PPT 动画…','添加手书图层…','封装输出文件…'];
+  let p=0;
+  const iv=setInterval(()=>{
+    p+=2+Math.random()*3;if(p>100)p=100;
+    fill.style.strokeDashoffset=163*(1-p/100);
+    pctEl.textContent=Math.round(p)+'%';
+    subEl.textContent=subs[Math.min(Math.floor(p/28),3)];
+    if(p>=100){clearInterval(iv);setTimeout(()=>{updateFN();document.getElementById('exProg').classList.remove('show');document.getElementById('exDone').classList.add('show')},500)}
+  },120);
+}
+function doDownload(){const a=document.createElement('a');a.href='#';a.download=document.getElementById('exFilename').textContent;a.click();setTimeout(closeExport,300)}
+
+// ── Generation History ──────────────────────────────────────────────
+let histRecords=[];
+
+function saveRecord(){
+  const text=document.getElementById('qi').value.trim();
+  const mode=document.querySelector('.vmode.on')?.dataset.mode==='live'?'直播':'录播';
+  const type=document.querySelector('.chip.on').textContent;
+  const tc=document.querySelector('.tc.on .tc-name').textContent;
+  const now=new Date();
+  const timeStr=now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+  const dateStr=now.getMonth()+1+'月'+now.getDate()+'日';
+  const record={
+    id:Date.now(),
+    text:text||'（图片题目）',
+    type:mode+' · '+type,tc,
+    time:dateStr+' '+timeStr,
+    dur:'07:52'
+  };
+  histRecords.unshift(record);
+  renderHistory();
+  updateHistBadge();
+}
+
+function renderHistory(){
+  const body=document.getElementById('histBody');
+  const empty=document.getElementById('histEmpty');
+  // remove old items (keep empty div)
+  body.querySelectorAll('.hist-item').forEach(el=>el.remove());
+  if(histRecords.length===0){empty.style.display='flex';return;}
+  empty.style.display='none';
+  histRecords.forEach(r=>{
+    const item=document.createElement('div');
+    item.className='hist-item';
+    item.innerHTML=`
+      <div class="hist-item-top">
+        <div class="hist-item-text">${escHtml(r.text)}</div>
+        <div class="hist-item-time">${r.time}</div>
+      </div>
+      <div class="hist-item-meta">
+        <span class="hi-badge hi-type">${escHtml(r.type)}</span>
+        <span class="hi-badge hi-tc">${escHtml(r.tc)}</span>
+        <span class="hi-badge hi-dur">⏱ ${r.dur}</span>
+      </div>`;
+    body.appendChild(item);
+  });
+}
+
+function updateHistBadge(){
+  const badge=document.getElementById('histBadge');
+  if(histRecords.length===0){badge.style.display='none';return;}
+  badge.style.display='inline-flex';
+  badge.textContent=histRecords.length;
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function openHistory(){
+  document.getElementById('histOverlay').classList.add('show');
+  document.getElementById('histDrawer').classList.add('open');
+}
+function closeHistory(){
+  document.getElementById('histOverlay').classList.remove('show');
+  document.getElementById('histDrawer').classList.remove('open');
+}
+
+// ── Beat data ────────────────────────────────────────────────────────
+// 生产环境由 step3/step4 JSON 注入；此处为 mock 演示数据
+const BEATS = [
+  {
+    goal: '建立整体印象，知道有什么材料，先不找数',
+    narr: [
+      { text:'好，来看这道题，先把材料扫一眼。', sec:3 },
+      { text:'材料有两部分：一段文字材料给了函数 f(x) = ax² + bx + c 的条件，还有题干直接问最小值。', sec:5 },
+      { text:'先不着急找数，等审完题再说。', sec:4 },
+    ],
+    board: [],
+    emph: [],
+  },
+  {
+    goal: '判断题型，明确公式，确定分子分母和计算目标',
+    narr: [
+      { text:'看题目——已知函数 f(x) = ax² + bx + c，其中 a > 0，求 f(x) 的最小值。', sec:5 },
+      { text:'注意，看到"最小值"，题型一眼出来——二次函数顶点问题，对吧。', sec:5 },
+      { text:'公式是 f(x) = a(x + b/2a)² - (b²-4ac)/4a，最小值就在顶点处取得。', sec:6 },
+      { text:'所以关键在求顶点坐标，分两步走。', sec:4 },
+    ],
+    board: [
+      { content:'f(x) = a(x+b/2a)² - (b²-4ac)/4a', triggerSent:3 },
+    ],
+    emph: [
+      { word:'最小值', form:'underline', src:'stem', triggerSent:2, triggerWord:'最小值' },
+      { word:'a > 0', form:'circle', src:'materials', triggerSent:1, triggerWord:'a > 0' },
+    ],
+  },
+  {
+    goal: '逐一定位所需数据，说清每个数的来源',
+    narr: [
+      { text:'好，去材料里找数。a > 0，直接给了，是吧。', sec:4 },
+      { text:'b 和 c 也在条件里给出了，是吧。', sec:3 },
+      { text:'顶点横坐标 x = -b/2a，这个要用 a 和 b 算出来，没有直接给。', sec:5 },
+      { text:'顶点纵坐标就是最小值，代入公式就能算，是吧。', sec:4 },
+    ],
+    board: [],
+    emph: [
+      { word:'a > 0', form:'circle', src:'materials', triggerSent:1, triggerWord:'a > 0' },
+      { word:'-b/2a', form:'box', src:'stem', triggerSent:3, triggerWord:'-b/2a' },
+    ],
+  },
+  {
+    goal: '看选项间距，判断是否可以估算',
+    narr: [
+      { text:'先别急着算，看一眼选项。A 是 1/4，B 是 1/2，C 是 3/4，D 是 1。', sec:5 },
+      { text:'相邻差是 1/4，误差不超过 1/8 能确定，可以估算，对吧。', sec:5 },
+      { text:'不用精确到小数点后很多位，大概算就行。', sec:4 },
+    ],
+    board: [],
+    emph: [],
+  },
+  {
+    goal: '分步计算，每步写板书，得出结果对应选项',
+    narr: [
+      { text:'好，一步一步来。第一步，把 x = -b/2a 代入公式。', sec:4 },
+      { text:'换个思路，□×2a = -b，试 x = 1/2——2a×(1/2) = a，不等于 -b，大了。', sec:7 },
+      { text:'再试 x = -1/4——2a×(-1/4) = -a/2，吻合了，是吧。', sec:5 },
+      { text:'第二步，算最小值：-(b²-4ac)/4a，代入数值，等于 -1/4，是吧。', sec:6 },
+      { text:'对应选项 A，选 A。', sec:3 },
+    ],
+    board: [
+      { content:'x = -b/2a', triggerSent:1 },
+      { content:'□×2a = -b', triggerSent:2 },
+      { content:'最小值 = -(b²-4ac)/4a = -1/4', triggerSent:4 },
+    ],
+    emph: [
+      { word:'-b/2a', form:'circle', src:'stem', triggerSent:1, triggerWord:'-b/2a' },
+      { word:'A', form:'circle', src:'options', triggerSent:5, triggerWord:'选 A' },
+    ],
+  },
+  {
+    goal: '说出核心难点和识别信号，以"好，下一题"结束',
+    narr: [
+      { text:'这道题难在哪里——容易忘记 a > 0 是前提，a < 0 的话是求最大值，思路反了。', sec:6 },
+      { text:'看到"a > 0"加上"最小值"，马上想到配方法求顶点，记住这个。', sec:5 },
+      { text:'好，下一题。', sec:2 },
+    ],
+    board: [],
+    emph: [
+      { word:'a > 0', form:'underline', src:'stem', triggerSent:2, triggerWord:'a > 0' },
+    ],
+  },
+];
+
+// 当前选中的 beat 索引
+let currentBeatIdx = 0;
+
+function selectBeat(el, idx){
+  document.querySelectorAll('.tree-node').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  currentBeatIdx = idx;
+  renderBeat(idx);
+}
+
+function renderBeat(idx){
+  const beat = BEATS[idx] || BEATS[0];
+  // 目标横幅
+  document.getElementById('beatGoalText').textContent = beat.goal;
+  // 渲染逐字稿
+  renderNarr(beat.narr);
+  // 渲染板书
+  renderBoard(beat.board);
+  // 渲染圈划
+  renderEmph(beat.emph);
+  // 更新字数
+  updateWordCount();
+}
+
+// ── 逐字稿渲染 ────────────────────────────────────────────────────────
+function renderNarr(sentences){
+  const list = document.getElementById('narrList');
+  list.innerHTML = '';
+  sentences.forEach((s, i) => {
+    const item = document.createElement('div');
+    item.className = 'narr-sent';
+    item.innerHTML = `
+      <div class="narr-sent-hdr">
+        <span class="narr-idx">第 ${i+1} 句</span>
+        <span class="narr-sec">${s.sec}s</span>
+        <button class="narr-del" onclick="delNarrSent(this)">
+          <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 3h8M4 3V2h4v1M5 6v3M7 6v3M2.5 3l.5 7h6l.5-7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <textarea class="narr-text" rows="2" oninput="onNarrInput(this)">${escAttr(s.text)}</textarea>`;
+    list.appendChild(item);
+  });
+  // auto-resize all
+  list.querySelectorAll('.narr-text').forEach(ta => { ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; });
+}
+
+// ── 板书渲染 ─────────────────────────────────────────────────────────
+function renderBoard(items){
+  const emptyTip = document.getElementById('boardEmptyTip');
+  const boardList = document.getElementById('boardList');
+  boardList.innerHTML = '';
+  if(!items || items.length === 0){
+    emptyTip.style.display = 'flex';
+    boardList.style.display = 'none';
+    return;
+  }
+  emptyTip.style.display = 'none';
+  boardList.style.display = 'flex';
+  items.forEach(b => {
+    const item = document.createElement('div');
+    item.className = 'board-item';
+    item.innerHTML = `
+      <div class="board-item-left">
+        <textarea class="board-content" rows="2">${escAttr(b.content)}</textarea>
+      </div>
+      <div class="board-item-right">
+        <div class="board-field-label">说到第几句时写</div>
+        <div class="board-trigger-row">
+          <span class="board-trigger-prefix">第</span>
+          <input class="board-trigger-input" type="number" value="${b.triggerSent}" min="1">
+          <span class="board-trigger-prefix">句</span>
+        </div>
+      </div>
+      <button class="hand-del" onclick="this.closest('.board-item').remove()">
+        <svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M2 4h10M5 4V2h4v2M6 7v4M8 7v4M3 4l1 8h6l1-8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>`;
+    boardList.appendChild(item);
+  });
+}
+
+// ── 圈划渲染 ─────────────────────────────────────────────────────────
+const EMPH_FORMS = ['circle','underline','box','arrow','line','hl','strike'];
+const EMPH_FORM_LABELS = { circle:'圈选', underline:'划线', box:'框选', arrow:'箭头', line:'直线', hl:'高亮', strike:'删除线' };
+const EMPH_FORM_SVGS = {
+  circle: `<svg viewBox="0 0 16 16" fill="none" width="13" height="13"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  underline: `<svg viewBox="0 0 16 16" fill="none" width="13" height="13"><path d="M4 4v5a4 4 0 008 0V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>`,
+  box: `<svg viewBox="0 0 16 16" fill="none" width="13" height="13"><rect x="2" y="4" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>`,
+  arrow: `<svg viewBox="0 0 16 16" fill="none" width="13" height="13"><path d="M3 8h8M9 5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  line: `<svg viewBox="0 0 16 16" fill="none" width="13" height="13"><path d="M3 13L13 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>`,
+  hl: `<svg viewBox="0 0 16 16" fill="none" width="13" height="13"><rect x="1" y="10" width="14" height="4" rx="1" fill="#FDE68A"/><path d="M3 10V5l5-3 5 3v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  strike: `<svg viewBox="0 0 16 16" fill="none" width="13" height="13"><path d="M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 5.5h6M5 10.5h6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".35"/></svg>`,
+};
+const SRC_MAP = { stem:'题干', materials:'材料', options:'选项' };
+
+function renderEmph(items){
+  const list = document.getElementById('emphList');
+  const emptyTip = document.getElementById('emphEmptyTip');
+  list.innerHTML = '';
+  if(!items || items.length === 0){
+    if(emptyTip) emptyTip.style.display = 'flex';
+    return;
+  }
+  if(emptyTip) emptyTip.style.display = 'none';
+  (items||[]).forEach((e, i) => {
+    const card = document.createElement('div');
+    card.className = 'emph-card';
+    const formOpts = EMPH_FORMS.map(f => `
+      <div class="ef-opt${f===e.form?' active':''}" onclick="selEmphForm(this)" data-form="${f}">
+        ${EMPH_FORM_SVGS[f]}${EMPH_FORM_LABELS[f]}
+      </div>`).join('');
+    const srcOpts = ['stem','materials','options'].map(s => `
+      <div class="esrc${s===e.src?' active':''}" onclick="selEmphSrc(this)" data-src="${s}">${SRC_MAP[s]}</div>`).join('');
+    card.innerHTML = `
+      <div class="emph-card-hdr">
+        <div class="emph-card-idx">${String(i+1).padStart(2,'0')}</div>
+        <input class="emph-word-input" type="text" value="${escAttr(e.word)}" placeholder="标记对象（原文字符）">
+        <button class="hand-del" onclick="this.closest('.emph-card').remove()">
+          <svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M2 4h10M5 4V2h4v2M6 7v4M8 7v4M3 4l1 8h6l1-8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div class="emph-card-body">
+        <div class="emph-row">
+          <div class="emph-field-label">标记形式</div>
+          <div class="emph-form-row">${formOpts}</div>
+        </div>
+        <div class="emph-row-split">
+          <div class="emph-field">
+            <div class="emph-field-label">来源</div>
+            <div class="emph-src-row">${srcOpts}</div>
+          </div>
+          <div class="emph-field emph-trigger-field">
+            <div class="emph-field-label">触发时机</div>
+            <div class="emph-trigger-stack">
+              <div class="emph-trigger-row">
+                <span class="board-trigger-prefix">第</span>
+                <input class="board-trigger-input" type="number" value="${e.triggerSent}" min="1">
+                <span class="board-trigger-prefix">句</span>
+              </div>
+              <div class="emph-trigger-kw-row">
+                <span class="emph-kw-prefix">说到</span>
+                <input class="emph-kw-input" type="text" value="${escAttr(e.triggerWord||e.word)}" placeholder="关键词">
+                <span class="emph-kw-prefix">时</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+function escAttr(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function updateWordCount(){
+  const total = Array.from(document.querySelectorAll('.narr-text'))
+    .map(t=>t.value.replace(/\s/g,'')).join('').length;
+  const wc = document.getElementById('scriptWc');
+  if(wc) wc.textContent = '共 '+total+' 字';
+}
+
+function switchTab(btn, tab){
+  btn.closest('.ed-detail').querySelectorAll('.ed-tab').forEach(t=>t.classList.remove('active'));
+  btn.closest('.ed-detail').querySelectorAll('.ed-body').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const capTab = tab.charAt(0).toUpperCase()+tab.slice(1);
+  document.getElementById('tab'+capTab).classList.add('active');
+}
+
+// ── 逐字稿 tab ──────────────────────────────────────────────────────
+function onNarrInput(ta){
+  ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px';
+  updateWordCount();
+  const sec=Math.max(2,Math.round(ta.value.replace(/\s/g,'').length*0.316));
+  const hdr=ta.closest('.narr-sent').querySelector('.narr-sec');
+  if(hdr) hdr.textContent=sec+'s';
+  // persist to BEATS
+  const sentences=Array.from(document.querySelectorAll('.narr-text')).map(t=>({ text:t.value, sec:Math.max(2,Math.round(t.value.replace(/\s/g,'').length*0.316)) }));
+  BEATS[currentBeatIdx].narr = sentences;
+}
+function delNarrSent(btn){
+  btn.closest('.narr-sent').remove();
+  document.querySelectorAll('.narr-sent').forEach((s,i)=>{
+    const idx=s.querySelector('.narr-idx'); if(idx) idx.textContent='第 '+(i+1)+' 句';
+  });
+  updateWordCount();
+}
+function addNarrSent(){
+  const list=document.getElementById('narrList');
+  const count=list.querySelectorAll('.narr-sent').length;
+  const item=document.createElement('div'); item.className='narr-sent';
+  item.innerHTML=`
+    <div class="narr-sent-hdr">
+      <span class="narr-idx">第 ${count+1} 句</span>
+      <span class="narr-sec">2s</span>
+      <button class="narr-del" onclick="delNarrSent(this)">
+        <svg viewBox="0 0 12 12" fill="none" width="10" height="10"><path d="M2 3h8M4 3V2h4v1M5 6v3M7 6v3M2.5 3l.5 7h6l.5-7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <textarea class="narr-text" rows="2" oninput="onNarrInput(this)" placeholder="句子内容…"></textarea>`;
+  list.appendChild(item); item.querySelector('.narr-text').focus();
+}
+
+// ── 板书 tab ────────────────────────────────────────────────────────
+function addBoardItem(){
+  const list=document.getElementById('boardList');
+  list.style.display='flex';
+  document.getElementById('boardEmptyTip').style.display='none';
+  const item=document.createElement('div'); item.className='board-item';
+  item.innerHTML=`
+    <div class="board-item-left">
+      <textarea class="board-content" rows="2" placeholder="板书内容…"></textarea>
+    </div>
+    <div class="board-item-right">
+      <div class="board-field-label">说到第几句时写</div>
+      <div class="board-trigger-row">
+        <span class="board-trigger-prefix">第</span>
+        <input class="board-trigger-input" type="number" value="1" min="1">
+        <span class="board-trigger-prefix">句</span>
+      </div>
+    </div>
+    <button class="hand-del" onclick="this.closest('.board-item').remove()">
+      <svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M2 4h10M5 4V2h4v2M6 7v4M8 7v4M3 4l1 8h6l1-8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>`;
+  list.appendChild(item); item.querySelector('.board-content').focus();
+}
+
+// ── 圈划 tab ────────────────────────────────────────────────────────
+function selEmphForm(el){
+  el.closest('.emph-form-row').querySelectorAll('.ef-opt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+}
+function selEmphSrc(el){
+  el.closest('.emph-src-row').querySelectorAll('.esrc').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+}
+function addEmphCard(){
+  const list=document.getElementById('emphList');
+  const idx=list.querySelectorAll('.emph-card').length+1;
+  const card=document.createElement('div'); card.className='emph-card';
+  card.innerHTML=`
+    <div class="emph-card-hdr">
+      <div class="emph-card-idx">${String(idx).padStart(2,'0')}</div>
+      <input class="emph-word-input" type="text" placeholder="标记对象（原文字符）">
+      <button class="hand-del" onclick="this.closest('.emph-card').remove()">
+        <svg viewBox="0 0 14 14" fill="none" width="11" height="11"><path d="M2 4h10M5 4V2h4v2M6 7v4M8 7v4M3 4l1 8h6l1-8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <div class="emph-card-body">
+      <div class="emph-row">
+        <div class="emph-field-label">标记形式</div>
+        <div class="emph-form-row">
+          <div class="ef-opt active" onclick="selEmphForm(this)"><svg viewBox="0 0 16 16" fill="none" width="13" height="13"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.6"/></svg>圈选</div>
+          <div class="ef-opt" onclick="selEmphForm(this)"><svg viewBox="0 0 16 16" fill="none" width="13" height="13"><path d="M4 4v5a4 4 0 008 0V4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>划线</div>
+          <div class="ef-opt" onclick="selEmphForm(this)"><svg viewBox="0 0 16 16" fill="none" width="13" height="13"><rect x="2" y="4" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>框选</div>
+          <div class="ef-opt" onclick="selEmphForm(this)"><svg viewBox="0 0 16 16" fill="none" width="13" height="13"><path d="M3 8h8M9 5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>箭头</div>
+          <div class="ef-opt" onclick="selEmphForm(this)"><svg viewBox="0 0 16 16" fill="none" width="13" height="13"><path d="M3 13L13 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>直线</div>
+          <div class="ef-opt" onclick="selEmphForm(this)"><svg viewBox="0 0 16 16" fill="none" width="13" height="13"><rect x="1" y="10" width="14" height="4" rx="1" fill="#FDE68A"/><path d="M3 10V5l5-3 5 3v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>高亮</div>
+          <div class="ef-opt" onclick="selEmphForm(this)"><svg viewBox="0 0 16 16" fill="none" width="13" height="13"><path d="M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M5 5.5h6M5 10.5h6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".35"/></svg>删除线</div>
+        </div>
+      </div>
+      <div class="emph-row-split">
+        <div class="emph-field">
+          <div class="emph-field-label">来源</div>
+          <div class="emph-src-row">
+            <div class="esrc active" onclick="selEmphSrc(this)">题干</div>
+            <div class="esrc" onclick="selEmphSrc(this)">材料</div>
+            <div class="esrc" onclick="selEmphSrc(this)">选项</div>
+          </div>
+        </div>
+        <div class="emph-field emph-trigger-field">
+          <div class="emph-field-label">触发时机</div>
+          <div class="emph-trigger-stack">
+            <div class="emph-trigger-row">
+              <span class="board-trigger-prefix">第</span>
+              <input class="board-trigger-input" type="number" value="1" min="1">
+              <span class="board-trigger-prefix">句</span>
+            </div>
+            <div class="emph-trigger-kw-row">
+              <span class="emph-kw-prefix">说到</span>
+              <input class="emph-kw-input" type="text" placeholder="关键词">
+              <span class="emph-kw-prefix">时</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  list.appendChild(card); card.querySelector('.emph-word-input').focus();
+}
+
+// Regen — only Phase 2
+function regenVideo(){
+  stopVideo();
+  const ld=document.getElementById('loading');
+  ld.classList.add('show');
+  runPhase2(()=>runPhase3(()=>{
+    ld.classList.remove('show');
+    [0,1,2,3,4].forEach(i=>{
+      const el=document.getElementById('pt'+i);
+      if(el){ el.classList.remove('pt-active','pt-done'); document.getElementById('pt'+i+'s').textContent='等待中'; }
+    });
+    [0,1,2,3].forEach(i=>{
+      const f=document.getElementById('df'+i); if(f)f.style.width='0%';
+      const p=document.getElementById('dp'+i); if(p)p.textContent='0%';
+    });
+    ['ldPhase2','ldPhase3'].forEach(id=>document.getElementById(id).classList.remove('active'));
+    startPlayback();
+  }));
+}
+
+// init on load
+document.addEventListener('DOMContentLoaded',()=>{
+  renderBeat(0);
+});
+</script>
+</body>
+</html>
