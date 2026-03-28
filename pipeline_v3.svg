@@ -1,0 +1,497 @@
+<svg width="100%" viewBox="0 0 1000 1760" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0f1e"/>
+      <stop offset="100%" stop-color="#0d1117"/>
+    </linearGradient>
+    <linearGradient id="l1grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#4f46e5"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="l2grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+    <linearGradient id="l3grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <linearGradient id="rendergrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="#000" flood-opacity="0.45"/>
+    </filter>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#475569" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.9" fill="#1e293b"/>
+    </pattern>
+    <style><![CDATA[
+      text[font-size="9"] { font-size: 10.8px !important; }
+      text[font-size="9.5"] { font-size: 11.4px !important; }
+      text[font-size="10"] { font-size: 12px !important; }
+      text[font-size="10.5"] { font-size: 12.6px !important; }
+      text[font-size="11"] { font-size: 13.2px !important; }
+      text[font-size="11.5"] { font-size: 13.8px !important; }
+      text[font-size="12"] { font-size: 14.4px !important; }
+      text[font-size="13"] { font-size: 15.6px !important; }
+      text[font-size="14"] { font-size: 16.8px !important; }
+      text[font-size="16"] { font-size: 19.2px !important; }
+      text[font-size="18"] { font-size: 21.6px !important; }
+    ]]></style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1000" height="1760" fill="url(#bg)"/>
+  <rect width="1000" height="1760" fill="url(#dots)"/>
+
+  <!-- Stage rail -->
+  <line x1="32" y1="70" x2="32" y2="1688" stroke="#1e293b" stroke-width="1.5"/>
+
+  <g id="content" transform="translate(0,24) scale(1,1.08)">
+
+  <!-- ══════════════════════════════════════════
+       TITLE
+  ══════════════════════════════════════════ -->
+  <text x="500" y="38" fill="#f1f5f9" font-size="18" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif" letter-spacing="1">
+    上岸仓生课系统 · 视频生产 Pipeline v3
+  </text>
+  <text x="500" y="58" fill="#475569" font-size="11.5" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">
+    讲题课程生成 Agent → 内容设计 Agent → 导演 Agent → 渲染引擎
+  </text>
+
+  <!-- style param sidebar -->
+  <line x1="960" y1="80" x2="960" y2="1460" stroke="#4f46e5" stroke-width="0.8" stroke-dasharray="5 4" opacity="0.35"/>
+  <text x="978" y="780" fill="#4338ca" font-size="10" font-family="'PingFang SC',sans-serif"
+        transform="rotate(90,978,780)" text-anchor="middle" opacity="0.6">风格参数（刘文超）贯穿全程</text>
+
+  <!-- ══════════════════════════════════════════
+       SECTION: 输入层   y=72
+  ══════════════════════════════════════════ -->
+  <circle cx="32" cy="100" r="5" fill="#a78bfa" filter="url(#glow)"/>
+  <text x="20" y="138" fill="#64748b" font-size="10" font-weight="600"
+        font-family="'PingFang SC',sans-serif" transform="rotate(-90,20,138)" text-anchor="middle">输入</text>
+
+  <!-- Input box -->
+  <rect x="60" y="76" width="880" height="68" rx="13" fill="#1e1b4b" stroke="#4f46e5" stroke-width="1.3" filter="url(#shadow)"/>
+  <line x1="500" y1="84" x2="500" y2="136" stroke="#4f46e5" stroke-opacity="0.35" stroke-width="1"/>
+  <text x="280" y="106" fill="#c4b5fd" font-size="14" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">输入试题</text>
+  <text x="280" y="124" fill="#7c3aed" font-size="11" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">题目文本 · 图表图片 · 公式</text>
+  <text x="720" y="106" fill="#c4b5fd" font-size="14" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">参数包</text>
+  <text x="720" y="124" fill="#7c3aed" font-size="11" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">风格: 刘文超 · 课型: 讲题</text>
+
+  <!-- Arrow -->
+  <line x1="500" y1="144" x2="500" y2="164" stroke="#475569" stroke-width="1.4" marker-end="url(#arr)"/>
+
+  <!-- 有效题目判断 diamond -->
+  <polygon points="500,168 582,198 500,228 418,198" fill="#0f172a" fill-opacity="0.85" stroke="#34d399" stroke-width="1.3"/>
+  <text x="500" y="201" fill="#cbd5e1" font-size="12" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">是有效试题？</text>
+  <!-- No branch -->
+  <line x1="582" y1="198" x2="668" y2="198" stroke="#94a3b8" stroke-width="1.2" marker-end="url(#arr)"/>
+  <text x="624" y="190" fill="#ef4444" font-size="10" font-family="'PingFang SC',sans-serif" text-anchor="middle">否</text>
+  <rect x="672" y="184" width="88" height="28" rx="6" fill="#1f2937" stroke="#4b5563"/>
+  <text x="716" y="202" fill="#9ca3af" font-size="11" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">终止处理</text>
+  <!-- Yes arrow -->
+  <line x1="500" y1="228" x2="500" y2="252" stroke="#34d399" stroke-width="1.4" marker-end="url(#arr-green)"/>
+  <text x="514" y="244" fill="#34d399" font-size="10" font-family="'PingFang SC',sans-serif">是</text>
+
+  <!-- ══════════════════════════════════════════
+       SECTION: 预处理   y=256
+  ══════════════════════════════════════════ -->
+  <circle cx="32" cy="300" r="5" fill="#34d399" filter="url(#glow)"/>
+  <text x="20" y="340" fill="#64748b" font-size="10" font-weight="600"
+        font-family="'PingFang SC',sans-serif" transform="rotate(-90,20,340)" text-anchor="middle">预处理</text>
+
+  <!-- 图表处理 Skill -->
+  <rect x="60" y="256" width="418" height="96" rx="11" fill="#052e16" fill-opacity="0.85" stroke="#34d399" stroke-width="1.3"/>
+  <text x="269" y="282" fill="#6ee7b7" font-size="13" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">图表处理 Skill</text>
+  <text x="269" y="300" fill="#34d399" font-size="10.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">Vision 读图 → extracted + coord_map</text>
+  <text x="269" y="317" fill="#34d399" font-size="10.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">重绘图表（ECharts SVG）· 有图才跑</text>
+  <text x="269" y="334" fill="#065f46" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">图表类精确坐标 · 图形推理类格子分割</text>
+
+  <!-- 母题路由 -->
+  <rect x="522" y="256" width="418" height="96" rx="11" fill="#1c1917" fill-opacity="0.85" stroke="#f97316" stroke-width="1.3"/>
+  <text x="731" y="282" fill="#fdba74" font-size="13" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">母题路由</text>
+  <text x="731" y="300" fill="#f97316" font-size="10.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">语义判断题型 → 匹配母题接口</text>
+  <text x="731" y="317" fill="#f97316" font-size="10.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">13种分支（资料/数量/判断/言语/常识）+ 兜底</text>
+  <text x="731" y="334" fill="#92400e" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">返回 solution { answer · steps · trap · speed_method }</text>
+
+  <!-- Converge arrows to Layer 1 -->
+  <line x1="269" y1="352" x2="269" y2="376" stroke="#34d399" stroke-width="1" stroke-dasharray="4 3"/>
+  <line x1="731" y1="352" x2="731" y2="376" stroke="#f97316" stroke-width="1" stroke-dasharray="4 3"/>
+  <path d="M269 376 L500 396" stroke="#475569" stroke-width="1" fill="none" marker-end="url(#arr)"/>
+  <path d="M731 376 L500 396" stroke="#475569" stroke-width="1" fill="none" marker-end="url(#arr)"/>
+
+  <!-- ══════════════════════════════════════════
+       LAYER 1   y=400
+  ══════════════════════════════════════════ -->
+  <circle cx="32" cy="480" r="5" fill="#818cf8" filter="url(#glow)"/>
+  <text x="20" y="520" fill="#64748b" font-size="10" font-weight="600"
+        font-family="'PingFang SC',sans-serif" transform="rotate(-90,20,520)" text-anchor="middle">Layer 1</text>
+
+  <rect x="60" y="400" width="880" height="160" rx="13" fill="#1e1b4b" fill-opacity="0.75"
+        stroke="#6366f1" stroke-width="1.6" filter="url(#shadow)"/>
+  <!-- header bar -->
+  <rect x="60" y="400" width="880" height="38" rx="13" fill="url(#l1grad)" fill-opacity="0.9"/>
+  <rect x="60" y="424" width="880" height="14" rx="0" fill="url(#l1grad)" fill-opacity="0.9"/>
+  <text x="500" y="424" fill="white" font-size="14" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">Layer 1 · 讲题课程生成 Agent</text>
+  <text x="500" y="441" fill="#c7d2fe" font-size="10.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">职责：讲什么（内容逻辑）</text>
+
+  <!-- 4 steps -->
+  <!-- Step 1 -->
+  <rect x="76" y="454" width="190" height="90" rx="9" fill="#312e81" fill-opacity="0.65" stroke="#818cf8" stroke-width="1"/>
+  <text x="171" y="474" fill="#a5b4fc" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">Step 1 · 图表处理</text>
+  <text x="171" y="491" fill="#6366f1" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">有图才跑</text>
+  <text x="171" y="507" fill="#6366f1" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">charts[] + coord_map</text>
+  <text x="171" y="523" fill="#4338ca" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">→ 注入 materials</text>
+  <text x="171" y="537" fill="#4338ca" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">供后续 Agent 使用</text>
+
+  <!-- Step 2 -->
+  <rect x="284" y="454" width="190" height="90" rx="9" fill="#312e81" fill-opacity="0.65" stroke="#818cf8" stroke-width="1"/>
+  <text x="379" y="474" fill="#a5b4fc" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">Step 2 · 母题路由</text>
+  <text x="379" y="491" fill="#6366f1" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">语义判断题型</text>
+  <text x="379" y="507" fill="#6366f1" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">13种分支</text>
+  <text x="379" y="523" fill="#4338ca" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">→ skill_to_call</text>
+  <text x="379" y="537" fill="#4338ca" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">solution{}</text>
+
+  <!-- Step 3 -->
+  <rect x="492" y="454" width="190" height="90" rx="9" fill="#312e81" fill-opacity="0.65" stroke="#818cf8" stroke-width="1"/>
+  <text x="587" y="474" fill="#a5b4fc" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">Step 3 · 讲题 Skill</text>
+  <text x="587" y="491" fill="#6366f1" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">节拍结构设计</text>
+  <text x="587" y="507" fill="#6366f1" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">逐字稿生成</text>
+  <text x="587" y="523" fill="#4338ca" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">→ beats[]</text>
+  <text x="587" y="537" fill="#4338ca" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">sentences + intent</text>
+
+  <!-- Step 4 -->
+  <rect x="700" y="454" width="224" height="90" rx="9" fill="#312e81" fill-opacity="0.65" stroke="#818cf8" stroke-width="1"/>
+  <text x="812" y="474" fill="#a5b4fc" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">Step 4 · 自检</text>
+  <text x="812" y="491" fill="#6366f1" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">对齐 / 时长 / 完整性</text>
+  <text x="812" y="507" fill="#6366f1" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">数值一致性验证</text>
+  <text x="812" y="523" fill="#4338ca" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">→ pass / failed</text>
+  <text x="812" y="537" fill="#4338ca" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">严重错误时 abort</text>
+
+  <text x="500" y="572" fill="#818cf8" font-size="10" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">
+    输出：beats[] · narration_sentences · board_intent · emphasis_intent · est_sec
+  </text>
+
+  <!-- Arrow down -->
+  <line x1="500" y1="582" x2="500" y2="608" stroke="#6366f1" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+
+  <!-- ══════════════════════════════════════════
+       LAYER 2   y=612
+  ══════════════════════════════════════════ -->
+  <circle cx="32" cy="710" r="5" fill="#38bdf8" filter="url(#glow)"/>
+  <text x="20" y="750" fill="#64748b" font-size="10" font-weight="600"
+        font-family="'PingFang SC',sans-serif" transform="rotate(-90,20,750)" text-anchor="middle">Layer 2</text>
+
+  <rect x="60" y="612" width="880" height="170" rx="13" fill="#0c1a2e" fill-opacity="0.85"
+        stroke="#0ea5e9" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="60" y="612" width="880" height="38" rx="13" fill="url(#l2grad)" fill-opacity="0.85"/>
+  <rect x="60" y="636" width="880" height="14" rx="0" fill="url(#l2grad)" fill-opacity="0.85"/>
+  <text x="500" y="636" fill="white" font-size="14" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">Layer 2 · 内容设计 Agent</text>
+  <text x="500" y="653" fill="#bae6fd" font-size="10.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">职责：怎么呈现（视觉形式）· 三轨分工，互不重叠</text>
+
+  <!-- PPT track -->
+  <rect x="76" y="666" width="264" height="100" rx="9" fill="#0c4a6e" fill-opacity="0.75" stroke="#7dd3fc" stroke-width="1.2"/>
+  <text x="208" y="688" fill="#7dd3fc" font-size="12" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">📺  PPT 设计</text>
+  <text x="208" y="706" fill="#38bdf8" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">结构性内容 · layout 分类</text>
+  <text x="208" y="721" fill="#38bdf8" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">题干 / 材料 / 选项 / 总结</text>
+  <text x="208" y="736" fill="#38bdf8" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">appear_trigger · animation</text>
+  <text x="208" y="751" fill="#0369a1" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">每页 ≤ 7 个元素</text>
+  <text x="208" y="762" fill="#0369a1" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">学生持续"看着"的内容</text>
+
+  <!-- Board track -->
+  <rect x="368" y="666" width="264" height="100" rx="9" fill="#1c1917" fill-opacity="0.85" stroke="#fbbf24" stroke-width="1.2"/>
+  <text x="500" y="688" fill="#fbbf24" font-size="12" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">✏️  板书设计</text>
+  <text x="500" y="706" fill="#f59e0b" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">过程性内容 · 计算步骤</text>
+  <text x="500" y="721" fill="#f59e0b" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">每条 ≤ 15 字符</text>
+  <text x="500" y="736" fill="#f59e0b" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">style: slow / normal / fast</text>
+  <text x="500" y="751" fill="#92400e" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">PPT 有的不重复写</text>
+  <text x="500" y="762" fill="#92400e" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">体现老师现场思考过程</text>
+
+  <!-- Emphasis track -->
+  <rect x="660" y="666" width="264" height="100" rx="9" fill="#1c0505" fill-opacity="0.85" stroke="#f87171" stroke-width="1.2"/>
+  <text x="792" y="688" fill="#f87171" font-size="12" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">⭕  圈划设计</text>
+  <text x="792" y="706" fill="#ef4444" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">定位性内容 · 三层定位</text>
+  <text x="792" y="721" fill="#ef4444" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">ppt / chart / text_material</text>
+  <text x="792" y="736" fill="#ef4444" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">coord_map 精确坐标</text>
+  <text x="792" y="751" fill="#7f1d1d" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">当前屏幕可见才圈划</text>
+  <text x="792" y="762" fill="#7f1d1d" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">persist_until_ms 跨拍保留</text>
+
+  <text x="500" y="793" fill="#38bdf8" font-size="10" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">
+    输出：content_design[] · ppt_elements · board_items · emphasis_items
+  </text>
+
+  <!-- Split arrows: one to TTS, one to L3 -->
+  <path d="M500 804 L500 818 L200 818 L200 838" stroke="#475569" stroke-width="1.2"
+        fill="none" stroke-dasharray="5 3" marker-end="url(#arr)"/>
+  <line x1="500" y1="804" x2="500" y2="838" stroke="#6366f1" stroke-width="1.3"
+        fill="none" marker-end="url(#arr-blue)"/>
+
+  <!-- ══════════════════════════════════════════
+       TTS (left side)   y=842
+  ══════════════════════════════════════════ -->
+  <rect x="60" y="842" width="280" height="76" rx="11" fill="#0a1628" stroke="#7dd3fc" stroke-width="1.3"/>
+  <text x="200" y="866" fill="#7dd3fc" font-size="13" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">TTS 合成 + 音频时间轴 5a</text>
+  <text x="200" y="884" fill="#38bdf8" font-size="10.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">逐字稿 → 音频文件 + 逐词时间戳</text>
+  <text x="200" y="901" fill="#0369a1" font-size="10" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">→ audio_timeline[] · trigger_word_offset_ms</text>
+
+  <!-- TTS merge to L3 -->
+  <path d="M200 918 L200 956 L500 956 L500 972" stroke="#7dd3fc" stroke-width="1.2"
+        fill="none" marker-end="url(#arr-blue)"/>
+  <line x1="500" y1="838" x2="500" y2="972" stroke="#6366f1" stroke-width="1.3" marker-end="url(#arr-blue)"/>
+
+  <!-- ══════════════════════════════════════════
+       LAYER 3   y=976
+  ══════════════════════════════════════════ -->
+  <circle cx="32" cy="1090" r="5" fill="#f59e0b" filter="url(#glow)"/>
+  <text x="20" y="1130" fill="#64748b" font-size="10" font-weight="600"
+        font-family="'PingFang SC',sans-serif" transform="rotate(-90,20,1130)" text-anchor="middle">Layer 3</text>
+
+  <rect x="60" y="976" width="880" height="188" rx="13" fill="#1c0f00" fill-opacity="0.85"
+        stroke="#f59e0b" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="60" y="976" width="880" height="38" rx="13" fill="url(#l3grad)" fill-opacity="0.85"/>
+  <rect x="60" y="1000" width="880" height="14" rx="0" fill="url(#l3grad)" fill-opacity="0.85"/>
+  <text x="500" y="1000" fill="white" font-size="14" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">Layer 3 · 导演 Agent</text>
+  <text x="500" y="1017" fill="#fde68a" font-size="10.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">职责：什么时候（毫秒级时序）· 五种冲突自动仲裁</text>
+
+  <!-- 5 steps in L3 -->
+  <rect x="76" y="1030" width="150" height="118" rx="9" fill="#431407" fill-opacity="0.7" stroke="#fb923c" stroke-width="1"/>
+  <text x="151" y="1051" fill="#fdba74" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">建立基准</text>
+  <text x="151" y="1068" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">从 5a 读取</text>
+  <text x="151" y="1083" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">精确时间戳</text>
+  <text x="151" y="1098" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">beat_start_ms</text>
+  <text x="151" y="1113" fill="#7c2d12" font-size="9" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">句级 / 词级</text>
+  <text x="151" y="1128" fill="#7c2d12" font-size="9" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">降级用 est_sec</text>
+  <text x="151" y="1141" fill="#7c2d12" font-size="9" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">标记 estimated:true</text>
+
+  <rect x="244" y="1030" width="150" height="118" rx="9" fill="#431407" fill-opacity="0.7" stroke="#fb923c" stroke-width="1"/>
+  <text x="319" y="1051" fill="#fdba74" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">触发计算</text>
+  <text x="319" y="1068" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">PPT 提前 300ms</text>
+  <text x="319" y="1083" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">板书 char×speed</text>
+  <text x="319" y="1098" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">圈划 word×speed</text>
+  <text x="319" y="1113" fill="#7c2d12" font-size="9" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">slow/normal/fast</text>
+  <text x="319" y="1128" fill="#7c2d12" font-size="9" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">circle/underline/box</text>
+
+  <rect x="412" y="1030" width="176" height="118" rx="9" fill="#431407" fill-opacity="0.7" stroke="#fbbf24" stroke-width="1.3"/>
+  <text x="500" y="1051" fill="#fde68a" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">冲突仲裁</text>
+  <text x="500" y="1068" fill="#fbbf24" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">① 板书写作重叠</text>
+  <text x="500" y="1083" fill="#fbbf24" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">② 切页+板书同时</text>
+  <text x="500" y="1098" fill="#fbbf24" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">③ 圈划目标不可见</text>
+  <text x="500" y="1113" fill="#fbbf24" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">④ 圈划与板书同区域</text>
+  <text x="500" y="1128" fill="#fbbf24" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">⑤ 切页过于频繁</text>
+  <text x="500" y="1141" fill="#92400e" font-size="9" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">优先级自动延迟处理</text>
+
+  <rect x="606" y="1030" width="150" height="118" rx="9" fill="#431407" fill-opacity="0.7" stroke="#fb923c" stroke-width="1"/>
+  <text x="681" y="1051" fill="#fdba74" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">跨拍过渡</text>
+  <text x="681" y="1068" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">PPT 淡出淡入</text>
+  <text x="681" y="1083" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">板书保留策略</text>
+  <text x="681" y="1098" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">clear_after_beat</text>
+  <text x="681" y="1113" fill="#7c2d12" font-size="9" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">圈划 persist_until</text>
+
+  <rect x="774" y="1030" width="150" height="118" rx="9" fill="#431407" fill-opacity="0.7" stroke="#fb923c" stroke-width="1"/>
+  <text x="849" y="1051" fill="#fdba74" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">输出时间线</text>
+  <text x="849" y="1068" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">四轨统一 JSON</text>
+  <text x="849" y="1083" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">毫秒级精确</text>
+  <text x="849" y="1098" fill="#f97316" font-size="9.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">现期比重题</text>
+  <text x="849" y="1113" fill="#7c2d12" font-size="9" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">48条事件</text>
+  <text x="849" y="1128" fill="#7c2d12" font-size="9" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">153.5s · 零冲突</text>
+
+  <text x="500" y="1175" fill="#f59e0b" font-size="10" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">
+    输出：timeline { audio[] · ppt[] · board[] · emphasis[] }  精确到毫秒
+  </text>
+
+  <!-- Arrow to render -->
+  <line x1="500" y1="1186" x2="500" y2="1212" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arr-amber)"/>
+
+  <!-- ══════════════════════════════════════════
+       渲染引擎   y=1216
+  ══════════════════════════════════════════ -->
+  <circle cx="32" cy="1330" r="5" fill="#22d3ee" filter="url(#glow)"/>
+  <text x="20" y="1380" fill="#64748b" font-size="10" font-weight="600"
+        font-family="'PingFang SC',sans-serif" transform="rotate(-90,20,1380)" text-anchor="middle">渲染</text>
+
+  <rect x="60" y="1216" width="880" height="188" rx="13" fill="#022c22" fill-opacity="0.85"
+        stroke="#10b981" stroke-width="1.6" filter="url(#shadow)"/>
+  <rect x="60" y="1216" width="880" height="38" rx="13" fill="url(#rendergrad)" fill-opacity="0.8"/>
+  <rect x="60" y="1240" width="880" height="14" rx="0" fill="url(#rendergrad)" fill-opacity="0.8"/>
+  <text x="500" y="1240" fill="white" font-size="14" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">渲染引擎</text>
+  <text x="500" y="1257" fill="#a7f3d0" font-size="10.5" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">时间轴驱动 · 逐帧执行</text>
+
+  <!-- 3 submodules -->
+  <rect x="76" y="1270" width="258" height="118" rx="9" fill="#052e16" fill-opacity="0.85" stroke="#34d399" stroke-width="1.2"/>
+  <text x="205" y="1291" fill="#6ee7b7" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">空间状态追踪器</text>
+  <text x="205" y="1308" fill="#34d399" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">实时维护 occupied_zones</text>
+  <text x="205" y="1323" fill="#34d399" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">PPT元素 + 已写板书</text>
+  <line x1="205" y1="1333" x2="205" y2="1343" stroke="#34d399" stroke-width="1" opacity="0.5"/>
+  <text x="205" y="1356" fill="#34d399" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">板书落点计算器</text>
+  <text x="205" y="1372" fill="#059669" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">扫描空白 → 优先级</text>
+  <text x="205" y="1384" fill="#059669" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">垂直堆叠，间距20px</text>
+
+  <rect x="371" y="1270" width="258" height="118" rx="9" fill="#0c2340" fill-opacity="0.85" stroke="#38bdf8" stroke-width="1.2"/>
+  <text x="500" y="1291" fill="#7dd3fc" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">圈划坐标解析器</text>
+  <text x="500" y="1308" fill="#38bdf8" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">三层定位</text>
+  <text x="500" y="1323" fill="#38bdf8" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">ppt → BoundingClientRect</text>
+  <text x="500" y="1338" fill="#38bdf8" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">chart → coord_map 直查</text>
+  <text x="500" y="1353" fill="#38bdf8" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">text → 字符坐标检索</text>
+  <text x="500" y="1372" fill="#075985" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">→ DrawInstruction</text>
+  <text x="500" y="1384" fill="#075985" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">{ cx, cy, rx, ry, rect }</text>
+
+  <rect x="666" y="1270" width="258" height="118" rx="9" fill="#1c1917" fill-opacity="0.85" stroke="#f59e0b" stroke-width="1.2"/>
+  <text x="795" y="1291" fill="#fbbf24" font-size="11" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">四轨合成</text>
+  <text x="795" y="1308" fill="#f59e0b" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">🔊  音频轨</text>
+  <text x="795" y="1323" fill="#f59e0b" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">📺  PPT 轨</text>
+  <text x="795" y="1338" fill="#f59e0b" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">✏️   手书轨</text>
+  <text x="795" y="1353" fill="#f59e0b" font-size="10" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">⭕  标记轨</text>
+  <text x="795" y="1372" fill="#78350f" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">FFmpeg / WebCodecs</text>
+  <text x="795" y="1384" fill="#78350f" font-size="9.5" text-anchor="middle"
+        font-family="'DM Sans',sans-serif">1080P MP4 输出</text>
+
+  <!-- Arrow to output -->
+  <line x1="500" y1="1416" x2="500" y2="1444" stroke="#10b981" stroke-width="1.6" marker-end="url(#arr-green)"/>
+
+  <!-- ══ OUTPUT ══ -->
+  <rect x="270" y="1448" width="460" height="64" rx="14" fill="#052e16"
+        stroke="#34d399" stroke-width="2.2" filter="url(#glow)"/>
+  <text x="500" y="1476" fill="#6ee7b7" font-size="16" font-weight="700" text-anchor="middle"
+        font-family="'PingFang SC','Noto Sans SC',sans-serif">成品视频 MP4</text>
+  <text x="500" y="1497" fill="#34d399" font-size="11" text-anchor="middle"
+        font-family="'PingFang SC',sans-serif">1080P · 音频 + PPT + 手书 + 标记  全程 150s+</text>
+
+  </g>
+
+</svg>
