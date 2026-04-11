@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>上岸仓 · 对话系统完整规范 v3.0</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap');
+:root{
+  --bg:#f4f6fa; --card:#ffffff; --text:#1a1d26; --muted:#6b7280; --border:#e5e7eb;
+  --blue:#4f46e5; --blue-l:#eef2ff; --green:#059669; --green-l:#ecfdf5;
+  --orange:#ea580c; --orange-l:#fff7ed; --pink:#db2777; --pink-l:#fdf2f8;
+  --purple:#7c3aed; --purple-l:#f5f3ff; --teal:#0d9488; --teal-l:#f0fdfa;
+  --amber:#d97706; --amber-l:#fffbeb; --red:#dc2626; --red-l:#fef2f2;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 6px 16px rgba(0,0,0,.04);
+  --shadow-lg:0 4px 24px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans SC',-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:14px}
+
+/* TOP BAR */
+.top{background:linear-gradient(135deg,#0f172a,#1e293b);color:#fff;padding:24px 32px 0;position:sticky;top:0;z-index:100}
+.top h1{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.top h1 span{color:#818cf8}
+.top .sub{margin-top:4px;font-size:11px;color:rgba(255,255,255,.45);line-height:1.5}
+.tabs{display:flex;gap:0;margin-top:16px;overflow-x:auto}
+.tab{font-size:12px;font-weight:600;color:rgba(255,255,255,.45);cursor:pointer;padding:10px 18px 12px;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s}
+.tab.active,.tab:hover{color:#fff;border-bottom-color:#818cf8}
+
+/* LAYOUT */
+.wrap{max-width:1320px;margin:0 auto;padding:28px 24px}
+.section{display:none}.section.active{display:block}
+
+/* TYPOGRAPHY */
+.st{font-size:20px;font-weight:900;margin-bottom:4px;letter-spacing:-.3px}
+.ss{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.7}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:16px}
+.callout{padding:14px 18px;border-radius:12px;margin-bottom:16px;font-size:13px;line-height:1.7}
+.callout.blue{background:var(--blue-l);border:1px solid #c7d2fe;color:#3730a3}
+.callout.orange{background:var(--orange-l);border:1px solid #fed7aa;color:#9a3412}
+.callout.green{background:var(--green-l);border:1px solid #a7f3d0;color:#065f46}
+.callout.purple{background:var(--purple-l);border:1px solid #ddd6fe;color:#5b21b6}
+.callout.red{background:var(--red-l);border:1px solid #fecaca;color:#991b1b}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+@media(max-width:1024px){.g2,.g3,.g4,.g5{grid-template-columns:1fr}}
+
+/* TABLE */
+.table{width:100%;border-collapse:collapse;font-size:13px}
+.table th,.table td{border:1px solid var(--border);padding:10px 12px;vertical-align:top}
+.table th{background:#f8fafc;font-size:11px;font-weight:700;color:#475467;text-align:left;letter-spacing:.3px}
+.table td strong{color:var(--text)}
+
+/* LOGIC BLOCK */
+.logic{background:#0f172a;color:#e2e8f0;border-radius:14px;padding:16px 20px;margin-bottom:14px}
+.logic .label{font-size:10px;letter-spacing:1.5px;color:#64748b;font-weight:700;margin-bottom:6px}
+.logic .flow{font-size:15px;font-weight:700;line-height:1.8}
+
+/* MINI LABEL */
+.mini{font-size:11px;color:#475467;font-weight:700;margin-bottom:10px;letter-spacing:.3px}
+
+/* KPI CARDS */
+.kpi{border-top:4px solid var(--blue);padding:18px 20px}
+.kpi.green{border-top-color:var(--green)}
+.kpi.orange{border-top-color:var(--orange)}
+.kpi.pink{border-top-color:var(--pink)}
+.kpi.purple{border-top-color:var(--purple)}
+.kpi .num{font-size:28px;font-weight:900;margin-bottom:2px}
+.kpi .name{font-size:15px;font-weight:800;margin-bottom:4px}
+.kpi .desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* DUAL BOX */
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.dualbox{border:2px solid #c7d2fe;border-radius:16px;padding:18px 20px;background:linear-gradient(180deg,#fafbff,#f5f7ff);position:relative}
+.dualbox .badge{position:absolute;top:-13px;left:20px;background:var(--blue);color:#fff;padding:6px 16px;border-radius:99px;font-weight:700;font-size:12px}
+.dualbox h3{margin:22px 0 6px;font-size:14px;font-weight:700}
+.dualbox p{margin:0;font-size:13px;color:var(--muted)}
+.pillcol{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.pill{border:1.5px solid #a5b4fc;border-radius:10px;padding:9px 14px;text-align:center;font-weight:700;font-size:13px;background:#fff}
+
+/* PERSONA CARDS */
+.persona-card{background:var(--card);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}
+.persona-head{padding:20px 22px 16px;color:#fff;position:relative}
+.persona-head.ca{background:linear-gradient(135deg,#4f46e5,#4338ca)}
+.persona-head.cb{background:linear-gradient(135deg,#db2777,#be185d)}
+.persona-head.cc{background:linear-gradient(135deg,#d97706,#b45309)}
+.persona-head.cd{background:linear-gradient(135deg,#ea580c,#c2410c)}
+.persona-head.ce{background:linear-gradient(135deg,#059669,#047857)}
+.persona-emo{font-size:28px;margin-bottom:8px}
+.persona-label-sm{font-size:10px;color:rgba(255,255,255,.5);font-weight:700;letter-spacing:1.5px}
+.persona-name{font-size:18px;font-weight:800}
+.persona-slogan{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px;font-style:italic}
+.persona-pct{position:absolute;top:16px;right:20px;font-size:24px;font-weight:900;color:rgba(255,255,255,.85)}
+.persona-pct small{font-size:11px;font-weight:400;color:rgba(255,255,255,.45)}
+.persona-body{padding:18px 22px}
+
+/* SUB SECTIONS */
+.ssec{margin-bottom:14px}
+.ssec-t{font-size:10px;font-weight:700;letter-spacing:1px;color:#94a3b8;text-transform:uppercase;padding-bottom:6px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.elist{display:flex;flex-direction:column;gap:5px}
+.eitem{display:flex;gap:8px;padding:7px 10px;border-radius:8px;background:var(--bg);font-size:12px}
+.eico{font-size:14px;flex-shrink:0;margin-top:1px}
+.estate{font-size:10px;font-weight:600;color:var(--muted)}
+.equote{font-size:11px;color:var(--text);margin-top:1px;font-style:italic}
+.slist{display:flex;flex-direction:column;gap:5px}
+.sitem{padding:8px 11px;border-radius:8px;border-left:3px solid var(--border);background:var(--bg);font-size:12px}
+.strigger{font-size:10px;color:#94a3b8;margin-bottom:2px;font-weight:600}
+.sresp{font-size:11px;color:var(--text)}
+.info2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.ik{font-size:10px;color:#94a3b8;font-weight:600}
+.iv{font-size:12px;font-weight:500}
+
+/* ENTRY PATH */
+.path-card{border:2px solid var(--border);border-radius:14px;padding:16px 18px;background:#fff}
+.path-card.highlight{border-color:#818cf8;background:var(--blue-l)}
+.path-label{font-size:10px;font-weight:800;letter-spacing:1.5px;padding:3px 10px;border-radius:20px;display:inline-block;margin-bottom:8px}
+.path-label.new{background:var(--green);color:#fff}
+.path-label.return{background:var(--orange);color:#fff}
+.path-label.shift{background:var(--purple);color:#fff}
+.path-label.shallow{background:var(--amber);color:#fff}
+.path-title{font-size:14px;font-weight:700;margin-bottom:6px}
+.path-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ACTION CHAIN */
+.chain{display:flex;gap:0;align-items:stretch;margin:16px 0}
+.chain-step{flex:1;background:#fff;border:1.5px solid var(--border);padding:12px 14px;position:relative}
+.chain-step:first-child{border-radius:12px 0 0 12px}
+.chain-step:last-child{border-radius:0 12px 12px 0}
+.chain-step:not(:last-child)::after{content:'→';position:absolute;right:-11px;top:50%;transform:translateY(-50%);font-size:14px;color:#94a3b8;z-index:1;background:var(--bg);padding:2px}
+.chain-step .step-name{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:3px}
+.chain-step .step-goal{font-size:11px;color:var(--muted)}
+
+/* MATRIX */
+.mtable{width:100%;border-collapse:collapse;font-size:12px}
+.mtable th{padding:10px 12px;font-size:11px;font-weight:700;background:#f8fafc;border:1px solid var(--border);text-align:center}
+.mtable th.rh{text-align:left;color:var(--muted);width:100px}
+.mtable th.ch{color:var(--teal)}
+.mtable td{padding:10px 12px;border:1px solid var(--border);vertical-align:top;line-height:1.6}
+.mtable td.sl{font-weight:700;font-size:12px;background:#f8fafc}
+.cell-r{font-size:10px;color:#94a3b8;margin-bottom:3px;font-weight:600}
+.cell-q{font-size:11px;font-style:italic;color:var(--muted);background:var(--bg);padding:4px 7px;border-radius:5px;margin-top:4px}
+
+/* STATUS DOT */
+.sd{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px}
+.sd.active{background:var(--green)}.sd.sporadic{background:var(--amber)}.sd.paused{background:var(--red)}.sd.sprint{background:var(--purple)}
+
+/* GAP BOX */
+.gap-box{background:var(--amber-l);border:1px solid #fcd34d;border-radius:10px;padding:12px 14px;margin-top:12px}
+.gap-t{font-size:10px;font-weight:700;color:#92400e;letter-spacing:.5px;margin-bottom:6px}
+.gap-items{display:flex;flex-direction:column;gap:4px}
+.gap-item{font-size:11px;color:#78350f;display:flex;gap:5px}
+.gap-item::before{content:'·';color:var(--amber);flex-shrink:0;font-weight:700}
+
+/* FOOTER */
+.footer{padding:30px 20px 50px;text-align:center;font-size:11px;color:#94a3b8}
+hr.sep{border:none;border-top:2px solid #e5e7eb;margin:24px 0}
+</style>
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelector('[data-tab="'+id+'"]').classList.add('active');
+}
+</script>
+</head>
+<body>
+
+<div class="top">
+  <h1>上岸仓 · <span>对话系统完整规范</span></h1>
+  <div class="sub">v3.0 · 整合画像调研数据 + 入口多路径展开 · 以"对话是备考引擎"为总原则</div>
+  <div class="tabs">
+    <div class="tab active" data-tab="arch" onclick="show('arch')">系统架构</div>
+    <div class="tab" data-tab="entry" onclick="show('entry')">入口</div>
+    <div class="tab" data-tab="scheduler" onclick="show('scheduler')">调度器</div>
+    <div class="tab" data-tab="intervener" onclick="show('intervener')">干预器</div>
+    <div class="tab" data-tab="persona" onclick="show('persona')">画像修正层 + 详情</div>
+    
+  </div>
+</div>
+
+<!-- ==================== 系统架构 ==================== -->
+<div id="arch" class="section active"><div class="wrap">
+  <div class="st">系统架构 · 对话是备考引擎</div>
+  <div class="ss">系统拆为三层：对话主引擎负责驱动备考关系与学习推进，能力层负责解决当前问题，画像修正层在通用主逻辑之上修正不同用户的进入方式、推进策略、风险敏感点与表达方式。</div>
+
+  <div class="card" style="padding:28px 24px;overflow-x:auto">
+    <svg viewBox="0 0 920 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:920px;display:block;margin:0 auto;font-family:'Noto Sans SC',sans-serif">
+      <defs>
+        <filter id="ds" x="-4%" y="-4%" width="108%" height="112%"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity=".07"/></filter>
+        <marker id="ah" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#94a3b8"/></marker>
+        <marker id="ahb" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#4f46e5"/></marker>
+        <marker id="ahg" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#059669"/></marker>
+      </defs>
+
+      <!-- ===== 用户 ===== -->
+      <circle cx="460" cy="36" r="18" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+      <text x="460" y="41" text-anchor="middle" font-size="16">👤</text>
+      <text x="460" y="68" text-anchor="middle" font-size="11" fill="#64748b" font-weight="600">用户</text>
+
+      <!-- 用户→入口 箭头 -->
+      <line x1="460" y1="78" x2="460" y2="102" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)"/>
+
+      <!-- ===== 对话主引擎层 ===== -->
+      <rect x="40" y="108" width="840" height="180" rx="16" fill="#eef2ff" stroke="#818cf8" stroke-width="2" filter="url(#ds)"/>
+      <text x="68" y="134" font-size="13" font-weight="800" fill="#4f46e5" letter-spacing=".5">对话主引擎层</text>
+      <text x="260" y="134" font-size="11" fill="#6366f1">对话不是被动答疑，而是老师角色驱动的备考主引擎</text>
+
+      <!-- 入口 -->
+      <rect x="80" y="152" width="220" height="116" rx="12" fill="#fff" stroke="#a5b4fc" stroke-width="1.5" filter="url(#ds)"/>
+      <rect x="80" y="152" width="220" height="32" rx="12" fill="#4f46e5"/>
+      <rect x="80" y="172" width="220" height="12" fill="#4f46e5"/>
+      <text x="190" y="173" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">入口</text>
+      <text x="190" y="206" text-anchor="middle" font-size="11" fill="#64748b">建立关系与共识</text>
+      <text x="190" y="224" text-anchor="middle" font-size="10" fill="#94a3b8">接住→定位→澄清→对齐→承诺</text>
+      <text x="190" y="254" text-anchor="middle" font-size="10" fill="#4f46e5" font-weight="600">把用户带入可持续备考关系</text>
+
+      <!-- 调度器 -->
+      <rect x="350" y="152" width="220" height="116" rx="12" fill="#fff" stroke="#6ee7b7" stroke-width="1.5" filter="url(#ds)"/>
+      <rect x="350" y="152" width="220" height="32" rx="12" fill="#059669"/>
+      <rect x="350" y="172" width="220" height="12" fill="#059669"/>
+      <text x="460" y="173" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">调度器</text>
+      <text x="460" y="206" text-anchor="middle" font-size="11" fill="#64748b">推进学习与提升</text>
+      <text x="460" y="224" text-anchor="middle" font-size="10" fill="#94a3b8">识别主矛盾→主任务→能力→强度</text>
+      <text x="460" y="254" text-anchor="middle" font-size="10" fill="#059669" font-weight="600">推动下一步有效学习发生</text>
+
+      <!-- 干预器 -->
+      <rect x="620" y="152" width="220" height="116" rx="12" fill="#fff" stroke="#fca5a5" stroke-width="1.5" filter="url(#ds)"/>
+      <rect x="620" y="152" width="220" height="32" rx="12" fill="#dc2626"/>
+      <rect x="620" y="172" width="220" height="12" fill="#dc2626"/>
+      <text x="730" y="173" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">干预器</text>
+      <text x="730" y="206" text-anchor="middle" font-size="11" fill="#64748b">恢复可持续状态</text>
+      <text x="730" y="224" text-anchor="middle" font-size="10" fill="#94a3b8">情绪承接 · 认知校正 · 降门槛</text>
+      <text x="730" y="254" text-anchor="middle" font-size="10" fill="#dc2626" font-weight="600">当常规推进失效时主导</text>
+
+      <!-- 入口→调度器 箭头 -->
+      <line x1="300" y1="210" x2="346" y2="210" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#ahb)"/>
+      <!-- 调度器↔干预器 双箭头 -->
+      <line x1="570" y1="204" x2="616" y2="204" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="616" y1="216" x2="570" y2="216" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#ah)"/>
+      <text x="593" y="198" text-anchor="middle" font-size="8" fill="#94a3b8">切换</text>
+
+      <!-- ===== 调用箭头（对话→能力） ===== -->
+      <line x1="460" y1="288" x2="460" y2="324" stroke="#059669" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ahg)"/>
+      <text x="476" y="310" font-size="9" fill="#059669" font-weight="600">调用</text>
+
+      <!-- ===== 能力层 ===== -->
+      <rect x="100" y="330" width="720" height="80" rx="14" fill="#ecfdf5" stroke="#6ee7b7" stroke-width="2" filter="url(#ds)"/>
+      <text x="128" y="354" font-size="13" font-weight="800" fill="#059669" letter-spacing=".5">能力层</text>
+      <text x="220" y="354" font-size="11" fill="#047857">能力服务于推进，不主导推进</text>
+
+      <!-- 能力 pills -->
+      <rect x="128" y="366" width="88" height="30" rx="8" fill="#fff" stroke="#a7f3d0" stroke-width="1.5"/>
+      <text x="172" y="385" text-anchor="middle" font-size="12" font-weight="600" fill="#065f46">规划</text>
+      <rect x="228" y="366" width="88" height="30" rx="8" fill="#fff" stroke="#a7f3d0" stroke-width="1.5"/>
+      <text x="272" y="385" text-anchor="middle" font-size="12" font-weight="600" fill="#065f46">资源</text>
+      <rect x="328" y="366" width="88" height="30" rx="8" fill="#fff" stroke="#a7f3d0" stroke-width="1.5"/>
+      <text x="372" y="385" text-anchor="middle" font-size="12" font-weight="600" fill="#065f46">反馈</text>
+      <rect x="428" y="366" width="88" height="30" rx="8" fill="#fff" stroke="#a7f3d0" stroke-width="1.5"/>
+      <text x="472" y="385" text-anchor="middle" font-size="12" font-weight="600" fill="#065f46">测评</text>
+      <rect x="528" y="366" width="88" height="30" rx="8" fill="#fff" stroke="#a7f3d0" stroke-width="1.5"/>
+      <text x="572" y="385" text-anchor="middle" font-size="12" font-weight="600" fill="#065f46">复盘</text>
+      <rect x="628" y="366" width="160" height="30" rx="8" fill="#fff" stroke="#a7f3d0" stroke-width="1.5"/>
+      <text x="708" y="385" text-anchor="middle" font-size="12" font-weight="600" fill="#065f46">情绪支持</text>
+
+      <!-- ===== 画像修正层 ===== -->
+      <rect x="100" y="440" width="720" height="70" rx="14" fill="#fff7ed" stroke="#fdba74" stroke-width="2" filter="url(#ds)"/>
+      <text x="128" y="466" font-size="13" font-weight="800" fill="#ea580c" letter-spacing=".5">画像修正层</text>
+      <text x="278" y="466" font-size="11" fill="#c2410c">状态决定做什么，画像决定怎么做更合适</text>
+
+      <!-- 画像变量 -->
+      <rect x="128" y="478" width="110" height="22" rx="6" fill="#fff" stroke="#fdba74" stroke-width="1"/>
+      <text x="183" y="493" text-anchor="middle" font-size="10" font-weight="600" fill="#9a3412">信任起点</text>
+      <rect x="248" y="478" width="110" height="22" rx="6" fill="#fff" stroke="#fdba74" stroke-width="1"/>
+      <text x="303" y="493" text-anchor="middle" font-size="10" font-weight="600" fill="#9a3412">推进阻力</text>
+      <rect x="368" y="478" width="110" height="22" rx="6" fill="#fff" stroke="#fdba74" stroke-width="1"/>
+      <text x="423" y="493" text-anchor="middle" font-size="10" font-weight="600" fill="#9a3412">高发主矛盾</text>
+      <rect x="488" y="478" width="110" height="22" rx="6" fill="#fff" stroke="#fdba74" stroke-width="1"/>
+      <text x="543" y="493" text-anchor="middle" font-size="10" font-weight="600" fill="#9a3412">风险触发点</text>
+      <rect x="608" y="478" width="110" height="22" rx="6" fill="#fff" stroke="#fdba74" stroke-width="1"/>
+      <text x="663" y="493" text-anchor="middle" font-size="10" font-weight="600" fill="#9a3412">表达偏好</text>
+
+      <!-- 画像→对话引擎 修正箭头（左侧） -->
+      <path d="M96,470 C50,470 50,220 80,220" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="4,3" fill="none" marker-end="url(#ah)"/>
+      <text x="36" y="348" font-size="9" fill="#ea580c" font-weight="600" transform="rotate(-90,36,348)">修正执行方式</text>
+
+      <!-- 画像→能力层 修正箭头（右侧） -->
+      <path d="M824,470 C870,470 870,380 820,380" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="4,3" fill="none" marker-end="url(#ah)"/>
+    </svg>
+  </div>
+
+  <div class="card">
+    <div class="mini">关键边界（每个模块"是什么"与"不是什么"）</div>
+    <table class="table">
+      <tr><th>对象</th><th>核心定义</th><th>不是</th></tr>
+      <tr><td><strong>入口</strong></td><td>通过多条路径构建目标共识、规划共识与学习模式共识，把用户带入可持续备考关系</td><td>固定开场脚本、一次性问全信息</td></tr>
+      <tr><td><strong>调度器</strong></td><td>围绕当前主矛盾确定本轮主任务，再组织能力组合与推进强度</td><td>按菜单发内容、按课表机械推进</td></tr>
+      <tr><td><strong>干预器</strong></td><td>当风险已让常规推进失效时，优先恢复可对话、可判断、可执行状态</td><td>所有情绪都要处理的安慰模块</td></tr>
+      <tr><td><strong>画像修正层</strong></td><td>在通用逻辑之上，修正进入方式、推进策略、风险敏感点与表达方式</td><td>独立第四套系统、实时运行的唯一判断依据</td></tr>
+      <tr><td><strong>能力层</strong></td><td>被对话引擎调用来解决当前问题的手段集合</td><td>独立主导对话的功能模块</td></tr>
+    </table>
+  </div>
+
+  <!-- Fix 5: 能力层定义 -->
+  <div class="card">
+    <div class="mini">能力层：六大能力定义与边界</div>
+    <div class="ss" style="margin-bottom:14px">能力不是独立运行的模块，而是调度器为完成当前主任务所调用的解决手段。每个能力有明确的输入、输出和使用场景。</div>
+    <table class="table">
+      <tr><th>能力</th><th>定义</th><th>典型输入</th><th>典型输出</th><th>不是</th></tr>
+      <tr>
+        <td><strong>规划</strong></td>
+        <td>根据用户当前状态和目标，生成可执行的学习安排</td>
+        <td>目标、时间窗口、水平、可用时间</td>
+        <td>阶段计划、每日/每周任务、节奏安排</td>
+        <td>一次性给完所有计划；脱离状态的固定课表</td>
+      </tr>
+      <tr>
+        <td><strong>资源</strong></td>
+        <td>根据当前主任务和卡点，匹配并推送合适的学习内容</td>
+        <td>当前卡点、学习阶段、可用时长</td>
+        <td>课程、题目、专项训练、碎片材料</td>
+        <td>按目录全量推送；不区分用户状态的统一推荐</td>
+      </tr>
+      <tr>
+        <td><strong>反馈</strong></td>
+        <td>对用户刚完成的学习动作给出即时回应，强化学习循环</td>
+        <td>刚完成的练习、做题结果、学习行为</td>
+        <td>正确率反馈、进步确认、错题归因、下一步建议</td>
+        <td>延迟的阶段性报告（那是复盘）；单纯的鼓励话术</td>
+      </tr>
+      <tr>
+        <td><strong>测评</strong></td>
+        <td>通过结构化测试诊断用户当前水平和薄弱点</td>
+        <td>需要诊断的科目/模块、用户当前阶段</td>
+        <td>分数、正确率分布、薄弱模块定位、与目标差距</td>
+        <td>日常做题（那是资源）；全面考试模拟（仅冲刺期使用）</td>
+      </tr>
+      <tr>
+        <td><strong>复盘</strong></td>
+        <td>对一段时间的学习过程做回顾性分析，校正方向和方法</td>
+        <td>一段时间的学习数据、完成率、正确率变化</td>
+        <td>阶段进展总结、方法有效性判断、路径调整建议</td>
+        <td>即时反馈（那是反馈）；情绪安抚（那是情绪支持）</td>
+      </tr>
+      <tr>
+        <td><strong>情绪支持</strong></td>
+        <td>在常规推进中对轻度情绪波动做承接和调节</td>
+        <td>用户表达中的情绪信号（轻度焦虑、小挫败）</td>
+        <td>情绪确认、正常化、轻量认知调整、鼓励</td>
+        <td>干预器的情绪承接（那是风险已升高时的专项干预）；心理咨询</td>
+      </tr>
+    </table>
+    <div class="callout green" style="margin-top:12px;margin-bottom:0"><strong>关键区分：</strong>情绪支持（能力层）处理的是调度器范围内的普通波动——用户还愿意学，只是情绪有些低。干预器的情绪承接处理的是常规推进已失效的风险状态——用户已经接不住任何任务。前者是推进中顺手做的事，后者需要暂停推进专门处理。</div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- Fix 6: 用户生命周期全景图 -->
+  <div class="st" style="font-size:17px">用户生命周期：三个模块如何交替主导</div>
+  <div class="ss">一个用户从首次进入到持续备考，入口、调度器、干预器在不同阶段交替主导。以下是典型的生命周期流转。</div>
+
+  <div class="card" style="padding:24px;overflow-x:auto">
+    <svg viewBox="0 0 920 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:920px;display:block;margin:0 auto;font-family:'Noto Sans SC',sans-serif">
+      <defs>
+        <marker id="a2" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#94a3b8"/></marker>
+      </defs>
+
+      <!-- 时间轴 -->
+      <line x1="40" y1="140" x2="880" y2="140" stroke="#e5e7eb" stroke-width="2"/>
+
+      <!-- 阶段 1: 入口 -->
+      <rect x="40" y="60" width="150" height="60" rx="10" fill="#4f46e5" opacity=".9"/>
+      <text x="115" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">入口主导</text>
+      <text x="115" y="104" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.7)">关系建立 · 共识构建</text>
+      <line x1="115" y1="120" x2="115" y2="136" stroke="#4f46e5" stroke-width="1.5"/>
+      <circle cx="115" cy="140" r="5" fill="#4f46e5"/>
+      <text x="115" y="165" text-anchor="middle" font-size="9" fill="#64748b">首次/回流/目标变化</text>
+
+      <!-- 箭头 -->
+      <line x1="190" y1="90" x2="220" y2="90" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+
+      <!-- 阶段 2: 调度器日常 -->
+      <rect x="224" y="60" width="200" height="60" rx="10" fill="#059669" opacity=".9"/>
+      <text x="324" y="86" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">调度器主导 · 日常推进</text>
+      <text x="324" y="104" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.7)">启动→持续→提效</text>
+      <line x1="324" y1="120" x2="324" y2="136" stroke="#059669" stroke-width="1.5"/>
+      <circle cx="324" cy="140" r="5" fill="#059669"/>
+      <text x="324" y="165" text-anchor="middle" font-size="9" fill="#64748b">每日/每周学习推进</text>
+
+      <!-- 箭头 -->
+      <line x1="424" y1="90" x2="454" y2="90" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+
+      <!-- 阶段 3: 遭遇波动 -->
+      <rect x="458" y="60" width="130" height="60" rx="10" fill="#f59e0b" opacity=".15" stroke="#f59e0b" stroke-width="1.5"/>
+      <text x="523" y="84" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">遭遇波动</text>
+      <text x="523" y="102" text-anchor="middle" font-size="9" fill="#92400e">调度器内消化</text>
+      <line x1="523" y1="120" x2="523" y2="136" stroke="#f59e0b" stroke-width="1.5"/>
+      <circle cx="523" cy="140" r="5" fill="#f59e0b"/>
+      <text x="523" y="165" text-anchor="middle" font-size="9" fill="#64748b">轻承接 · 轻调整</text>
+
+      <!-- 分叉：向上=风险升高 -->
+      <path d="M588,80 L620,50" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#a2)"/>
+      <text x="612" y="44" font-size="8" fill="#dc2626">风险升高</text>
+
+      <!-- 干预器 -->
+      <rect x="624" y="16" width="140" height="56" rx="10" fill="#dc2626" opacity=".9"/>
+      <text x="694" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">干预器主导</text>
+      <text x="694" y="56" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.7)">承接→校正→降门槛</text>
+
+      <!-- 干预器→回到调度器 -->
+      <path d="M694,72 C694,100 660,120 620,90" stroke="#dc2626" stroke-width="1" stroke-dasharray="3,3"/>
+      <path d="M764,44 L800,70" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+      <text x="790" y="46" font-size="8" fill="#94a3b8">风险下降 · 交还</text>
+
+      <!-- 分叉：向下=正常恢复 -->
+      <line x1="588" y1="90" x2="614" y2="90" stroke="#059669" stroke-width="1.5" marker-end="url(#a2)"/>
+
+      <!-- 阶段 4: 回到调度器 -->
+      <rect x="618" y="72" width="90" height="40" rx="8" fill="#059669" opacity=".15" stroke="#059669" stroke-width="1.5"/>
+      <text x="663" y="96" text-anchor="middle" font-size="10" font-weight="600" fill="#065f46">恢复推进</text>
+
+      <!-- 箭头 -->
+      <line x1="708" y1="92" x2="734" y2="92" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#a2)"/>
+
+      <!-- 阶段 5: 冲刺 -->
+      <rect x="738" y="60" width="140" height="60" rx="10" fill="#7c3aed" opacity=".9"/>
+      <text x="808" y="84" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">冲刺期 · 调度器</text>
+      <text x="808" y="102" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.7)">收束重点 · 做减法</text>
+      <line x1="808" y1="120" x2="808" y2="136" stroke="#7c3aed" stroke-width="1.5"/>
+      <circle cx="808" cy="140" r="5" fill="#7c3aed"/>
+      <text x="808" y="165" text-anchor="middle" font-size="9" fill="#64748b">距考试≤30天</text>
+
+      <!-- 底部回流箭头 -->
+      <path d="M808,175 C808,230 460,250 115,230 L115,175" stroke="#4f46e5" stroke-width="1.5" stroke-dasharray="5,4" fill="none" marker-end="url(#a2)"/>
+      <text x="460" y="248" text-anchor="middle" font-size="9" fill="#4f46e5" font-weight="600">考后/中断/目标变化 → 重新进入入口</text>
+    </svg>
+  </div>
+</div></div>
+
+<!-- ==================== 入口 ==================== -->
+<div id="entry" class="section"><div class="wrap">
+  <div class="st">一、入口</div>
+  <div class="callout blue"><strong>定义：</strong>入口，是对话引擎在首次接触、重新进入或方向重置时，通过识别用户当前状态，建立基本信任、降低进入门槛、获取最小必要信息，并逐步构建目标共识、规划共识与学习模式共识，使用户进入可持续备考关系的能力。</div>
+  <div class="ss">入口的本质目标不是"问清楚"，而是"对齐清楚"。入口不是固定脚本；下方动作链是可调用动作，不是必须线性执行的话术流程。入口的完成标志不是"信息采集完毕"，而是"用户接受了老师角色，并愿意开始第一个具体动作"。</div>
+
+  <!-- 共识结果 -->
+  <div class="card">
+    <div class="mini">上层：入口要达成的三类共识</div>
+    <table class="table">
+      <tr><th>共识类型</th><th>核心问题</th><th>要对齐的内容</th><th>达成后的结果</th></tr>
+      <tr><td><strong>目标共识</strong></td><td>我们要去哪？</td><td>考试方向、时间窗口、当前起点、当前主要矛盾</td><td>备考目标从模糊意向变成双方都能操作的明确方向</td></tr>
+      <tr><td><strong>规划共识</strong></td><td>我们怎么去？</td><td>当前最优先的第一步、为什么先做、近期节奏、暂时不做什么</td><td>用户认可起步路径，知道先做什么、为什么</td></tr>
+      <tr><td><strong>学习模式共识</strong></td><td>我们怎么一起走？</td><td>老师带学关系、系统按状态调整、用户需持续行动、过程中有反馈纠偏</td><td>用户接受"跟着老师学"的关系，不是随便聊</td></tr>
+    </table>
+  </div>
+
+  <!-- 动作工具箱 -->
+  <div class="card">
+    <div class="mini">下层：入口五类动作工具箱</div>
+    <div class="chain">
+      <div class="chain-step"><div class="step-name">① 接住</div><div class="step-goal">让用户愿意继续对话</div></div>
+      <div class="chain-step"><div class="step-name">② 定位</div><div class="step-goal">判断当前该走哪条路径</div></div>
+      <div class="chain-step"><div class="step-name">③ 澄清</div><div class="step-goal">建立目标共识</div></div>
+      <div class="chain-step"><div class="step-name">④ 对齐</div><div class="step-goal">建立规划+学习模式共识</div></div>
+      <div class="chain-step"><div class="step-name">⑤ 承诺</div><div class="step-goal">共识转化为行动起点</div></div>
+    </div>
+    <div class="ss" style="margin-top:8px;margin-bottom:0">五类动作是工具箱，不是固定线性流程。不同用户因信任起点、紧迫度和当前状态不同，走不同进入路径。</div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 四类入口场景 -->
+  <div class="st" style="font-size:17px">入口的四类触发场景与进入路径</div>
+  <div class="ss">每类场景的信任起点、紧迫度、信息缺口不同，因此动作优先级和节奏完全不同。</div>
+
+  <div class="g2" style="margin-bottom:16px">
+    <div class="path-card">
+      <div class="path-label new">场景 A · 新用户首次进入</div>
+      <div class="path-title">信任为零，需要从"你是谁"开始</div>
+      <div class="path-desc" style="margin-bottom:10px">用户不了解系统、没有预期，可能试探也可能带着焦虑进来。入口的首要目标是让用户愿意开口并交出基本信息。</div>
+      <table class="table">
+        <tr><th style="width:90px">动作</th><th>策略</th><th>画像修正</th></tr>
+        <tr><td><strong>接住</strong></td><td>不急着问，先给身份感和确定感："我是你的备考老师，从现在开始陪你往下走。"</td><td>E类新手→更慢更温和；D类多次考生→不当小白盘问</td></tr>
+        <tr><td><strong>定位</strong></td><td>根据首句判断紧迫度和状态。"下个月就考"→快进澄清；"随便看看"→继续接住</td><td>C类冲刺→跳过寒暄直接定位；B类宝妈→先承认现实约束</td></tr>
+        <tr><td><strong>澄清</strong></td><td>获取最小必要信息（考什么、什么时候、大概什么水平、每天能学多久），但以对话形式而非表单</td><td>A类在职→关注可用时间碎片化程度</td></tr>
+        <tr><td><strong>对齐</strong></td><td>给出第一步建议并解释为什么先做这个。让用户感到"有人在带我"而不是"给了我一堆东西"</td><td>E类新手→先建现实坐标再给方案</td></tr>
+        <tr><td><strong>承诺</strong></td><td>确认首个具体动作："那我们今天先做这一件事好不好？"</td><td>—</td></tr>
+      </table>
+    </div>
+
+    <div class="path-card">
+      <div class="path-label return">场景 B · 回流用户重新打开</div>
+      <div class="path-title">带着中断的负面情绪回来，信任需要重建</div>
+      <div class="path-desc" style="margin-bottom:10px">用户消失过一段时间，回来时可能有自责、羞耻、低意愿。最怕的是被追问"你怎么没学"。</div>
+      <table class="table">
+        <tr><th style="width:90px">动作</th><th>策略</th><th>画像修正</th></tr>
+        <tr><td><strong>接住</strong><br><span style="font-size:10px;color:var(--orange)">最优先</span></td><td>不提中断、不追问原因。"好久没见，最近还好吗？" 先关心人，不提学习任务。</td><td>A类在职→正常化中断，"工作忙完全正常"；B类宝妈→"孩子最近还好吗？"</td></tr>
+        <tr><td><strong>定位</strong></td><td>判断当前是有意愿但缺抓手，还是意愿本身就很低。前者直接给动作，后者继续接住</td><td>D类瓶颈→可能带着"又要重来"的无力感，先稳认知</td></tr>
+        <tr><td><strong>澄清</strong></td><td>不重新建档，只确认目标是否变化："还是考那个方向对吧？时间有没有变？"</td><td>—</td></tr>
+        <tr><td><strong>对齐</strong></td><td>给一个极低门槛动作重新接回。不恢复原计划，而是"今天只做一件事"</td><td>A类→"今天5道题就够了"；C类→重建阶段节奏</td></tr>
+        <tr><td><strong>承诺</strong></td><td>确认愿意接回一个动作即可，不追求完整计划</td><td>—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="path-card">
+      <div class="path-label shift">场景 C · 用户目标变化</div>
+      <div class="path-title">信任基础在，但需要重新对齐方向</div>
+      <div class="path-desc" style="margin-bottom:10px">用户已经在系统里学了一段时间，但考试方向、目标地区、考试时间发生变化。</div>
+      <table class="table">
+        <tr><th style="width:90px">动作</th><th>策略</th></tr>
+        <tr><td><strong>接住</strong></td><td>不跳过。先确认变化原因、情绪状态。"换方向是因为发现更合适，还是原来的太难？"</td></tr>
+        <tr><td><strong>定位</strong></td><td>快速判断：新方向的时间窗口、科目差异、已有积累能复用多少</td></tr>
+        <tr><td><strong>澄清</strong></td><td>更新目标信息，重建时间线</td></tr>
+        <tr><td><strong>对齐</strong></td><td>基于新方向重新给出起步路径，同时肯定已有积累："你之前的基础不是白费的"</td></tr>
+        <tr><td><strong>承诺</strong></td><td>确认新方向下的第一个动作</td></tr>
+      </table>
+    </div>
+
+    <div class="path-card">
+      <div class="path-label shallow">场景 D · 浅层停留，未真正进入学习</div>
+      <div class="path-title">人在系统里，但从没真正开始</div>
+      <div class="path-desc" style="margin-bottom:10px">用户注册了、登录了、甚至聊过几句，但没有完成过任何实质学习动作。停留在"想"而不是"做"。</div>
+      <table class="table">
+        <tr><th style="width:90px">动作</th><th>策略</th></tr>
+        <tr><td><strong>接住</strong></td><td>不催促。先理解卡在哪——是不知道从哪开始，还是还没下决心。"你之前看了看，有没有觉得哪里可以先入手？"</td></tr>
+        <tr><td><strong>定位</strong></td><td>判断是方向模糊（不知道该做什么）还是动力不足（知道但做不到）</td></tr>
+        <tr><td><strong>对齐</strong></td><td>直接给一个极小动作。"你现在有5分钟吗？做3道题试试看。"不解释太多，先让行为发生</td></tr>
+        <tr><td><strong>承诺</strong></td><td>以完成首个动作为入口成功标志，不追求完整建档</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout orange"><strong>入口与调度器的中断期边界：</strong>用户中断后回来，不一定都走入口的完整回流路径。判断标准不只是中断天数，而是<strong>上次共识是否仍然有效</strong>。如果用户中断8天但目标、计划、学习模式共识都没变，调度器以低强度直接接回即可（断续期处理）。只有当共识已失效（目标变了、计划已不适用、用户对"跟着学"的意愿需要重建）时，才触发入口回流路径。简单规则：中断≤14天且共识未变→调度器接回；中断>14天或共识已变→入口回流路径。</div>
+
+  <hr class="sep">
+
+  <!-- 动作级标准 -->
+  <div class="st" style="font-size:17px">五类动作的成功与失败判断</div>
+  <div class="ss">每类动作都有可观察的成功信号和失败信号。失败不意味着结束，而是触发策略切换。</div>
+
+  <div class="card">
+    <table class="table">
+      <tr><th>动作</th><th>成功信号</th><th>失败信号</th><th>失败后策略</th></tr>
+      <tr>
+        <td><strong>① 接住</strong></td>
+        <td>用户从一句话变成两三句；开始提供具体情况；情绪从散乱变得可对话</td>
+        <td>用户不说话/只回"嗯""好"；明显敷衍；直接退出</td>
+        <td>降低压力，给一个零门槛选择题（"你现在更想先看看资料，还是聊聊你的情况？"）；如果持续沉默，不追问，留一句低压出口</td>
+      </tr>
+      <tr>
+        <td><strong>② 定位</strong></td>
+        <td>系统能判断出紧迫度、当前最优先任务、该走哪条路径</td>
+        <td>信息太少无法判断；用户表达矛盾</td>
+        <td>用选择题缩小范围（"你大概什么时候考？今年还是明年？"）；不连续追问超过2轮</td>
+      </tr>
+      <tr>
+        <td><strong>③ 澄清</strong></td>
+        <td>考试方向、时间窗口、大致水平已够用，可启动第一步</td>
+        <td>用户回避回答水平问题；说"不知道"</td>
+        <td>跳过自评，直接给2道诊断题做摸底；或暂时跳过，先进入对齐阶段</td>
+      </tr>
+      <tr>
+        <td><strong>④ 对齐</strong></td>
+        <td>用户对"先做什么"无明显抗拒；回应"可以""那我试试"</td>
+        <td>用户反复追问"所以我现在到底该干嘛"；表示"我不确定"</td>
+        <td>缩小选项："你觉得先做A还是B？"；解释为什么先做这个而不是那个</td>
+      </tr>
+      <tr>
+        <td><strong>⑤ 承诺</strong></td>
+        <td>用户答应开始一个具体任务；完成首个动作（点击/做题/记录）</td>
+        <td>用户说"我回头看看"然后没有动作</td>
+        <td>进一步降低动作门槛（"不用做完，先看第一题就行"）；或设定下次继续的节点</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="mini">入口整体成功标准</div>
+    <div class="callout green" style="margin-bottom:0">
+      <strong>入口成功 =</strong> 用户愿意继续对话 + 接受老师带教关系 + 认可当前起步路径 + 愿意开始首个具体动作。<br>
+      四个条件同时出现，才算入口真正完成。任何一个未达成，入口仍在进行中。
+    </div>
+  </div>
+</div></div>
+
+<!-- ==================== 调度器 ==================== -->
+<div id="scheduler" class="section"><div class="wrap">
+  <div class="st">二、调度器</div>
+  <div class="callout blue"><strong>定义：</strong>调度器，是对话引擎在用户已进入备考关系后，根据用户当前阶段、行为状态、学习表现和心态风险，判断这一轮最优先要解决的问题，并动态调用能力，以推动用户持续学习和有效提升的能力。</div>
+
+  <div class="logic">
+    <div class="label">CORE LOGIC</div>
+    <div class="flow">识别主矛盾 → 确定主任务 → 调用能力 → 控制强度 → 推动下一步发生</div>
+  </div>
+
+  <div class="callout orange"><strong>边界：</strong>调度器只处理"如何正常推进"；一旦主矛盾升级为掉线风险、强失控或持续行动失联，主导权切换至干预器。</div>
+
+  <div class="card">
+    <div class="mini">调度器三项核心职责</div>
+    <table class="table">
+      <tr><th>核心职责</th><th>要解决的问题</th><th>关键判断</th><th>输出</th></tr>
+      <tr><td><strong>判断当前主任务</strong></td><td>这一轮最优先解决什么</td><td>启动学习、维持连续性、提升正确率、做阶段诊断，还是处理偏离风险</td><td>本轮主任务</td></tr>
+      <tr><td><strong>选择能力组合</strong></td><td>为主任务调用哪些能力</td><td>调规划、资源、反馈、测评、复盘、情绪的哪些；先后和取舍</td><td>能力调用方案</td></tr>
+      <tr><td><strong>控制推进强度</strong></td><td>这一轮该推到什么程度</td><td>该推进、收束还是减压；给一个动作还是一组；强推进还是轻推进</td><td>推进深度与收口方式</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="mini">主矛盾 → 主任务 → 能力组合 → 强度梯度</div>
+    <table class="table">
+      <tr><th>主矛盾</th><th>核心问题</th><th>典型表现</th><th>主任务</th><th>默认能力</th><th>低强度</th><th>中强度</th><th>高强度</th><th>完成标准</th></tr>
+      <tr>
+        <td><strong>启动问题</strong></td><td>学习还没真正发生</td><td>目标模糊、迟迟未开始</td><td>让学习发生</td><td>规划+资源</td>
+        <td>启动1个最小动作</td><td>启动1–2个基础动作</td><td>给出起步包与顺序</td>
+        <td>用户知道第一步是什么并愿意开始</td>
+      </tr>
+      <tr>
+        <td><strong>连续性问题</strong></td><td>学习无法持续</td><td>断断续续、中断频繁</td><td>让学习持续</td><td>规划+反馈</td>
+        <td>接回1个低门槛动作</td><td>接回本周节奏</td><td>重建完整节奏</td>
+        <td>用户重新接上可执行节奏</td>
+      </tr>
+      <tr>
+        <td><strong>有效性问题</strong></td><td>学习没转化为提升</td><td>做了很多但提分慢</td><td>让学习更有效</td><td>测评+复盘+资源</td>
+        <td>校正1个关键点</td><td>轻诊断+1个改法</td><td>完整重点收束</td>
+        <td>用户知道问题在哪并有校正方向</td>
+      </tr>
+      <tr>
+        <td><strong>稳定性问题</strong></td><td>用户偏离学习轨道</td><td>焦虑、自责、掉线风险</td><td>回到可持续状态</td><td>情绪+轻规划</td>
+        <td>稳住+给一个抓手</td><td>稳状态+接一个动作</td><td>仅在风险下降后</td>
+        <td>用户回到可对话、可行动状态</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="mini">主矛盾默认优先级</div>
+      <table class="table">
+        <tr><th>优先级</th><th>类型</th><th>原因</th></tr>
+        <tr><td>1</td><td>稳定性问题</td><td>掉线风险不处理，其他推进无意义</td></tr>
+        <tr><td>2</td><td>启动问题</td><td>还没开始时不应先谈提效</td></tr>
+        <tr><td>3</td><td>连续性问题</td><td>学不稳时先恢复持续性</td></tr>
+        <tr><td>4</td><td>有效性问题</td><td>已开始且稳定时提效才成立</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="mini">调度器判断依据</div>
+      <table class="table">
+        <tr><th>维度</th><th>关注内容</th><th>识别什么</th></tr>
+        <tr><td>行为状态</td><td>是否在学、是否连续、有无中断</td><td>启动/连续性问题</td></tr>
+        <tr><td>学习表现</td><td>正确率、短板、测评结果</td><td>有效性问题</td></tr>
+        <tr><td>心态信号</td><td>焦虑、自责、退缩、失控</td><td>稳定性问题</td></tr>
+        <tr><td>时间阶段</td><td>距考试时间、是否临考</td><td>优先级与方式</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 实时状态矩阵 -->
+  <div class="st" style="font-size:17px">调度器的实时状态×卡点决策矩阵</div>
+  <div class="callout blue"><strong>上下文关系：</strong>上方主矛盾框架定义了调度器"如何思考"——识别主矛盾、选择能力、控制强度。下方状态矩阵则是调度器"如何执行"——系统通过行为数据自动识别用户处于哪种状态（活跃/断续/中断/冲刺），再结合卡点类型，直接查表得到本轮对话策略。四种状态本质上是主矛盾的行为信号来源：活跃期对应有效性问题为主，断续期对应连续性问题，中断期触发入口回流，冲刺期叠加时间压力。</div>
+
+  <div class="card">
+    <div class="mini">状态识别规则（行为数据驱动）</div>
+    <div class="g4" style="margin-bottom:16px">
+      <div style="background:var(--green-l);border:1.5px solid var(--green);border-radius:12px;padding:12px 14px">
+        <div style="font-size:13px;font-weight:700"><span class="sd active"></span>活跃期</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">近7天登录≥5次；完成率≥60%；刷题量稳定</div>
+      </div>
+      <div style="background:var(--amber-l);border:1.5px solid var(--amber);border-radius:12px;padding:12px 14px">
+        <div style="font-size:13px;font-weight:700"><span class="sd sporadic"></span>断续期</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">7天内登录2–4次；完成率&lt;40%；刷题下滑</div>
+      </div>
+      <div style="background:var(--red-l);border:1.5px solid var(--red);border-radius:12px;padding:12px 14px">
+        <div style="font-size:13px;font-weight:700"><span class="sd paused"></span>中断期</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">超过7天未登录</div>
+      </div>
+      <div style="background:var(--purple-l);border:1.5px solid var(--purple);border-radius:12px;padding:12px 14px">
+        <div style="font-size:13px;font-weight:700"><span class="sd sprint"></span>冲刺期</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">距考试≤30天</div>
+      </div>
+    </div>
+
+    <table class="mtable">
+      <thead>
+        <tr><th class="rh">状态 ↓ / 卡点 →</th><th class="ch">📝 申论卡点</th><th class="ch">⏱ 速度卡点</th><th class="ch">💔 信心卡点</th><th class="ch">🗺 方向卡点</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sl"><span class="sd active"></span>活跃期</td>
+          <td><div class="cell-r">申论练习量低</div><div class="cell-q">「你最近写过什么题，发给我看看」→ 推批改</div></td>
+          <td><div class="cell-r">模拟超时</div><div class="cell-q">「今天试试15分钟完成资料分析」→ 推速算专项</div></td>
+          <td><div class="cell-r">正确率有进步</div><div class="cell-q">「你这周比上周多对了X题」→ 正反馈</div></td>
+          <td><div class="cell-r">只看课不刷题</div><div class="cell-q">「看完这节，试试配套5道题？」→ 学完即练</div></td>
+        </tr>
+        <tr>
+          <td class="sl"><span class="sd sporadic"></span>断续期</td>
+          <td><div class="cell-r">申论长期回避</div><div class="cell-q">「申论不用写完，先从小题开始」→ 降门槛</div></td>
+          <td><div class="cell-r">刷题量下滑</div><div class="cell-q">「今天就5道资料分析，计时一下」→ 轻量重启</div></td>
+          <td><div class="cell-r">连续出错后沉默</div><div class="cell-q">「最近状态怎么样？不用急着学」→ 情绪优先</div></td>
+          <td><div class="cell-r">随机学习无规律</div><div class="cell-q">「今天只做一件事，选这个还是那个？」→ 极简任务</div></td>
+        </tr>
+        <tr>
+          <td class="sl"><span class="sd paused"></span>中断期</td>
+          <td colspan="4" style="color:var(--muted);font-style:italic;text-align:center;font-size:12px">无论哪种卡点——先问「好久没见，最近怎么了？」关心优先，不提学习任务。若共识仍有效→调度器低强度接回；若共识已失效→触发入口回流路径。</td>
+        </tr>
+        <tr>
+          <td class="sl"><span class="sd sprint"></span>冲刺期</td>
+          <td><div class="cell-r">申论最优先</div><div class="cell-q">「还有X天，申论每天写一篇小题」→ 批改最高频</div></td>
+          <td><div class="cell-r">策略调整</div><div class="cell-q">「放弃数量关系，时间留给申论和资料」→ 做减法</div></td>
+          <td><div class="cell-r">帮算分差</div><div class="cell-q">「距目标差X分，这样分配最合算」→ 数据锚定</div></td>
+          <td><div class="cell-r">30天倒计时</div><div class="cell-q">给最后30天每日计划+每天打卡确认</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
+
+<!-- ==================== 干预器 ==================== -->
+<div id="intervener" class="section"><div class="wrap">
+  <div class="st">三、干预器</div>
+  <div class="callout red"><strong>定义：</strong>干预器，是对话引擎在识别到用户出现掉线风险、失控风险或明显偏离持续学习轨道时，暂停或重排常规推进逻辑，优先通过情绪承接、认知校正、行动降门槛等方式，使用户回到可对话、可执行、可持续状态的能力。</div>
+  <div class="ss">干预器不是默认模式，也不是情绪陪伴模块；只有当常规推进已经失效，或继续推进会显著增加中断、退出与失控风险时，才由干预器主导。</div>
+
+  <div class="card">
+    <div class="mini">干预器三项核心职责</div>
+    <table class="table">
+      <tr><th>核心职责</th><th>要解决的问题</th><th>关键判断</th><th>输出</th></tr>
+      <tr><td><strong>识别风险状态</strong></td><td>当前是否已不适合常规推进</td><td>普通波动，还是掉线/失控/退出风险</td><td>是否切换到干预</td></tr>
+      <tr><td><strong>重建可持续状态</strong></td><td>把用户从偏离边缘拉回</td><td>先承接情绪、校正认知，还是降低行动门槛</td><td>回到可对话/可执行/可持续</td></tr>
+      <tr><td><strong>交还推进权</strong></td><td>干预做到什么程度可回归</td><td>风险是否下降，承接能力是否恢复</td><td>交还调度器主导</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="mini">风险层级与启动判断</div>
+    <table class="table">
+      <tr><th>风险层级</th><th>典型表现</th><th>是否启动干预</th><th>处理方式</th></tr>
+      <tr><td><strong>普通波动</strong></td><td>累、慌、做得不好，但仍愿意继续学</td><td>否</td><td>调度器内轻承接、轻调整</td></tr>
+      <tr><td><strong>升高风险</strong></td><td>学不进去、自我怀疑、抗拒任务、承接能力下降</td><td>视情况</td><td>收缩推进，必要时切换干预器</td></tr>
+      <tr><td><strong>必须干预</strong></td><td>放弃倾向、强自我否定、强失控感、持续行动失联</td><td>是</td><td>干预器主导，暂停原推进逻辑</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="mini">三类核心干预方式</div>
+    <table class="table">
+      <tr><th>干预方式</th><th>定义</th><th>解决什么</th><th>典型场景</th><th>目标状态</th></tr>
+      <tr><td><strong>情绪承接</strong></td><td>接住当前感受，降低失控感和防御感</td><td>用户还能不能继续对话</td><td>焦虑、自责、回流羞耻、情绪上头</td><td>可对话状态</td></tr>
+      <tr><td><strong>认知校正</strong></td><td>修正因焦虑受挫产生的失真判断</td><td>用户还能不能稳定看待局面</td><td>自我否定、绝对化判断、局部失败放大为整体</td><td>可判断状态</td></tr>
+      <tr><td><strong>行动降门槛</strong></td><td>缩小动作、降低难度，让用户重新动起来</td><td>用户还能不能执行</td><td>计划过重、低意愿、中断回流</td><td>可执行状态</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="mini">干预结束与交还推进权</div>
+    <table class="table">
+      <tr><th>判断维度</th><th>结束标准</th><th>交还后处理</th></tr>
+      <tr><td>可对话</td><td>用户能稳定回应，不再明显抗拒或失控</td><td>可交还，但保持低强度推进</td></tr>
+      <tr><td>可判断</td><td>不再强烈绝对化/自我否定，能接受现实判断</td><td>恢复轻量规划，不直接恢复原强度</td></tr>
+      <tr><td>可执行</td><td>愿意接受低门槛下一步，具备基本承接能力</td><td>以低强度接回学习，逐步恢复</td></tr>
+    </table>
+    <div class="callout orange" style="margin-top:12px;margin-bottom:0"><strong>原则：</strong>干预终点不是"情绪好一点"，而是"用户重新具备常规推进的承接能力"。交还后不默认恢复原强度，由调度器重新评估。</div>
+  </div>
+</div></div>
+
+<!-- ==================== 画像修正层 ==================== -->
+<div id="persona" class="section"><div class="wrap">
+  <div class="st">四、画像修正层</div>
+  <div class="callout orange"><strong>核心定位：</strong>画像不是系统实时运行的唯一判断依据，也不是独立于入口、调度器、干预器之外的第四套系统；它作为对话引擎的运行修正层，在通用主逻辑之上，修正不同用户的进入方式、推进策略、风险敏感点与表达方式。</div>
+  <div class="callout purple"><strong>使用边界：</strong>画像A–E用维度不统一、不互斥的方式描述用户，适合团队对齐场景设计，但系统不能仅靠标签做实时判断。驱动对话个性化需要两层独立机制：首次收集的用户档案（静态基线）+ 持续更新的行为状态（动态信号）。画像变量用于修正对话引擎的执行方式，不替代调度器的状态判断。</div>
+
+  <div class="card">
+    <div class="mini">画像如何作用于系统各环节</div>
+    <table class="table">
+      <tr><th>作用环节</th><th>画像修正什么</th><th>举例</th></tr>
+      <tr><td><strong>入口</strong></td><td>修正信任建立方式、问题顺序、进入路径</td><td>D类不当小白盘问；B类先承认育儿约束</td></tr>
+      <tr><td><strong>调度器</strong></td><td>修正高发主矛盾、主任务优先级、推进强度</td><td>A类连续性优先；C类有效性优先但需防burnout</td></tr>
+      <tr><td><strong>干预器</strong></td><td>修正风险敏感点、典型掉线原因、优先干预方式</td><td>D类自我否定高敏；B类双重内疚高敏</td></tr>
+      <tr><td><strong>表达层</strong></td><td>修正反馈方式、提醒方式、带教语气</td><td>A类温暖低压；C类直接明确；D类尊重克制</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="mini">画像输出变量（系统消费接口）</div>
+    <table class="table">
+      <tr><th>输出变量</th><th>要回答的问题</th><th>作用环节</th></tr>
+      <tr><td><strong>信任起点</strong></td><td>用户对"老师带学关系"的默认接受度</td><td>入口</td></tr>
+      <tr><td><strong>默认推进阻力</strong></td><td>最容易卡在开始、持续、提效还是重启</td><td>入口/调度器</td></tr>
+      <tr><td><strong>高发主矛盾</strong></td><td>最容易高频出现哪类主矛盾</td><td>调度器</td></tr>
+      <tr><td><strong>高敏风险触发点</strong></td><td>最容易因什么进入风险状态</td><td>干预器</td></tr>
+      <tr><td><strong>表达偏好</strong></td><td>更适合被怎么说、怎么反馈、怎么提醒</td><td>全程表达</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="mini">5大画像系统消费总表</div>
+    <table class="table">
+      <tr><th>画像</th><th>初判线索</th><th>入口重点</th><th>高发主矛盾</th><th>高敏风险触发点</th><th>表达/推进修正</th></tr>
+      <tr>
+        <td><strong>A 断续在职者</strong><br><span style="font-size:11px;color:var(--muted)">55%占比</span></td>
+        <td>在职；时间不稳定；有中断史</td>
+        <td>先降低重启门槛，不追问中断原因；先接回现实可执行的一步</td>
+        <td>连续性问题为主，稳定性次之</td>
+        <td>中断后自责/羞耻/低意愿；工作日计划过重</td>
+        <td>低压、少催促、正常化中断；低到轻中强度为主</td>
+      </tr>
+      <tr>
+        <td><strong>B 宝妈备考者</strong><br><span style="font-size:11px;color:var(--muted)">15%占比</span></td>
+        <td>有照护责任；时间碎片化；"只能趁孩子睡了学"</td>
+        <td>先承认现实约束，不预设整块时间；建立"碎片也能学"共识</td>
+        <td>连续性问题为主，启动问题次之</td>
+        <td>家庭突发导致中断；双重内疚（没陪好孩子也没学好）</td>
+        <td>理解约束不施压；低强度、可拆分、碎片化推进</td>
+      </tr>
+      <tr>
+        <td><strong>C 全职冲刺者</strong><br><span style="font-size:11px;color:var(--muted)">14%占比</span></td>
+        <td>考试时间较近；目标明确；强紧迫感</td>
+        <td>快速进入目标和路径共识；少寒暄，先给阶段感</td>
+        <td>有效性为主，临考期稳定性上升</td>
+        <td>临考慌乱/节奏失控；经济焦虑；周期性burnout</td>
+        <td>直接明确结构化；轻中到中高强度；更早引入测评复盘</td>
+      </tr>
+      <tr>
+        <td><strong>D 焦虑瓶颈者</strong><br><span style="font-size:11px;color:var(--muted)">30%占比</span></td>
+        <td>二战/多次备考；有卡分经历；"学了很久还是不行"</td>
+        <td>不当小白重新盘问；先承认已有投入和卡点，再切入诊断</td>
+        <td>稳定性与有效性并存，默认先稳态</td>
+        <td>自我否定；瓶颈固化；失败经验反复唤起</td>
+        <td>尊重、克制、不空泛鼓励；先稳认知再进入诊断</td>
+      </tr>
+      <tr>
+        <td><strong>E 预期失真新手</strong><br><span style="font-size:11px;color:var(--muted)">15%占比</span></td>
+        <td>首次备考；对投入成本缺乏现实感；"跟着学是不是就能上"</td>
+        <td>先建立现实坐标，不急着给大方案；先摸底再给第一步</td>
+        <td>启动问题为主，后续易转稳定性</td>
+        <td>首次受挫后预期坍塌；把没做好等于没希望</td>
+        <td>务实清晰去幻想化；低到轻中强度；先摸底再收束</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="mini">画像判定机制</div>
+    <table class="table">
+      <tr><th>问题</th><th>建议</th><th>说明</th></tr>
+      <tr><td>首次怎么判</td><td>根据入口阶段最小必要信息初判</td><td>不追求判准，只求足够支持入口和首轮调度</td></tr>
+      <tr><td>后续怎么修正</td><td>根据行为、表现、风险信号动态修正</td><td>真实特征在学习过程中逐步显露</td></tr>
+      <tr><td>能否多画像</td><td>建议主画像+次画像</td><td>允许同一用户带两类倾向</td></tr>
+      <tr><td>画像 vs 状态</td><td>当前状态优先，画像做修正</td><td>状态决定做什么，画像决定怎么做</td></tr>
+      <tr><td>输出什么</td><td>输出画像变量，不只是标签</td><td>变量可直接接入引擎各环节</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="mini">首次对话用户档案采集（静态基线）</div>
+    <div class="ss" style="margin-bottom:14px">首次对话的核心任务之一：通过4个问题建立用户基线。注意这不是入口的全部——入口还要完成关系建立和共识构建。档案采集服务于画像初判和初始计划生成。</div>
+    <div class="g4">
+      <div style="border:1.5px solid var(--border);border-radius:12px;padding:14px 16px">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px">问题 01 · 目标</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px">你打算考哪个地方？大概什么时候参加考试？</div>
+        <div style="font-size:11px;color:var(--muted);background:var(--bg);padding:6px 8px;border-radius:6px">→ 时间紧迫度、省考/国考差异、地域题型适配</div>
+      </div>
+      <div style="border:1.5px solid var(--border);border-radius:12px;padding:14px 16px">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px">问题 02 · 经历</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px">这是第几次备考？之前有没有参加过考试？</div>
+        <div style="font-size:11px;color:var(--muted);background:var(--bg);padding:6px 8px;border-radius:6px">→ 对话深度校准、画像初判（新手/多战）、情绪预判</div>
+      </div>
+      <div style="border:1.5px solid var(--border);border-radius:12px;padding:14px 16px">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px">问题 03 · 水平</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px">行测大概多少分？申论呢？不知道就做2道诊断题</div>
+        <div style="font-size:11px;color:var(--muted);background:var(--bg);padding:6px 8px;border-radius:6px">→ 初始卡点识别、资源推荐起点、进度基准</div>
+      </div>
+      <div style="border:1.5px solid var(--border);border-radius:12px;padding:14px 16px">
+        <div style="font-size:11px;font-weight:700;color:var(--blue);margin-bottom:6px">问题 04 · 时间</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:8px">现在在职还是全职备考？每天大概能学多久？</div>
+        <div style="font-size:11px;color:var(--muted);background:var(--bg);padding:6px 8px;border-radius:6px">→ 计划密度、课程时长推荐、推送频率</div>
+      </div>
+    </div>
+  </div>
+  <hr class="sep">
+
+  <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:14px;padding:18px 24px;margin-bottom:20px;color:#fff">
+    <div style="font-size:14px;font-weight:800;margin-bottom:6px">↓ 以下为团队场景设计参考</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.55);line-height:1.6">上方内容面向系统设计——定义画像如何接入对话引擎。下方内容面向团队对齐——用具体场景、情绪地图、对话介入信号帮助团队理解每类用户。两者配合使用：系统读变量，团队读场景。</div>
+  </div>
+
+  <div class="st" style="font-size:17px">画像详情 A–E</div>
+  <div class="callout purple">以下画像用于团队内部对齐场景设计，不作为系统运行的唯一判断依据。五个画像维度不完全统一（行为/约束/心理/阶段），同一用户可能跨越多个画像——这是已知局限。基于51条电话调研数据。</div>
+
+  <!-- 画像A -->
+  <div class="persona-card">
+    <div class="persona-head ca">
+      <div class="persona-emo">👩‍💼</div>
+      <div class="persona-label-sm">画像 A · 时间/生活约束型</div>
+      <div class="persona-name">断续在职者「小林」</div>
+      <div class="persona-slogan">「知道要学，但总是被打断」</div>
+      <div class="persona-pct">55%<small> 占比</small></div>
+    </div>
+    <div class="persona-body">
+      <div class="info2">
+        <div><div class="ik">年龄</div><div class="iv">26–32岁</div></div>
+        <div><div class="ik">状态</div><div class="iv">在职</div></div>
+        <div><div class="ik">备考年限</div><div class="iv">1–3年（有中断）</div></div>
+        <div><div class="ik">日均学习</div><div class="iv">1–3小时</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="ssec"><div class="ssec-t">情绪地图</div>
+            <div class="elist">
+              <div class="eitem"><span class="eico">😔</span><div><div class="estate">中断时→自责+焦虑</div><div class="equote">「中断近一个月，身心疲惫」</div></div></div>
+              <div class="eitem"><span class="eico">😶</span><div><div class="estate">重启时→低意愿</div><div class="equote">「提不上劲，知道要学但做不到」</div></div></div>
+              <div class="eitem"><span class="eico">😨</span><div><div class="estate">看到竞争→恐慌</div><div class="equote">「几千人争一岗，压力巨大」</div></div></div>
+            </div>
+          </div>
+          <div class="ssec"><div class="ssec-t">资源调用优先级</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 碎片短课(10–15分)</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 轻量刷题(5–10题)</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 每周计划</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 申论片段练习</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="ssec"><div class="ssec-t">对话介入信号</div>
+            <div class="slist">
+              <div class="sitem" style="border-left-color:var(--blue)"><div class="strigger">3天未登录</div><div class="sresp">「最近怎么样？工作还好吗？」不催学习</div></div>
+              <div class="sitem" style="border-left-color:var(--blue)"><div class="strigger">中断7天后首次登录</div><div class="sresp">「今天只做一件事就好，选这个还是那个？」</div></div>
+              <div class="sitem" style="border-left-color:var(--blue)"><div class="strigger">周五19:00</div><div class="sresp">「周末有空的话，这两件事可以推进下」</div></div>
+            </div>
+          </div>
+          <div class="gap-box">
+            <div class="gap-t">⚠ 数据缺口</div>
+            <div class="gap-items">
+              <div class="gap-item">重启真实触发点（外部提醒 vs 内心时刻）</div>
+              <div class="gap-item">付费决策时机：什么情况下决定买？</div>
+              <div class="gap-item">不学习时他们在干什么？</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 画像B -->
+  <div class="persona-card">
+    <div class="persona-head cb">
+      <div class="persona-emo">👩‍👧</div>
+      <div class="persona-label-sm">画像 B · 时间/生活约束型</div>
+      <div class="persona-name">宝妈备考者「晓雯」</div>
+      <div class="persona-slogan">「孩子睡了才能学，但我也累了」</div>
+      <div class="persona-pct">15%<small> 占比</small></div>
+    </div>
+    <div class="persona-body">
+      <div class="info2">
+        <div><div class="ik">年龄</div><div class="iv">27–34岁</div></div>
+        <div><div class="ik">状态</div><div class="iv">在职，有低龄子女</div></div>
+        <div><div class="ik">备考年限</div><div class="iv">1–3年（多次因育儿中断）</div></div>
+        <div><div class="ik">最小学习单元</div><div class="iv">5–15分钟</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="ssec"><div class="ssec-t">情绪地图</div>
+            <div class="elist">
+              <div class="eitem"><span class="eico">😣</span><div><div class="estate">被打断→双重内疚</div><div class="equote">「没陪好孩子，也没学好」</div></div></div>
+              <div class="eitem"><span class="eico">😴</span><div><div class="estate">终于可以学→精力耗尽</div><div class="equote">「打开课没几分钟就睡着了」</div></div></div>
+              <div class="eitem"><span class="eico">😞</span><div><div class="estate">孩子生病→整月废掉</div><div class="equote">「这个月又白费了」</div></div></div>
+              <div class="eitem"><span class="eico">✅</span><div><div class="estate">完整学了30分钟→满足</div><div class="equote">「终于做到了点什么」</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="ssec"><div class="ssec-t">对话介入信号</div>
+            <div class="slist">
+              <div class="sitem" style="border-left-color:var(--pink)"><div class="strigger">连续3天22点后登录</div><div class="sresp">「孩子最近还好吗？你这几天肯定很累」不提学习</div></div>
+              <div class="sitem" style="border-left-color:var(--pink)"><div class="strigger">同一天多次短登录（&lt;5分钟）</div><div class="sresp">「随时停就随时停，今天5分钟也算数」</div></div>
+              <div class="sitem" style="border-left-color:var(--pink)"><div class="strigger">申论卡点</div><div class="sresp">「先不写大作文，小题在午睡时20分钟够了」</div></div>
+            </div>
+          </div>
+          <div class="ssec"><div class="ssec-t">资源调用</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 极短单元(3–5分)</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 中断保存进度</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 申论小题批改</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 零压力今日任务</span>
+            </div>
+          </div>
+          <div class="gap-box">
+            <div class="gap-t">⚠ 数据缺口</div>
+            <div class="gap-items">
+              <div class="gap-item">有孩子用户实际占比（未系统标注）</div>
+              <div class="gap-item">孩子年龄段对学习时间的影响（0–3 vs 3–6岁）</div>
+              <div class="gap-item">宝妈群体付费意愿和决策时机</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 画像C -->
+  <div class="persona-card">
+    <div class="persona-head cc">
+      <div class="persona-emo">🎯</div>
+      <div class="persona-label-sm">画像 C · 时间/生活约束型</div>
+      <div class="persona-name">全职冲刺者「阿强」</div>
+      <div class="persona-slogan">「每天学8小时，但隔两周就撑不住了」</div>
+      <div class="persona-pct">14%<small> 占比</small></div>
+    </div>
+    <div class="persona-body">
+      <div class="info2">
+        <div><div class="ik">年龄</div><div class="iv">22–28岁</div></div>
+        <div><div class="ik">状态</div><div class="iv">全职备考，6–8小时/天</div></div>
+        <div><div class="ik">压力来源</div><div class="iv">经济空窗+家庭期待</div></div>
+        <div><div class="ik">低谷周期</div><div class="iv">每1–2周（数据支撑）</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="ssec"><div class="ssec-t">情绪周期（有数据支撑）</div>
+            <div class="elist">
+              <div class="eitem"><span class="eico">🔥</span><div><div class="estate">第1–10天：高效期</div><div class="equote">「今天状态超好，刷了100道题」</div></div></div>
+              <div class="eitem"><span class="eico">💀</span><div><div class="estate">第11–15天：低谷期</div><div class="equote">「坐了5小时，什么都没记住」</div></div></div>
+              <div class="eitem"><span class="eico">💸</span><div><div class="estate">底层焦虑：经济压力</div><div class="equote">「多一天不上班就多一天亏」</div></div></div>
+              <div class="eitem"><span class="eico">👁</span><div><div class="estate">家人盯进度</div><div class="equote">「你天天在家进展怎么样」</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="ssec"><div class="ssec-t">对话介入信号</div>
+            <div class="slist">
+              <div class="sitem" style="border-left-color:var(--amber)"><div class="strigger">刷题量连续3天下滑30%+</div><div class="sresp">「这几天状态有些低？休息一天完全ok」先给许可</div></div>
+              <div class="sitem" style="border-left-color:var(--amber)"><div class="strigger">每隔10–14天</div><div class="sresp">主动阶段复盘：「这两周哪里进步了，哪里还要攻」</div></div>
+              <div class="sitem" style="border-left-color:var(--amber)"><div class="strigger">提到家人/经济压力</div><div class="sresp">「先不管他们，我来帮你算你现在的位置」→ 数据锚定</div></div>
+            </div>
+          </div>
+          <div class="ssec"><div class="ssec-t">资源调用</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 高强度模拟测试</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 薄弱点精准诊断</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 阶段里程碑复盘</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 burnout识别对话</span>
+            </div>
+          </div>
+          <div class="gap-box">
+            <div class="gap-t">⚠ 数据缺口</div>
+            <div class="gap-items">
+              <div class="gap-item">全职样本仅7条，低谷周期规律待验证</div>
+              <div class="gap-item">全职放弃节点（什么情况决定去上班）</div>
+              <div class="gap-item">家庭经济支持情况对心理的影响</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 画像D -->
+  <div class="persona-card">
+    <div class="persona-head cd">
+      <div class="persona-emo">😤</div>
+      <div class="persona-label-sm">画像 D · 心理状态/备考经历型</div>
+      <div class="persona-name">焦虑瓶颈者「阿杰」</div>
+      <div class="persona-slogan">「考了好几次，分数就是上不去」</div>
+      <div class="persona-pct">30%<small> 占比</small></div>
+    </div>
+    <div class="persona-body">
+      <div class="info2">
+        <div><div class="ik">年龄</div><div class="iv">25–35岁</div></div>
+        <div><div class="ik">状态</div><div class="iv">在职或全职</div></div>
+        <div><div class="ik">考试次数</div><div class="iv">2次以上</div></div>
+        <div><div class="ik">总分区间</div><div class="iv">110–125分</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="ssec"><div class="ssec-t">情绪地图</div>
+            <div class="elist">
+              <div class="eitem"><span class="eico">😰</span><div><div class="estate">回顾失败→自我怀疑</div><div class="equote">「可能这条路不适合我」</div></div></div>
+              <div class="eitem"><span class="eico">😠</span><div><div class="estate">同期上岸→不甘心</div><div class="equote">「比我差的都上岸了」</div></div></div>
+              <div class="eitem"><span class="eico">😭</span><div><div class="estate">被家人问起→压力</div><div class="equote">「考了好几年还没考上」</div></div></div>
+              <div class="eitem"><span class="eico">💡</span><div><div class="estate">找到方法→重燃希望</div><div class="equote">「调整策略后心态明显改善」</div></div></div>
+            </div>
+          </div>
+          <div class="ssec"><div class="ssec-t">卡点分布</div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:72px;font-size:10px;color:var(--muted)">申论小题</span><div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:90%;height:100%;background:var(--orange);border-radius:3px"></div></div><span style="font-size:10px;color:var(--muted)">重</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:72px;font-size:10px;color:var(--muted)">申论大作文</span><div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:85%;height:100%;background:var(--orange);border-radius:3px"></div></div><span style="font-size:10px;color:var(--muted)">重</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:72px;font-size:10px;color:var(--muted)">资料分析速度</span><div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:70%;height:100%;background:var(--orange);opacity:.7;border-radius:3px"></div></div><span style="font-size:10px;color:var(--muted)">中</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:72px;font-size:10px;color:var(--muted)">数量关系</span><div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:55%;height:100%;background:var(--orange);opacity:.4;border-radius:3px"></div></div><span style="font-size:10px;color:var(--muted)">放弃</span></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="ssec"><div class="ssec-t">对话介入信号</div>
+            <div class="slist">
+              <div class="sitem" style="border-left-color:var(--orange)"><div class="strigger">提到失败/「差X分」</div><div class="sresp">「那次一定很难受，你当时怎么想的？」先认同</div></div>
+              <div class="sitem" style="border-left-color:var(--orange)"><div class="strigger">连续两次模考无提升</div><div class="sresp">「让我看看哪里分差最大，针对那里」</div></div>
+              <div class="sitem" style="border-left-color:var(--orange)"><div class="strigger">距考试≤30天</div><div class="sresp">「申论比行测多投入，这里分差最大」</div></div>
+            </div>
+          </div>
+          <div class="ssec"><div class="ssec-t">资源调用</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 申论批改</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 弱点诊断报告</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 资料分析速算</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 考场策略课</span>
+            </div>
+          </div>
+          <div class="gap-box">
+            <div class="gap-t">⚠ 数据缺口</div>
+            <div class="gap-items">
+              <div class="gap-item">上岸成功路径（当前0条上岸案例）</div>
+              <div class="gap-item">申论突破的有效练习方式</div>
+              <div class="gap-item">心理崩溃后外部干预是否有效</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 画像E -->
+  <div class="persona-card">
+    <div class="persona-head ce">
+      <div class="persona-emo">🌱</div>
+      <div class="persona-label-sm">画像 E · 心理状态/备考经历型</div>
+      <div class="persona-name">预期失真新手「小白」</div>
+      <div class="persona-slogan">「大家都考，我也想考」</div>
+      <div class="persona-pct">15%<small> 占比</small></div>
+    </div>
+    <div class="persona-body">
+      <div class="info2">
+        <div><div class="ik">年龄</div><div class="iv">22–26岁</div></div>
+        <div><div class="ik">状态</div><div class="iv">应届/在校/刚工作</div></div>
+        <div><div class="ik">考试经历</div><div class="iv">0–1次</div></div>
+        <div><div class="ik">信息来源</div><div class="iv">小红书/B站</div></div>
+      </div>
+      <div class="g2">
+        <div>
+          <div class="ssec"><div class="ssec-t">核心心理</div>
+            <div class="elist">
+              <div class="eitem"><span class="eico">🐑</span><div><div class="estate">从众驱动</div><div class="equote">「大家都考公就考了」</div></div></div>
+              <div class="eitem"><span class="eico">😊</span><div><div class="estate">信心虚高（无参照系）</div><div class="equote">「感觉比考研简单一些」</div></div></div>
+              <div class="eitem"><span class="eico">🤷</span><div><div class="estate">缺乏节奏</div><div class="equote">「有空就学，没有计划」</div></div></div>
+            </div>
+          </div>
+          <div class="ssec"><div class="ssec-t">启动路径</div>
+            <div class="elist">
+              <div class="eitem"><span class="eico">🔔</span><div><div class="estate">触发</div><div class="equote">同学都考公/工作不稳/家人建议</div></div></div>
+              <div class="eitem"><span class="eico">🔍</span><div><div class="estate">搜索</div><div class="equote">小红书看帖，了解科目</div></div></div>
+              <div class="eitem"><span class="eico">⏰</span><div><div class="estate">2–4周后</div><div class="equote">坚持率极低，「不知道学到哪了」</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="ssec"><div class="ssec-t">对话介入信号</div>
+            <div class="slist">
+              <div class="sitem" style="border-left-color:var(--green)"><div class="strigger">首次对话</div><div class="sresp">「你打算考哪个地方？什么时候？」先建坐标</div></div>
+              <div class="sitem" style="border-left-color:var(--green)"><div class="strigger">前2周 · 每天</div><div class="sresp">主动推送今日任务，回收完成情况，给反馈</div></div>
+              <div class="sitem" style="border-left-color:var(--green)"><div class="strigger">第一次测试后</div><div class="sresp">「你知道自己现在什么水平吗？」建立真实参照系</div></div>
+            </div>
+          </div>
+          <div class="ssec"><div class="ssec-t">资源调用</div>
+            <div style="display:flex;flex-wrap:wrap;gap:5px">
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 备考路径规划</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fee2e2;color:#991b1b;font-weight:600">P0 基础诊断测试</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 每日任务推送</span>
+              <span style="font-size:10px;padding:3px 10px;border-radius:20px;background:#fef3c7;color:#92400e;font-weight:600">P1 上岸案例参考</span>
+            </div>
+          </div>
+          <div class="gap-box">
+            <div class="gap-t">⚠ 数据缺口</div>
+            <div class="gap-items">
+              <div class="gap-item">新手前2周在哪个节点放弃</div>
+              <div class="gap-item">从众动机是否稳定（考难了还坚持吗）</div>
+              <div class="gap-item">愿意为「帮我规划」付多少</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <!-- 横向对比 -->
+  <div class="st" style="font-size:17px">五画像横向对比</div>
+  <div class="card" style="overflow-x:auto">
+    <table class="table">
+      <thead>
+        <tr><th style="width:90px">维度</th><th style="color:var(--blue)">A 断续在职者</th><th style="color:var(--pink)">B 宝妈备考者</th><th style="color:var(--amber)">C 全职冲刺者</th><th style="color:var(--orange)">D 焦虑瓶颈者</th><th style="color:var(--green)">E 预期失真新手</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>核心动力</strong></td><td>职业稳定性</td><td>稳定+为孩子树榜样</td><td>必须上岸，时间有限</td><td>不甘心，想证明自己</td><td>从众/家人期待</td></tr>
+        <tr><td><strong>最大阻力</strong></td><td>时间碎片化+重启门槛高</td><td>育儿打断不可预测+双重内疚</td><td>经济焦虑+周期性burnout</td><td>申论卡点+信心受损</td><td>没有学习节奏</td></tr>
+        <tr><td><strong>对AI期待</strong></td><td>陪伴感和提醒</td><td>理解处境，不施压</td><td>精准进度追踪+低谷许可</td><td>精准诊断，不是鸡汤</td><td>给方向，不知道问什么</td></tr>
+        <tr><td><strong>对话基调</strong></td><td>温暖陪伴、降低门槛</td><td>减负、允许中断、肯定碎片</td><td>进度管理、阶段复盘</td><td>专业诊断、情感支撑</td><td>引导目标、结构给方向</td></tr>
+        <tr><td><strong>核心资源</strong></td><td>碎片课+申论小题</td><td>极短单元(5分)+中断保存</td><td>全套模拟+弱点诊断+复盘</td><td>申论批改+弱点报告</td><td>路径规划+入门课</td></tr>
+        <tr><td><strong>付费意愿</strong></td><td>⭐⭐⭐ 中</td><td>⭐⭐⭐ 中（时间比钱稀缺）</td><td>⭐⭐⭐⭐ 高</td><td>⭐⭐⭐⭐⭐ 最高</td><td>⭐⭐ 低，先体验</td></tr>
+        <tr><td><strong>流失风险点</strong></td><td>中断7天后失联</td><td>孩子生病/育儿危机后消失</td><td>第2次低谷期后放弃</td><td>情绪崩溃后放弃</td><td>前2周自然流失</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
+
+<div class="footer">上岸仓 · 对话系统完整规范 v3.0 · 基于51条电话调研数据 · 2026.04.11</div>
+</body>
+</html>
