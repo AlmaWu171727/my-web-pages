@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>旅程阶段验证 · 上岸仓</title>
+<style>
+:root{
+  --ink:#1A202C;--sub:#4A5568;--light:#A0AEC0;--border:#E2E8F0;--bg:#F7FAFC;
+  --a:#4B7BEC;--b:#E84393;--c:#F39C12;--d:#E17055;--e:#00B894;
+  --green:#27AE60;--red:#E53E3E;--orange:#DD6B20;--purple:#6B46C1;--teal:#2C7A7B;
+  --card:#fff;--shadow:0 1px 8px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif;
+  background:var(--bg);color:var(--ink);font-size:14px;line-height:1.7}
+
+nav{background:#1A202C;padding:14px 32px;display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:100;flex-wrap:wrap}
+nav .logo{color:#fff;font-weight:700;font-size:15px;margin-right:4px}
+nav a{color:rgba(255,255,255,.6);text-decoration:none;font-size:12px;padding:4px 10px;
+  border-radius:6px;border:1px solid rgba(255,255,255,.15)}
+nav a:hover{background:rgba(255,255,255,.1);color:#fff}
+nav a.active{background:rgba(255,255,255,.15);color:#fff}
+
+.wrap{max-width:1120px;margin:0 auto;padding:36px 24px 80px}
+h1{font-size:22px;font-weight:800;margin-bottom:6px}
+.meta{color:var(--sub);font-size:13px;margin-bottom:16px}
+.bias-note{background:#FFFBF0;border:1px solid #F6E05E;border-radius:8px;padding:12px 16px;
+  font-size:12px;color:#7D5A00;margin-bottom:32px;line-height:1.6}
+
+/* STAT ROW */
+.stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:36px}
+.stat{background:var(--card);border-radius:12px;padding:18px 12px;border:1px solid var(--border);text-align:center}
+.stat .n{font-size:28px;font-weight:800}
+.stat .l{font-size:11px;color:var(--sub);margin-top:4px;line-height:1.4}
+
+/* SECTION */
+.sec{margin-bottom:48px}
+.sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:20px;
+  padding-bottom:10px;border-bottom:2px solid var(--border)}
+.sec-head h2{font-size:16px;font-weight:700}
+.tag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:10px;color:#fff}
+
+/* JOURNEY FLOW */
+.journey-wrap{overflow-x:auto;padding-bottom:12px;margin-bottom:24px}
+.journey{display:flex;align-items:flex-start;gap:0;min-width:900px;position:relative}
+.journey::before{content:'';position:absolute;top:28px;left:0;right:0;height:2px;background:var(--border);z-index:0}
+.j-step{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;min-width:70px}
+.j-node{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#fff;border:3px solid #fff;box-shadow:0 0 0 2px var(--border)}
+.j-node.ok{background:var(--green)}
+.j-node.warn{background:var(--orange)}
+.j-node.miss{background:var(--red)}
+.j-node.special{background:var(--purple)}
+.j-label{font-size:10px;color:var(--sub);margin-top:8px;text-align:center;line-height:1.4;max-width:68px}
+.j-arrow{width:100%;display:flex;align-items:center;justify-content:center;
+  position:absolute;top:28px;right:-50%;transform:translateX(0);z-index:0}
+
+/* STAGE DETAIL CARDS */
+.stage-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.stage-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.stage-card-head{padding:12px 16px;display:flex;align-items:center;gap:10px}
+.stage-card-head .snum{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.stage-card-head h3{font-size:13px;font-weight:700;flex:1}
+.stage-card-head .verdict{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.verdict.ok{background:#F0FFF4;color:var(--green)}
+.verdict.warn{background:#FFFBF0;color:var(--orange)}
+.verdict.miss{background:#FFF5F5;color:var(--red)}
+.stage-card-body{padding:14px 16px;border-top:1px solid var(--border)}
+.stage-card-body p{font-size:12px;color:var(--sub);line-height:1.6;margin-bottom:10px}
+.stage-card-body p:last-child{margin-bottom:0}
+
+/* DATA ROW INSIDE CARD */
+.data-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.data-bar-wrap{flex:1;background:#EDF2F7;border-radius:3px;height:14px;overflow:hidden}
+.data-bar-fill{height:100%;border-radius:3px;display:flex;align-items:center;
+  font-size:10px;font-weight:700;color:#fff;padding-left:6px;min-width:20px}
+.data-label{font-size:11px;color:var(--ink);min-width:100px;flex-shrink:0}
+.data-val{font-size:11px;font-weight:700;min-width:42px;text-align:right;flex-shrink:0}
+
+/* QUOTE */
+.quote{background:var(--bg);border-radius:8px;padding:11px 14px;border-left:3px solid var(--border);
+  font-size:12px;color:var(--sub);line-height:1.6;margin-top:8px}
+.quote strong{color:var(--ink);display:block;font-size:11px;margin-bottom:3px}
+
+/* HL BOX */
+.hl{border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.6;margin-top:10px}
+.hl.orange{background:#FFFBF0;border-left:3px solid var(--orange);color:#7D4E00}
+.hl.green{background:#F0FFF4;border-left:3px solid var(--green);color:#1A4731}
+.hl.blue{background:#EBF8FF;border-left:3px solid #3182CE;color:#1A3A5C}
+.hl.red{background:#FFF5F5;border-left:3px solid var(--red);color:#742A2A}
+.hl.purple{background:#FAF5FF;border-left:3px solid var(--purple);color:#44337A}
+
+/* CYCLE DIAGRAM */
+.cycle-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;box-shadow:var(--shadow)}
+.cycle-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cycle-side h4{font-size:12px;font-weight:700;margin-bottom:12px;color:var(--sub)}
+.cycle-flow{display:flex;flex-direction:column;gap:0}
+.cf-item{padding:8px 12px;font-size:12px;border-radius:8px;margin-bottom:4px;line-height:1.4}
+.cf-item.main{background:#EBF8FF;color:#1A3A5C;font-weight:600}
+.cf-item.minor{background:var(--bg);color:var(--sub);border:1px dashed var(--border)}
+.cf-item.key{background:#F0FFF4;color:#1A4731;font-weight:600}
+.cf-item.missing{background:#FFF5F5;color:#742A2A;border:1px dashed #FEB2B2}
+.cf-arrow{text-align:center;color:var(--light);font-size:14px;margin:2px 0}
+
+/* SUMMARY TABLE */
+.sum-table{width:100%;border-collapse:collapse}
+.sum-table th{padding:9px 12px;font-size:11px;font-weight:700;text-align:left;
+  background:var(--ink);color:rgba(255,255,255,.8);letter-spacing:.4px}
+.sum-table td{padding:9px 12px;font-size:12px;border-bottom:1px solid var(--border);line-height:1.5;vertical-align:top}
+.sum-table tr:hover td{background:var(--bg)}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;color:#fff}
+.badge.ok{background:var(--green)}
+.badge.warn{background:var(--orange)}
+.badge.miss{background:var(--red)}
+.badge.p0{background:#E53E3E}
+.badge.p1{background:#DD6B20}
+.badge.p2{background:#718096}
+
+/* MISSING PATH */
+.path-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:var(--shadow)}
+.path-flow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:12px 0}
+.pf-node{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.pf-node.a{background:#EBF8FF;color:#1A3A5C}
+.pf-node.b{background:#FFFBF0;color:#7D4E00}
+.pf-node.c{background:#F0FFF4;color:#1A4731}
+.pf-node.missing{background:#FFF5F5;color:#742A2A;border:1px dashed #FEB2B2}
+.pf-arrow{color:var(--light);font-weight:700;font-size:14px}
+
+/* DESIGN RECS */
+.recs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.rec-card{border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.rec-head{padding:10px 14px;font-size:12px;font-weight:700;color:#fff}
+.rec-body{padding:12px 14px;background:var(--card)}
+.rec-item{font-size:12px;color:var(--sub);padding:5px 0;border-bottom:1px solid var(--border);
+  display:flex;gap:6px;align-items:flex-start;line-height:1.5}
+.rec-item:last-child{border-bottom:none}
+.rec-item::before{content:"→";color:inherit;flex-shrink:0;margin-top:1px}
+
+/* INNER STAGE */
+.inner-stage{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;margin-top:12px}
+.is-node{flex:1;min-width:100px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;font-size:11px;position:relative}
+.is-node::after{content:'→';position:absolute;right:-14px;top:50%;transform:translateY(-50%);
+  color:var(--light);font-weight:700;font-size:13px}
+.is-node:last-child::after{display:none}
+.is-node .isn-title{font-weight:700;color:var(--ink);margin-bottom:4px;font-size:12px}
+.is-node .isn-sub{color:var(--sub);line-height:1.4}
+.is-node.highlight{background:#EBF8FF;border-color:#90CDF4}
+.is-node.highlight .isn-title{color:#1A3A5C}
+.is-node.danger{background:#FFF5F5;border-color:#FEB2B2}
+.is-node.danger .isn-title{color:#742A2A}
+
+@media(max-width:700px){
+  .stat-row,.stage-grid,.cycle-compare,.recs{grid-template-columns:1fr}
+  .journey{min-width:600px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">上岸仓</span>
+  <a href="./index.html">返回首页</a>
+  <a href="./journey-stage-validation.html" class="active">旅程阶段验证</a>
+</nav>
+
+<div class="wrap">
+  <h1>旅程阶段验证报告</h1>
+  <p class="meta">对象：whiteboard 旅程图（01前期准备 + 02备考过程 1→22步）&nbsp;·&nbsp; 数据：102条上岸经验帖 &nbsp;·&nbsp; 2026.04.11</p>
+  <div class="bias-note">
+    ⚠️ <strong>幸存者偏差说明：</strong>上岸帖均来自成功上岸的用户，"中断/放弃/失败"相关阶段在数据中被系统性低估。对应阶段的结论已做校正标注。
+  </div>
+
+  <!-- STAT ROW -->
+  <div class="stat-row">
+    <div class="stat"><div class="n" style="color:var(--a)">102</div><div class="l">有效帖子（两文件合并）</div></div>
+    <div class="stat"><div class="n" style="color:var(--orange)">86%</div><div class="l">经历过多次/多年备考</div></div>
+    <div class="stat"><div class="n" style="color:var(--green)">58%</div><div class="l">提到申论突破</div></div>
+    <div class="stat"><div class="n" style="color:var(--purple)">24%</div><div class="l">经历全职转型</div></div>
+    <div class="stat"><div class="n" style="color:var(--red)">3</div><div class="l">旅程图结构性缺陷</div></div>
+  </div>
+
+  <!-- JOURNEY OVERVIEW -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>整体旅程节点验证状态</h2>
+      <span class="tag" style="background:var(--sub)">总览</span>
+    </div>
+
+    <!-- 01 前期准备 -->
+    <p style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:8px;letter-spacing:.5px">01 前期准备</p>
+    <div class="journey-wrap">
+      <div class="journey" style="max-width:500px">
+        <div class="j-step">
+          <div class="j-node ok">Q1</div>
+          <div class="j-label">为什么考公</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node warn">Q2</div>
+          <div class="j-label">第一动作</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node miss">缺</div>
+          <div class="j-label">裸考探路路径</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">资源</div>
+          <div class="j-label">了解课程/资源</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 备考过程 -->
+    <p style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:8px;letter-spacing:.5px;margin-top:20px">02 备考过程（笔试）</p>
+    <div class="journey-wrap">
+      <div class="journey">
+        <div class="j-step">
+          <div class="j-node warn">1</div>
+          <div class="j-label">选择课程</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node miss">2</div>
+          <div class="j-label">学习过程<br><span style="color:var(--red)">欠细化</span></div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">3</div>
+          <div class="j-label">公告</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node warn">4</div>
+          <div class="j-label">报名/选岗</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">5</div>
+          <div class="j-label">备考冲刺</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">6</div>
+          <div class="j-label">打印准考证</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">7</div>
+          <div class="j-label">订票/抢酒店</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">8</div>
+          <div class="j-label">上考场</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">9</div>
+          <div class="j-label">估分/对答案</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node warn">10</div>
+          <div class="j-label">提前准备面试</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">11</div>
+          <div class="j-label">查成绩/晒分</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node special">↻</div>
+          <div class="j-label">进面/未进面</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 面试→上岸 -->
+    <p style="font-size:11px;font-weight:700;color:var(--sub);margin-bottom:8px;letter-spacing:.5px;margin-top:20px">02 备考过程（面试→入职）</p>
+    <div class="journey-wrap">
+      <div class="journey" style="max-width:780px">
+        <div class="j-step">
+          <div class="j-node ok">12</div>
+          <div class="j-label">找面试机构</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">13</div>
+          <div class="j-label">面试学习</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">14</div>
+          <div class="j-label">资格复审</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">15</div>
+          <div class="j-label">打印准考证</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">16</div>
+          <div class="j-label">订票/抢酒店</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">17</div>
+          <div class="j-label">上考场/出成绩</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">18</div>
+          <div class="j-label">体检</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">19</div>
+          <div class="j-label">政审</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">20</div>
+          <div class="j-label">公示</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node ok">21</div>
+          <div class="j-label">入职</div>
+        </div>
+        <div class="j-step">
+          <div class="j-node warn">22</div>
+          <div class="j-label">正式公务员</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:12px">
+      <span style="font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:var(--green);display:inline-block"></span>验证成立</span>
+      <span style="font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:var(--orange);display:inline-block"></span>需补充/修正</span>
+      <span style="font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:var(--red);display:inline-block"></span>严重缺失</span>
+      <span style="font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:var(--purple);display:inline-block"></span>关键决策点</span>
+    </div>
+  </div>
+
+  <!-- 01 前期准备 -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>01 前期准备阶段详细验证</h2>
+      <span class="tag" style="background:var(--a)">数据 n=102</span>
+    </div>
+
+    <div class="stage-grid">
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--green)">Q1</div>
+          <h3>为什么要考公务员</h3>
+          <span class="verdict ok">✓ 基本准确</span>
+        </div>
+        <div class="stage-card-body">
+          <div class="data-row">
+            <span class="data-label">同学/朋友已上岸</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:25%;background:var(--a)"></div></div>
+            <span class="data-val" style="color:var(--a)">25%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">家庭/回乡/夫妻异地</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:20%;background:var(--teal)"></div></div>
+            <span class="data-val">20%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">工作不满意/压力大</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:12%;background:var(--orange)"></div></div>
+            <span class="data-val">12%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">年龄危机（30+危机）</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:6%;background:var(--d)"></div></div>
+            <span class="data-val">6%</span>
+          </div>
+          <div class="hl orange">
+            ⚠️ <strong>缺失项：</strong>「同学影响」是第一高频触发点（25%），在白板的在校/应届分支下仅隐含，建议独立标注。<br><br>
+            <em>「我们学校每年20%毕业生考入公务员，我心里憋着一股劲」</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFFBF0">
+          <div class="snum" style="background:var(--orange)">Q2</div>
+          <h3>决定考公后第一动作</h3>
+          <span class="verdict warn">△ 缺第三条路</span>
+        </div>
+        <div class="stage-card-body">
+          <div class="data-row">
+            <span class="data-label">选课程/平台（步知等）</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:57%;background:var(--a)"></div></div>
+            <span class="data-val">57%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">自学找资料</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:21%;background:var(--teal)"></div></div>
+            <span class="data-val">21%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">报线下班</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:9%;background:var(--orange)"></div></div>
+            <span class="data-val">9%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label" style="color:var(--red)">先裸考→再认真备考</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:14%;background:var(--red)"></div></div>
+            <span class="data-val" style="color:var(--red)">14%+</span>
+          </div>
+          <div class="hl red">
+            ❌ <strong>白板缺失路径：</strong>「先随便考一次看看→看到差距→认真备考」。14条明确案例，实际比例更高。这不是边缘情况，是裸考用户的标准入口。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 1-5 详细 -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>02 备考过程 Stage 1–11 验证</h2>
+      <span class="tag" style="background:var(--teal)">笔试阶段</span>
+    </div>
+
+    <div class="stage-grid">
+
+      <!-- Stage 1 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFFBF0">
+          <div class="snum" style="background:var(--orange)">1</div>
+          <h3>选择课程</h3>
+          <span class="verdict warn">△ 需补充背景</span>
+        </div>
+        <div class="stage-card-body">
+          <p>白板描述「自学+网课 / 选择课程」基本准确，57%的帖子以选课为备考起点。</p>
+          <div class="hl orange">
+            ⚠️ <strong>重要背景：</strong>86%的上岸者在进入 Stage 1 时已有至少一次失败经历。白板把 Stage 1 画成干净起点，实际上多数人是「重新选课/调整策略」，而非第一次接触。
+          </div>
+          <div class="quote">
+            <strong>线下班负评（9% 选线下，但有明显抱怨）</strong>
+            「线下班动辄几万块，而且封闭培训，对在职的我来说几乎不可能」——广东国考
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFF5F5">
+          <div class="snum" style="background:var(--red)">2</div>
+          <h3>学习过程中</h3>
+          <span class="verdict miss">✗ 严重欠细化</span>
+        </div>
+        <div class="stage-card-body">
+          <p>白板仅一个节点，但这是整个旅程耗时最长、情绪最复杂的阶段。内部至少有四个子阶段：</p>
+          <div class="inner-stage">
+            <div class="is-node">
+              <div class="isn-title">2a 基础学习</div>
+              <div class="isn-sub">行测各模块<br>申论入门</div>
+            </div>
+            <div class="is-node">
+              <div class="isn-title">2b 刷题模考</div>
+              <div class="isn-sub">做真题<br>分数停滞感出现</div>
+            </div>
+            <div class="is-node danger">
+              <div class="isn-title">2c 瓶颈期 ⚡</div>
+              <div class="isn-sub">申论卡点<br>情绪最低谷</div>
+            </div>
+            <div class="is-node highlight">
+              <div class="isn-title">2d 方法突破</div>
+              <div class="isn-sub">找到方法 35%<br>申论动笔+批改</div>
+            </div>
+          </div>
+          <div class="hl red" style="margin-top:12px">
+            ❌ <strong>关键缺失节点：全职转型</strong><br>
+            24%的上岸者在 Stage 2 瓶颈期后，经历了「在职→辞职全职备考」的转型。这是一个明确的决策节点，在白板中完全不存在。
+          </div>
+          <div class="quote">
+            <strong>全职转型的典型触发</strong>
+            「17年1月买了步知的课程，开始全职备考，这是我备考的分水岭」——30岁宝妈，广东
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 3-4 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--green)">3–4</div>
+          <h3>公告/报名/选岗</h3>
+          <span class="verdict ok">✓ 准确，可加深</span>
+        </div>
+        <div class="stage-card-body">
+          <div class="data-row">
+            <span class="data-label">提到选岗策略</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:11%;background:var(--green)"></div></div>
+            <span class="data-val">11%</span>
+          </div>
+          <p>白板的「报岗咨询/多选择/没得选」结构正确。</p>
+          <div class="hl green">
+            💡 <strong>补充价值点：</strong>「考的好不如报的好」在多条帖子中反复出现。选岗是一个高价值的策略决策节点，应在 Stage 4 增加「选岗策略咨询」作为独立活动——这正是 N009 选岗功能的产品接入时机。
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 5 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--green)">5</div>
+          <h3>备考冲刺（1–1.5月）</h3>
+          <span class="verdict ok">✓ 准确</span>
+        </div>
+        <div class="stage-card-body">
+          <p>白板描述的「1-1.5月紧张备考」与数据一致，极端案例从40天到在职仅1个月均有记录。</p>
+          <div class="hl orange">
+            ⚠️ <strong>「找捷径」的真实意义：</strong>白板标注了「找捷径」，数据证实该行为真实存在（押题、背题、找技巧），但成功帖中这些行为<strong>均被描述为无效甚至适得其反</strong>。找捷径是行为事实，但不是上岸路径。
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 8 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--green)">6–8</div>
+          <h3>打印准考证 → 订票 → 上考场</h3>
+          <span class="verdict ok">✓ 完全准确</span>
+        </div>
+        <div class="stage-card-body">
+          <p>白板描述与数据完全吻合。多条帖子描述跨城市考试（「四处奔波去考试」）和抢酒店的紧张感。</p>
+          <div class="quote">
+            「终于不用再四处奔波去考试了！」——福建省考
+          </div>
+          <div class="quote">
+            「上考场那天紧张到不行，到了考场门口腿都软了」——多条类似描述
+          </div>
+        </div>
+      </div>
+
+      <!-- Stage 9 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFFBF0">
+          <div class="snum" style="background:var(--orange)">9–10</div>
+          <h3>估分/对答案 + 等待期</h3>
+          <span class="verdict warn">△ 缺「等待期」节点</span>
+        </div>
+        <div class="stage-card-body">
+          <p>估分/对答案行为白板描述准确，6条明确记录。</p>
+          <div class="hl orange">
+            ⚠️ <strong>缺失：考后「等待期」（1–2个月）</strong><br>
+            从考完到出成绩通常1-2个月，是独立的心理阶段：焦虑→习惯性刷帖→打听消息→成绩出来。白板将其压缩进 Stage 9，建议独立标注。
+          </div>
+          <div class="quote">
+            <strong>考后情绪反转（多条）</strong>
+            「刚考完都觉得自己肯定挂了，看到这个分数很惊讶！」——天津市考，应届研究生
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 未进面分支 -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>未进面分支验证</h2>
+      <span class="tag" style="background:var(--d)">关键分岔点</span>
+    </div>
+
+    <div class="stage-grid">
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--green)">分支</div>
+          <h3>未进面的三条路</h3>
+          <span class="verdict ok">✓ 准确</span>
+        </div>
+        <div class="stage-card-body">
+          <p>白板的「复盘 / EMO / 寻找下一次就业机会」三分支逻辑正确，数据验证：</p>
+          <div class="data-row" style="margin-top:10px">
+            <span class="data-label">提到未进面经历</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:8%;background:var(--d)"></div></div>
+            <span class="data-val">8%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">情绪崩溃描述</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:4%;background:var(--red)"></div></div>
+            <span class="data-val">4%</span>
+          </div>
+          <p style="margin-top:8px;font-size:11px;color:var(--light)">（幸存者偏差：未进面后彻底放弃的人不会写上岸帖，实际比例远高于数据）</p>
+          <div class="quote">
+            「心态崩盘，影响后续答题」「每次点开步知网页，心里都会多一种负重感」
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--green)">过渡</div>
+          <h3>先就业再备考</h3>
+          <span class="verdict ok">✓ 真实存在</span>
+        </div>
+        <div class="stage-card-body">
+          <p>白板「从主流考试到事业单位/编制内/无编制内工作」的过渡策略，数据验证真实存在且多样：</p>
+          <div class="hl green">
+            ✓ 已验证的过渡策略：<br>
+            · 先考事业单位编制（降级目标）<br>
+            · 找合同工/临时工/村官继续备考<br>
+            · 转考教师编/居委会作为过渡<br><br>
+            <em>「讲实话，之前两年每次考公都是差口气，后来换了些东西考，反而有些不一样的效果」</em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stage 12-22 -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>Stage 12–22 面试→入职 验证</h2>
+      <span class="tag" style="background:var(--green)">整体准确</span>
+    </div>
+
+    <div class="stage-grid">
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFFBF0">
+          <div class="snum" style="background:var(--orange)">12–13</div>
+          <h3>找面试机构 + 面试学习</h3>
+          <span class="verdict warn">△ 线下比例有误</span>
+        </div>
+        <div class="stage-card-body">
+          <p>整体流程描述准确。但白板「线下为主」与数据有出入——多条帖子明确描述线下班贵且不适合在职者。</p>
+          <div class="hl orange">
+            ⚠️ 建议修正：「线下为主」→「线下/线上均有；线下费用高（动辄几万）不适合在职」<br><br>
+            实际上，步知平台的在线面试课在帖子中被大量提及，线上面试备考是主流，不是补充。
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--green)">18–21</div>
+          <h3>体检 → 政审 → 公示 → 入职</h3>
+          <span class="verdict ok">✓ 准确</span>
+        </div>
+        <div class="stage-card-body">
+          <div class="data-row">
+            <span class="data-label">体检/政审期焦虑</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:5%;background:var(--orange)"></div></div>
+            <span class="data-val">5%</span>
+          </div>
+          <div class="hl green">
+            ✓ 白板标注的等待期焦虑真实存在：「之后的体检、政审、公示就比较顺利了，只是间隔时间有点久让人等的很是焦急」
+          </div>
+          <div class="quote" style="margin-top:10px">
+            <strong>体检确认感（上岸帖高频情绪）</strong>
+            「在办公室抽了三管血，才相信这是真的」
+          </div>
+        </div>
+      </div>
+
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFFBF0">
+          <div class="snum" style="background:var(--orange)">22</div>
+          <h3>正式公务员（上岸后）</h3>
+          <span class="verdict warn">△ 缺情绪平淡期</span>
+        </div>
+        <div class="stage-card-body">
+          <p>Stage 22 节点本身准确，但上岸后存在一个显著规律在白板中没有标注：</p>
+          <div class="hl orange">
+            ⚠️ <strong>上岸后情绪平淡是普遍现象，不是个案：</strong>
+          </div>
+          <div class="quote">「终于上岸了，没有意想中的欣喜若狂，而是重重的舒了口气」</div>
+          <div class="quote">「考上公务员了，要换工作了，但是我并不激动」</div>
+          <div class="quote">「上了岸倒觉得并没有那么的欣喜若狂，一切仿佛就是自然而然发生的事」</div>
+          <p style="font-size:11px;color:var(--sub);margin-top:8px">建议在 Stage 22 后增加「上岸后适应期」标注，这对产品的「上岸后留存」策略有参考价值。</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 最大结构问题：循环 -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>最重要的结构性问题：循环路径被严重低估</h2>
+      <span class="tag" style="background:var(--red)">P0 修改</span>
+    </div>
+
+    <div class="cycle-box">
+      <div class="hl red" style="margin-bottom:20px">
+        ❌ <strong>核心问题：</strong>白板用一条虚线箭头表示「没考上→回到备考」，视觉上是边缘支路。但数据显示 <strong>86%（88/102）</strong> 的上岸者都经历了多次循环。循环不是例外，循环才是主路径。
+      </div>
+
+      <div class="cycle-compare">
+        <div>
+          <h4>❌ 当前白板结构</h4>
+          <div class="cycle-flow">
+            <div class="cf-item main">备考 Stage 1→11 → 考试</div>
+            <div class="cf-arrow">↓（主路径）</div>
+            <div class="cf-item key">考上 → 面试 → 入职</div>
+            <div class="cf-arrow" style="color:var(--light)">↑ 虚线支路</div>
+            <div class="cf-item minor">没考上 → 重来（虚线）</div>
+          </div>
+        </div>
+        <div>
+          <h4>✅ 基于数据的真实结构</h4>
+          <div class="cycle-flow">
+            <div class="cf-item missing">画像C 第一次备考（多裸考/低效）</div>
+            <div class="cf-arrow">↓ 失败（86%的人）</div>
+            <div class="cf-item main">画像A 在职持续备考（2–3轮）</div>
+            <div class="cf-arrow">↓ 申论突破 / 全职转型</div>
+            <div class="cf-item main">画像B 瓶颈期→方法调整</div>
+            <div class="cf-arrow">↓ 最终上岸（中位：3–4次）</div>
+            <div class="cf-item key">进面 → 面试 → 体检 → 入职</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px">
+        <p style="font-size:13px;font-weight:700;margin-bottom:10px">每一次循环中，用户状态在演变：</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div style="background:#FAF5FF;border:1px solid #D6BCFA;border-radius:8px;padding:14px">
+            <div style="font-size:12px;font-weight:700;color:var(--purple);margin-bottom:6px">第1次循环 → 画像C</div>
+            <div style="font-size:12px;color:var(--sub)">目标模糊，方法不成熟，多数裸考或浅备考</div>
+          </div>
+          <div style="background:#EBF8FF;border:1px solid #90CDF4;border-radius:8px;padding:14px">
+            <div style="font-size:12px;font-weight:700;color:#1A3A5C;margin-bottom:6px">第2–3次循环 → 画像A</div>
+            <div style="font-size:12px;color:var(--sub)">有方法但效率不稳定，在职兼顾，有中断风险</div>
+          </div>
+          <div style="background:#FFF5F5;border:1px solid #FEB2B2;border-radius:8px;padding:14px">
+            <div style="font-size:12px;font-weight:700;color:#742A2A;margin-bottom:6px">第N次循环 → 画像B</div>
+            <div style="font-size:12px;color:var(--sub)">申论卡点，焦虑高峰，或已全职冲刺</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 修改建议 -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>给白板的具体修改建议</h2>
+      <span class="tag" style="background:var(--ink)">优先级排序</span>
+    </div>
+
+    <div class="recs">
+      <div class="rec-card">
+        <div class="rec-head" style="background:var(--red)">P0 结构性（必改）</div>
+        <div class="rec-body">
+          <div class="rec-item">把「没考上→重来」的虚线改为主路径，标注「86%的人经历1次以上循环，中位约3次」</div>
+          <div class="rec-item">Stage 2「学习过程」拆分为 2a基础学习 / 2b刷题模考 / 2c瓶颈期 / 2d方法突破 四个子阶段</div>
+          <div class="rec-item">在 Stage 2→5 之间增加「全职转型」决策节点（约25%的人经历此跳变）</div>
+        </div>
+      </div>
+
+      <div class="rec-card">
+        <div class="rec-head" style="background:var(--orange)">P1 节点补充</div>
+        <div class="rec-body">
+          <div class="rec-item">01前期准备增加「裸考探路」第三条路径：先试考看差距→再认真备考</div>
+          <div class="rec-item">在 Stage 9-11 之间增加「等待期」节点（考完→等1-2个月→查成绩，独立心理阶段）</div>
+          <div class="rec-item">Stage 4 增加「选岗策略咨询」作为关键活动（「考的好不如报的好」）</div>
+          <div class="rec-item">Q1动机中独立标注「同学/朋友已上岸」（25%，最高频触发）</div>
+        </div>
+      </div>
+
+      <div class="rec-card">
+        <div class="rec-head" style="background:var(--sub)">P2 细节完善</div>
+        <div class="rec-body">
+          <div class="rec-item">Stage 22 之后增加「上岸后适应期/情绪平淡期」标注</div>
+          <div class="rec-item">Stage 12 「线下为主」改为「线下/线上均有，线下费用高（几万），在职用户更倾向线上」</div>
+          <div class="rec-item">宝妈路径补充「有效备考窗口期」概念（孩子稍大后集中冲刺，而非持续低效坚持）</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 汇总表 -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>阶段验证汇总表</h2>
+    </div>
+    <table class="sum-table">
+      <thead>
+        <tr>
+          <th>阶段</th>
+          <th>白板描述</th>
+          <th>准确性</th>
+          <th>主要问题/补充</th>
+          <th>优先级</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01 Q1 动机</td>
+          <td>家长因素 / 在职原因</td>
+          <td><span class="badge ok">✓ 准确</span></td>
+          <td>「同学已上岸」（25%）未单独标注</td>
+          <td><span class="badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td>01 Q2 第一动作</td>
+          <td>了解/找资源</td>
+          <td><span class="badge warn">△ 不完整</span></td>
+          <td>缺「裸考探路」第三条路径</td>
+          <td><span class="badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td>Stage 1 选课</td>
+          <td>自学+网课 / 选择课程</td>
+          <td><span class="badge warn">△ 背景缺失</span></td>
+          <td>多数人是「重新选」而非第一次，需体现循环背景</td>
+          <td><span class="badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td><strong>Stage 2 学习过程</strong></td>
+          <td>学习过程中</td>
+          <td><span class="badge miss">✗ 严重欠细化</span></td>
+          <td>缺瓶颈期子阶段；缺全职转型节点（24%）</td>
+          <td><span class="badge p0">P0</span></td>
+        </tr>
+        <tr>
+          <td>Stage 3–4 报名/选岗</td>
+          <td>报岗咨询 / 选择</td>
+          <td><span class="badge ok">✓ 准确</span></td>
+          <td>选岗策略价值未体现，N009功能接入机会</td>
+          <td><span class="badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td>Stage 5 冲刺</td>
+          <td>1-1.5月紧张备考</td>
+          <td><span class="badge ok">✓ 准确</span></td>
+          <td>「找捷径」是真实行为但非成功路径</td>
+          <td><span class="badge p2">P2</span></td>
+        </tr>
+        <tr>
+          <td>Stage 6–8 考前流程</td>
+          <td>打印/订票/上考场</td>
+          <td><span class="badge ok">✓ 完全准确</span></td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Stage 9 估分</td>
+          <td>估分/对答案</td>
+          <td><span class="badge warn">△ 缺节点</span></td>
+          <td>缺「等待期」（考完→1-2个月→出成绩）</td>
+          <td><span class="badge p1">P1</span></td>
+        </tr>
+        <tr>
+          <td>未进面分支</td>
+          <td>复盘/EMO/就业过渡</td>
+          <td><span class="badge ok">✓ 准确</span></td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Stage 12–13 面试</td>
+          <td>找机构/面试学习</td>
+          <td><span class="badge warn">△ 小偏差</span></td>
+          <td>「线下为主」高估，实际线上面试备考是主流</td>
+          <td><span class="badge p2">P2</span></td>
+        </tr>
+        <tr>
+          <td>Stage 18–21 体检政审</td>
+          <td>体检/政审/公示</td>
+          <td><span class="badge ok">✓ 准确</span></td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Stage 22 正式公务员</td>
+          <td>入职/试用期</td>
+          <td><span class="badge warn">△ 缺后续</span></td>
+          <td>上岸后情绪平淡期（「没有欣喜若狂」）未标注</td>
+          <td><span class="badge p2">P2</span></td>
+        </tr>
+        <tr style="background:#FFF5F5">
+          <td><strong>循环结构</strong></td>
+          <td>虚线支路</td>
+          <td><span class="badge miss">✗ 结构性错误</span></td>
+          <td><strong>86%的人经历多次循环，虚线应改为主路径</strong></td>
+          <td><span class="badge p0">P0</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 100+ 上岸帖规律提炼 -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>100+ 上岸帖规律提炼</h2>
+      <span class="tag" style="background:var(--purple)">跨阶段 n=102</span>
+    </div>
+
+    <!-- 元规律 -->
+    <div style="background:#FAF5FF;border:1px solid #D6BCFA;border-radius:12px;padding:20px;margin-bottom:24px">
+      <div style="font-size:13px;font-weight:700;color:var(--purple);margin-bottom:10px">元规律：叙事结构一致 = 幸存者偏差的直接证明</div>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+        <span style="background:var(--purple);color:#fff;border-radius:16px;padding:4px 12px;font-size:12px;font-weight:600">迷茫起点</span>
+        <span style="color:var(--light);font-weight:700">→</span>
+        <span style="background:#6B46C1;color:#fff;border-radius:16px;padding:4px 12px;font-size:12px;font-weight:600">裸考/碰壁</span>
+        <span style="color:var(--light);font-weight:700">→</span>
+        <span style="background:var(--a);color:#fff;border-radius:16px;padding:4px 12px;font-size:12px;font-weight:600">遇到方法/平台</span>
+        <span style="color:var(--light);font-weight:700">→</span>
+        <span style="background:var(--teal);color:#fff;border-radius:16px;padding:4px 12px;font-size:12px;font-weight:600">坚持</span>
+        <span style="color:var(--light);font-weight:700">→</span>
+        <span style="background:var(--green);color:#fff;border-radius:16px;padding:4px 12px;font-size:12px;font-weight:600">上岸</span>
+        <span style="color:var(--light);font-weight:700">→</span>
+        <span style="background:var(--orange);color:#fff;border-radius:16px;padding:4px 12px;font-size:12px;font-weight:600">感谢平台</span>
+      </div>
+      <div style="font-size:12px;color:#44337A;line-height:1.7">
+        102条帖子的叙事弧几乎完全相同。这种统一性不是巧合——只有走完这条路径的人才能写出「上岸帖」，其他路径在数据中系统性缺失。<br>
+        <strong>产品洞察：「碰壁 → 遇到方法」节点是产品的最高价值介入时机。</strong>用户在此时最愿意付费、最愿意改变，也最记得谁帮了他们。
+      </div>
+    </div>
+
+    <!-- 6 patterns grid -->
+    <div class="stage-grid">
+
+      <!-- Pattern 1: 申论突破 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--a)">01</div>
+          <h3>申论是护城河，突破反直觉</h3>
+          <span class="verdict ok">58% 提及</span>
+        </div>
+        <div class="stage-card-body">
+          <p>申论突破路径在帖子中高度一致：不是多看答案，是动笔+获得批改。突破方式违反直觉，且多数人描述为「顿悟式」。</p>
+          <div class="data-row">
+            <span class="data-label">听申论课</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:62%;background:var(--a)"></div></div>
+            <span class="data-val">62%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">获得批改反馈</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:78%;background:var(--green)"></div></div>
+            <span class="data-val" style="color:var(--green)">78%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">跟框架/模板</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:34%;background:var(--teal)"></div></div>
+            <span class="data-val">34%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label" style="color:var(--sub)">真正动笔写</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:19%;background:var(--orange)"></div></div>
+            <span class="data-val">19%</span>
+          </div>
+          <div class="hl blue">
+            💡 <strong>产品含义：</strong>78% 知道需要批改，但只有 19% 真正动笔。用户卡在「知道要写却没写」的缺口里。N001 申论批改的核心价值不是批改工具本身，而是<strong>帮用户迈出动笔那一步</strong>。
+          </div>
+          <div class="quote">「考了三次55分，没想到申论70+真的实现了！跟着花木君专心学申论，逐渐上手」——广东国考</div>
+          <div class="quote">「国考裸考申论才44分，之后便觉得申论不学好一定会拉分」——甘肃省考</div>
+        </div>
+      </div>
+
+      <!-- Pattern 2: 面试淘汰 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFF5F5">
+          <div class="snum" style="background:var(--red)">02</div>
+          <h3>面试才是最大淘汰器</h3>
+          <span class="verdict miss">失败第一原因</span>
+        </div>
+        <div class="stage-card-body">
+          <p>描述失败经历时，面试发挥失常是被提及最多的原因，超过申论拖腿。笔试领先不能转移为面试安全感。</p>
+          <div style="font-size:11px;color:var(--sub);margin-bottom:8px;font-weight:600">失败原因分布（提到失败经历的帖子中）</div>
+          <div class="data-row">
+            <span class="data-label">面试发挥失常</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:53%;background:var(--red)"></div></div>
+            <span class="data-val" style="color:var(--red)">53%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">申论拖腿</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:43%;background:var(--orange)"></div></div>
+            <span class="data-val">43%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">方法不对</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:43%;background:var(--orange)"></div></div>
+            <span class="data-val">43%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">裸考/准备不足</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:28%;background:var(--sub)"></div></div>
+            <span class="data-val">28%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">心态问题</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:23%;background:var(--sub)"></div></div>
+            <span class="data-val">23%</span>
+          </div>
+          <div class="hl red">
+            ⚠️ 「笔试第一被逆袭」案例多次出现。面试是独立风险，不随笔试优势递减。<br>
+            <em>「笔试第一，面试压力巨大，特别内向的我，还在职，成绩出来后特别着急」——江苏省考</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern 3: 社区陪伴 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#F0FFF4">
+          <div class="snum" style="background:var(--green)">03</div>
+          <h3>社区陪伴是续航燃料</h3>
+          <span class="verdict ok">36% 提及</span>
+        </div>
+        <div class="stage-card-body">
+          <p>36% 的帖子提到社区/群/小伙伴是坚持下来的关键，但作用不是知识获取，而是<strong>情绪续航</strong>。</p>
+          <div class="data-row">
+            <span class="data-label">社区/同伴是关键</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:36%;background:var(--green)"></div></div>
+            <span class="data-val">36%</span>
+          </div>
+          <div class="hl green">
+            社区的三种续航方式：<br>
+            · <strong>知道别人也在坚持</strong> → 打消放弃念头<br>
+            · <strong>看到上岸帖</strong> → 重燃动力（帖子本身是续航内容）<br>
+            · <strong>互相打卡/对练</strong> → 外部约束替代内驱力
+          </div>
+          <div class="quote">「感谢步知大家庭，看到大家每天打卡，我也不好意思放弃」——多条类似表达</div>
+          <div class="hl orange" style="margin-top:8px">
+            ⚠️ <strong>孤独感是备考的隐性痛点：</strong>全职备考者最难熬的不是题目，而是「不知道自己走的路对不对」。社区的价值在于提供方向感，而不只是热闹。
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern 4: 上岸平静 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFFBF0">
+          <div class="snum" style="background:var(--orange)">04</div>
+          <h3>上岸情绪是平静，不是狂喜</h3>
+          <span class="verdict warn">留存盲区</span>
+        </div>
+        <div class="stage-card-body">
+          <p>10条帖子明确描述上岸后情绪平淡。这是数据中最一致的情绪反转，且与常识预期完全相反。</p>
+          <div class="data-row">
+            <span class="data-label">上岸后情绪平静</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:10%;background:var(--orange)"></div></div>
+            <span class="data-val">~10%</span>
+          </div>
+          <div style="font-size:11px;color:var(--sub);margin:4px 0 8px;font-style:italic">（实际比例更高——未明确描述情绪的帖子中也多为平静/如释重负）</div>
+          <div class="quote">「终于上岸了，没有意想中的欣喜若狂，而是重重的舒了口气」</div>
+          <div class="quote">「考上公务员了，但是我并不激动」</div>
+          <div class="quote">「上了岸倒觉得并没有那么的欣喜若狂，一切仿佛就是自然而然发生的事」</div>
+          <div class="hl orange" style="margin-top:8px">
+            ⚠️ <strong>产品留存含义：</strong>用户上岸后不会主动回来。产品需要在「上岸确认」节点主动触发——成就总结、引导写上岸帖、邀请分享——否则用户在这一刻静默流失，再也不会回来。
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern 5: 成功者行为 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--a)">05</div>
+          <h3>成功者的计划极度具体</h3>
+          <span class="verdict ok">输出优于输入</span>
+        </div>
+        <div class="stage-card-body">
+          <p>上岸帖中描述的学习行为高度一致：全是输出型、可量化、外部可见的行为，不是「多听课」。</p>
+          <div style="font-size:11px;color:var(--sub);margin-bottom:8px;font-weight:600">成功者的具体学习行为</div>
+          <div class="data-row">
+            <span class="data-label">手写笔记/整理</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:45%;background:var(--a)"></div></div>
+            <span class="data-val">45%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">错题本/错题分析</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:41%;background:var(--a)"></div></div>
+            <span class="data-val">41%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">打卡记录</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:40%;background:var(--teal)"></div></div>
+            <span class="data-val">40%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">反复听课</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:38%;background:var(--sub)"></div></div>
+            <span class="data-val">38%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">计时做题</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:14%;background:var(--sub)"></div></div>
+            <span class="data-val">14%</span>
+          </div>
+          <div class="hl blue">
+            💡 <strong>产品含义（N003）：</strong>个性化计划的核心价值不只是「安排任务」，而是让输出行为结构化——笔记、错题、打卡是成功者的三件套。产品可以把这三项做成标准化的每日输出流，而不只是课程清单。
+          </div>
+        </div>
+      </div>
+
+      <!-- Pattern 6: 全职转型 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FAF5FF">
+          <div class="snum" style="background:var(--purple)">06</div>
+          <h3>全职转型是决定性节点</h3>
+          <span class="verdict warn">旅程图缺失</span>
+        </div>
+        <div class="stage-card-body">
+          <p>35条帖子描述了「在职→全职」的转型。路径固定，触发点可分为三类，转型后成功率显著提升。</p>
+          <div class="data-row">
+            <span class="data-label">提到全职备考</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:35%;background:var(--purple)"></div></div>
+            <span class="data-val">35%</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:12px 0">
+            <div style="background:#FAF5FF;border:1px solid #D6BCFA;border-radius:8px;padding:10px;font-size:11px">
+              <div style="font-weight:700;color:var(--purple);margin-bottom:4px">年龄截止</div>
+              <div style="color:var(--sub)">「再不考就超龄了」（35岁红线）</div>
+            </div>
+            <div style="background:#FAF5FF;border:1px solid #D6BCFA;border-radius:8px;padding:10px;font-size:11px">
+              <div style="font-weight:700;color:var(--purple);margin-bottom:4px">累积失败</div>
+              <div style="color:var(--sub)">第N次没上，「再不拼就算了」</div>
+            </div>
+            <div style="background:#FAF5FF;border:1px solid #D6BCFA;border-radius:8px;padding:10px;font-size:11px">
+              <div style="font-weight:700;color:var(--purple);margin-bottom:4px">家庭支持</div>
+              <div style="color:var(--sub)">配偶/父母允许→「破釜沉舟」</div>
+            </div>
+          </div>
+          <div class="hl purple">
+            转型后路径固定：辞职/请假 → 全职冲刺（3–6个月）→ 上岸。转型是「决心信号」，是预测上岸概率的高权重特征。当对话系统检测到用户在考虑全职转型时，这是最高优先级的介入机会。
+          </div>
+          <div class="quote">「在职→全职的转变是我备考的分水岭，之后三个月效率翻倍」</div>
+          <div class="quote">「17年1月开始全职备考，破釜沉舟，一举成功」——30岁宝妈，广东</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 电话调研补充验证 -->
+  <div class="sec">
+    <div class="sec-head">
+      <h2>电话调研学员补充验证</h2>
+      <span class="tag" style="background:var(--teal)">当前备考 n=51</span>
+    </div>
+
+    <!-- 方法论互补说明 -->
+    <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0;margin-bottom:24px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)">
+      <div style="padding:18px 20px">
+        <div style="font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.5px;margin-bottom:8px">上岸帖分析（n=102）</div>
+        <div style="font-size:12px;line-height:1.7;color:var(--ink)">
+          ✓ 视角：已上岸者的<strong>回顾叙述</strong><br>
+          ✓ 呈现：成功路径、突破节点<br>
+          ✗ 缺失：失败/卡住/放弃状态<br>
+          ✗ 偏差：幸存者叙事高度一致
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;padding:0 12px;font-size:20px;color:var(--teal);background:var(--bg);border-left:1px solid var(--border);border-right:1px solid var(--border)">⇌</div>
+      <div style="padding:18px 20px">
+        <div style="font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.5px;margin-bottom:8px">电话调研（n=51）</div>
+        <div style="font-size:12px;line-height:1.7;color:var(--ink)">
+          ✓ 视角：正在备考者的<strong>实时困境</strong><br>
+          ✓ 呈现：当前卡点、真实行为<br>
+          ✓ 覆盖：失败/中断/挣扎状态<br>
+          ✓ 补充：具体时间窗口、工具使用
+        </div>
+      </div>
+    </div>
+
+    <!-- 受访者基本分布 -->
+    <div class="stat-row" style="margin-bottom:24px">
+      <div class="stat"><div class="n" style="color:var(--teal)">51</div><div class="l">有效访谈记录<br>（上岸仓25+步知19+雷达5+1v1 2）</div></div>
+      <div class="stat"><div class="n" style="color:var(--a)">82%</div><div class="l">在职备考</div></div>
+      <div class="stat"><div class="n" style="color:var(--purple)">14%</div><div class="l">全职备考中</div></div>
+      <div class="stat"><div class="n" style="color:var(--orange)">25%</div><div class="l">明确中断/断续经历</div></div>
+      <div class="stat"><div class="n" style="color:var(--green)">27%</div><div class="l">3个以上平台并用</div></div>
+    </div>
+
+    <div class="stage-grid">
+
+      <!-- 动机重构 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#E6FFFA">
+          <div class="snum" style="background:var(--teal)">动机</div>
+          <h3>动机结构与上岸帖不同</h3>
+          <span class="verdict ok">补充视角</span>
+        </div>
+        <div class="stage-card-body">
+          <p>电话调研中触发考公的首因是<strong>工作焦虑/职业不稳定</strong>，而非上岸帖中的「同伴已上岸」。</p>
+          <div style="font-size:11px;color:var(--sub);font-weight:600;margin-bottom:8px">电话调研动机信号（n=51）</div>
+          <div class="data-row">
+            <span class="data-label">工作不稳定/转型</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:31%;background:var(--teal)"></div></div>
+            <span class="data-val">31%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">家庭/回乡/育儿后</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:27%;background:var(--teal)"></div></div>
+            <span class="data-val">27%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">同伴影响</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:6%;background:var(--sub)"></div></div>
+            <span class="data-val">6%</span>
+          </div>
+          <div class="hl blue">
+            💡 对比：上岸帖中「同伴已上岸」是第一动机（25%），但在正在备考者中仅6%。差距来源：同伴驱动者可能更容易放弃，活跃备考中的人更多是<strong>内在焦虑驱动</strong>。
+          </div>
+          <div class="quote">「在私企工作，感受到精力随年龄增长逐渐受限，希望寻求更稳定的工作环境」——上岸仓02，湖北</div>
+          <div class="quote">「公司持续裁员，产生较强不稳定性焦虑，才重新萌生再次考编想法」——雷达03，云南</div>
+        </div>
+      </div>
+
+      <!-- 学习时间窗口 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#EBF8FF">
+          <div class="snum" style="background:var(--a)">Stage 2</div>
+          <h3>在职学习窗口：晚7–10点，2–3h上限</h3>
+          <span class="verdict ok">精确时间数据</span>
+        </div>
+        <div class="stage-card-body">
+          <p>电话调研给出了上岸帖缺失的精确时间信息——在职学员的可用学习窗口高度集中且有硬上限。</p>
+          <div style="background:var(--bg);border-radius:8px;padding:12px;margin:10px 0">
+            <div style="font-size:11px;font-weight:700;color:var(--ink);margin-bottom:8px">在职者典型一天</div>
+            <div style="display:flex;gap:4px;font-size:10px">
+              <div style="flex:1;background:#EDF2F7;border-radius:4px;padding:6px;text-align:center;color:var(--sub)">工作时间<br>8–18点</div>
+              <div style="flex:0.3;background:#FFF5F5;border-radius:4px;padding:6px;text-align:center;color:var(--red)">通勤<br>晚饭</div>
+              <div style="flex:0.8;background:#EBF8FF;border-radius:4px;padding:6px;text-align:center;color:var(--a);font-weight:700">19–22点<br>学习窗口</div>
+              <div style="flex:0.4;background:#EDF2F7;border-radius:4px;padding:6px;text-align:center;color:var(--sub)">睡眠</div>
+            </div>
+          </div>
+          <div class="data-row" style="margin-top:10px">
+            <span class="data-label">日均2–3h（主流）</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:55%;background:var(--a)"></div></div>
+            <span class="data-val">~55%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">日均1h以下（加班常态者）</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:18%;background:var(--orange)"></div></div>
+            <span class="data-val">~18%</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">全职每日4–8h</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:14%;background:var(--purple)"></div></div>
+            <span class="data-val">14%</span>
+          </div>
+          <div class="quote">「工作日学习集中在下班后，通常18:30/19:00开始，持续1–3小时，取决于是否加班」——上岸仓02</div>
+          <div class="quote">「晚上七点后为主要学习时段，受加班影响可能推迟至九十点，学习状态易犯困」——步知18</div>
+          <div class="hl orange">⚠️ 加班日可用时间大幅缩减：「不回家时可学3-4小时，回家则仅1-2小时」。每日任务量设计需以<strong>最低可用窗口</strong>为基准，而非理想窗口。</div>
+        </div>
+      </div>
+
+      <!-- 数量关系放弃 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFF5F5">
+          <div class="snum" style="background:var(--red)">行测</div>
+          <h3>数量关系 = 行测最大放弃区</h3>
+          <span class="verdict miss">结构性放弃</span>
+        </div>
+        <div class="stage-card-body">
+          <p>23/51（45%）学员主动提到数量关系，其中17人（74%）描述了考场放弃/跳过策略。这是理性选择，不是能力问题。</p>
+          <div class="data-row">
+            <span class="data-label">提到数量关系</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:45%;background:var(--red)"></div></div>
+            <span class="data-val">23/51</span>
+          </div>
+          <div class="data-row">
+            <span class="data-label">其中描述放弃/跳过</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:74%;background:var(--red)"></div></div>
+            <span class="data-val">17/23</span>
+          </div>
+          <div class="quote">「数量关系因耗时高且得分难，时间不足时通常选择放弃或乱填」——雷达01</div>
+          <div class="quote">「数量关系基本放弃，仅在时间充裕时尝试做2–3道；资料分析约70%题目放弃作答」——雷达04</div>
+          <div class="hl red">
+            ⚠️ <strong>产品含义：</strong>数量关系的「是否认真学」是学员真实面临的策略决策，产品在计划生成时需给出明确建议（而非把它当标准模块平等安排），尤其对在职用户。
+          </div>
+        </div>
+      </div>
+
+      <!-- 申论当前状态 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFFBF0">
+          <div class="snum" style="background:var(--orange)">申论</div>
+          <h3>申论卡点更早：在「动笔」之前</h3>
+          <span class="verdict warn">与上岸帖形成对照</span>
+        </div>
+        <div class="stage-card-body">
+          <p>上岸帖描述的突破路径（动笔→批改→提分）是已突破者的叙述。电话调研揭示了<strong>当前学员停留的更早阶段</strong>。</p>
+          <div style="display:flex;flex-direction:column;gap:6px;margin:10px 0">
+            <div style="padding:8px 12px;border-radius:8px;background:#FFF5F5;font-size:12px;border-left:3px solid var(--red)">
+              <strong style="color:var(--red)">当前大多数状态：</strong>听课 → 看答案 → 停留在「了解申论」
+            </div>
+            <div style="text-align:center;color:var(--light);font-size:11px;padding:2px">← 卡在这里，未迈出动笔这一步</div>
+            <div style="padding:8px 12px;border-radius:8px;background:#EBF8FF;font-size:12px;border-left:3px solid var(--a)">
+              <strong style="color:var(--a)">需要的下一步：</strong>真正动笔 → 获得批改 → 方法内化 → 提分
+            </div>
+          </div>
+          <div class="quote">「申论仅观看课程视频，未动手做题或写作练习，偶尔查看参考答案，无系统输出训练」——雷达02（已三次备考）</div>
+          <div class="quote">「大作文写作存在思路不清、动笔困难、遗忘写作方法等问题」——步知01</div>
+          <div class="hl orange">
+            ⚠️ 申论核心阻力不是「没有批改」，而是「没有动笔」。产品需要降低动笔摩擦——比如「只写开头两句」——在第一次输出发生之前，申论批改功能对这类用户实际上是无用的。
+          </div>
+        </div>
+      </div>
+
+      <!-- 中断/重启 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FFFBF0">
+          <div class="snum" style="background:var(--orange)">中断</div>
+          <h3>25% 明确中断，触发点固定可预测</h3>
+          <span class="verdict warn">可预测的高风险时刻</span>
+        </div>
+        <div class="stage-card-body">
+          <p>13/51（25%）明确描述了备考中断，触发点集中在三类固定场景：</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:10px 0">
+            <div style="background:#FFFBF0;border:1px solid #F6E05E;border-radius:8px;padding:10px;font-size:11px">
+              <div style="font-weight:700;color:var(--orange);margin-bottom:4px">工作繁忙</div>
+              <div style="color:var(--sub)">加班高峰、项目冲刺、身心疲惫</div>
+            </div>
+            <div style="background:#FFFBF0;border:1px solid #F6E05E;border-radius:8px;padding:10px;font-size:11px">
+              <div style="font-weight:700;color:var(--orange);margin-bottom:4px">生活事件</div>
+              <div style="color:var(--sub)">婚育、家庭事务、长假打乱节奏</div>
+            </div>
+            <div style="background:#FFFBF0;border:1px solid #F6E05E;border-radius:8px;padding:10px;font-size:11px">
+              <div style="font-weight:700;color:var(--orange);margin-bottom:4px">心态受挫</div>
+              <div style="color:var(--sub)">考试失败后数月内停学</div>
+            </div>
+          </div>
+          <div class="quote">「中间因结婚生子中断备考三至四年，2025年6月重新购买会员」——上岸仓03</div>
+          <div class="quote">「近期曾中断学习近一个月，主因工作繁忙、身心疲惫」——上岸仓02</div>
+          <div class="hl blue">
+            💡 中断是可预测的，不是偶然的。产品应对高风险中断点（婚育、加班高峰、考试失败后）设计主动重启触发，而不是等用户自己回来。<strong>中断后重启的摩擦比中断本身更值得关注。</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- 全职≠高效 -->
+      <div class="stage-card">
+        <div class="stage-card-head" style="background:#FAF5FF">
+          <div class="snum" style="background:var(--purple)">全职</div>
+          <h3>全职备考不等于高效备考</h3>
+          <span class="verdict warn">认知纠偏</span>
+        </div>
+        <div class="stage-card-body">
+          <p>7名全职学员中至少3名（43%）有明显自律性问题或成绩不达预期。「全职=高效」的假设在数据中被打破。</p>
+          <div class="data-row">
+            <span class="data-label">全职但效率/自律有问题</span>
+            <div class="data-bar-wrap"><div class="data-bar-fill" style="width:43%;background:var(--purple)"></div></div>
+            <span class="data-val">3/7</span>
+          </div>
+          <div class="quote">「全职备考，但每日有效学习时间约为2–3小时，自述自律性不足」——雷达04（已连续3年参加考试）</div>
+          <div class="quote">「全职备考每天约4小时，成绩行测57+申论55=112分，查完成绩心都凉了」——步知03（全职8个月）</div>
+          <div class="hl purple">
+            ⚠️ 全职转型是决定性节点（上岸帖35%成功路径），但全职本身不能保证成功。全职学员失去了工作节律带来的「被迫自律」，需要产品提供<strong>结构化替代方案</strong>，而不只是更多课程内容。
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 两数据源对比 -->
+    <div style="margin-top:24px">
+      <div style="font-size:13px;font-weight:700;margin-bottom:12px">两数据源关键指标对比</div>
+      <table class="sum-table">
+        <thead>
+          <tr>
+            <th>维度</th>
+            <th>上岸帖（102人·已上岸·回顾）</th>
+            <th>电话调研（51人·正在备考·实时）</th>
+            <th>解读</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>第一动机</td>
+            <td>同伴已上岸 25%</td>
+            <td>工作不稳定 31%，同伴影响 6%</td>
+            <td>同伴驱动可能更多导致放弃，内在焦虑者更能坚持</td>
+          </tr>
+          <tr>
+            <td>申论当前状态</td>
+            <td>突破后：批改反馈 78%</td>
+            <td>尚未动笔：主要停留在听课/看答案</td>
+            <td>两者描述不同阶段，申论真正卡点早于「动笔」</td>
+          </tr>
+          <tr>
+            <td>数量关系</td>
+            <td>未单独提及放弃策略</td>
+            <td>45% 提到，其中 74% 描述放弃/跳过</td>
+            <td>成功者回顾中淡化了放弃策略，实际备考中极普遍</td>
+          </tr>
+          <tr>
+            <td>全职转型</td>
+            <td>35% 成功者的关键节点</td>
+            <td>14% 处于全职，其中 43% 有效率问题</td>
+            <td>全职是条件而非充分条件，需配套自律结构</td>
+          </tr>
+          <tr>
+            <td>中断/断续</td>
+            <td>86% 有多次备考（宏观循环）</td>
+            <td>25% 明确中断，触发点集中</td>
+            <td>两者一致：中断是常态，重启机制是核心产品价值</td>
+          </tr>
+          <tr>
+            <td>每日学习时间</td>
+            <td>未精确记录（模糊叙述）</td>
+            <td>在职 2–3h/天；晚 7–10 点核心窗口</td>
+            <td>电话调研补充了上岸帖缺失的精确时间颗粒度</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
